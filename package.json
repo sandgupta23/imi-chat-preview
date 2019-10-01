@@ -18,7 +18,8 @@
     "onchange"
   ],
   "scripts": {
-    "start": "parcel src/index.html"
+    "start": "parcel src/index.html",
+    "git": "git add . && git commit && git push origin master"
   },
   "devDependencies": {
     "browser-sync": "^2.18.0",

@@ -4,7 +4,8 @@ import {IHeaderData} from "./typings/http";
 import {EBotMessageMediaType, IGeneratedMessageItem, IMessageData, ISendApiResp} from "./typings/send-api";
 
 export function sendMessageToBot(bot_access_token: string, enterprise_unique_name: string, humanMessage: string): Promise<ISendApiResp> {
-    const url = 'https://staging.imibot.ai/api/v1/webhook/web/';
+    //const url = 'https://staging.imibot.ai/api/v1/webhook/web/';
+    const url = 'https://dev.imibot.ai/api/v1/webhook/web/';
     const body = {
         "consumer": environment.consumer,
         "type": "human",
@@ -38,7 +39,7 @@ export function serializeGeneratedMessagesToPreviewMessages(generatedMessage: IG
         if (Object.keys(message)[0] === 'media') {
             messageData = {
                 ...messageData,
-                messageMediatype: message.media[0] && message.media[0].type,
+                messageMediatype:  message.media[0] && message.media[0].type,
                 text: EBotMessageMediaType.image, // this is for preview of last message in chat room list,
             };
         } else if (Object.keys(message)[0] === 'quick_reply') {
@@ -60,4 +61,3 @@ export function serializeGeneratedMessagesToPreviewMessages(generatedMessage: IG
 
     });
 }
-
