@@ -18,14 +18,19 @@
     "onchange"
   ],
   "scripts": {
-    "start": "parcel src/index.html"
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html",
+    "git": "git add . && git commit && git push"
   },
   "devDependencies": {
     "browser-sync": "^2.18.0",
     "copyfiles": "^1.2.0",
+    "cssnano": "^4.1.10",
     "node-sass": "^4.5.0",
     "npm-run-all": "^4.0.0",
     "onchange": "^3.2.0",
+    "parcel": "^1.12.3",
+    "sass": "^1.22.12",
     "typescript": "^3.6.2"
   },
   "dependencies": {
