@@ -9,13 +9,13 @@ export interface ISendApiReq {
 }
 
 export interface ISendApiResp {
-    "TimeStamp": 1567167604976,
-    "bot_message_id": 750126,
-    "bot_msg": "",
-    "extra_params": {},
-    "extras": {},
-    "generated_msg": IGeneratedMessageItem,
-    "messageStore": {
+    "TimeStamp"?: 1567167604976,
+    "bot_message_id"?: 750126,
+    "bot_msg"?: "",
+    "extra_params"?: {},
+    "extras"?: {},
+    "generated_msg"?: IGeneratedMessageItem[],
+    "messageStore"?: {
         "agent_handover_by_rules": true,
         "corpus_id": 183,
         "n_sections": [
@@ -35,7 +35,7 @@ export interface ISendApiResp {
                 "section_id": "3"
             }
         ],
-        "partial_match_sections": [],
+        "partial_match_sections"?: [],
         "response_type": "",
         "sendtoagent": true,
         "thresholding_scores": {
@@ -53,7 +53,7 @@ export interface ISendApiResp {
     "platform": "web",
     "progressive": false,
     "response_flag": true,
-    "room": {
+    "room"?: {
         "_id": "5d6914615f6218003a58df90",
         "agent_handover": false,
         "agent_handover_rules_count": {
@@ -149,7 +149,7 @@ export interface ISendApiRequestPayload {
 
 export interface IGeneratedMessageItem {
     'text'?: string;
-    bot_message_id: number;
+    bot_message_id?: number;
     'media'?: any;
     // {
     //   'buttons': [
@@ -184,7 +184,7 @@ export interface ISendApiResponsePayload {
     'bot_msg': string;
     bot_message_id: number;
     'generated_msg': IGeneratedMessageItem[];
-    'messageStore': { 'endflow': true, 'templateKey': 'A1', response_language:string };
+    'messageStore': { 'endflow': true, 'templateKey': 'A1', response_language: string };
     'room': {
         'agent_handover': false,
         'allow_anonymization': false,
@@ -262,13 +262,23 @@ export enum EBotMessageMediaType {
     bot_thinking = 'bot_thinking'
 }
 
+export enum ESourceType {
+    bot = "bot",
+    human = "human",
+}
+
 export interface IMessageData extends IGeneratedMessageItem {
     /*custom fields*/
-    sourceType: string; // TODO: "timePeriod" ||"human", gives error, see why
-    time: number;
-    messageMediatype: EBotMessageMediaType;
-    bot_message_id: number;
+    sourceType?: ESourceType; // TODO: "timePeriod" ||"human", gives error, see why
+    time?: number;
+    messageMediaType?: EBotMessageMediaType;
+    bot_message_id?: number;
     feedback?: any;
     isLast?: boolean;
     response_language?: string;
+    media?: {
+        audio_url: string,
+        image_url: string,
+        video_url: string,
+    }
 }

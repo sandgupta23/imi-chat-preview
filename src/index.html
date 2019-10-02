@@ -3,40 +3,68 @@
 <head>
     <meta charset="utf-8">
     <title>Typescript Starter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Typescript Starter">
     <meta name="author" content="https://github.com/nea">
     <link rel="stylesheet" href="styles.scss">
+    <link rel="stylesheet" href="iphone.scss">
+    <link rel="stylesheet" href="scroll-bar.scss">
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
           integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 </head>
-<body>
-<div class="grid-container">
-    <div class="header">
-        <div class="bot-intro" id="botIntro">
+<body class="dewa-theme lang-rtl">
+
+
+<div class="page1">
+    <div class="page__content">
+        <div class="phone">
+            <div class="phone__body">
+                <div class="phone__view">
+                    <div class="grid-container">
+                        <div class="header" style="z-index: 1">
+                            <div class="basel-bg"></div>
+                            <div class="bot-intro" id="botIntro">
                 <span class="bot-logo">
                     <img src="https://s3.eu-west-1.amazonaws.com/imibot-production/assets/search-bot-icon.svg" alt="">
                 </span>
-            <div class="bot-details">
-                <div class="title">Sprint 20 Test Demo</div>
-                <div class="description">Test</div>
+                                <div class="bot-details">
+                                    <div class="title">Wisdom Bot</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--chat body starts-->
+                        <div class="chat-body" id="body"
+                             style="padding: 8px 6px; display: flex; flex-direction: column; z-index: 0">
+
+                        </div>
+                        <!--chat body ends-->
+                        <div class="footer">
+                            <input placeholder="Type a message" id="chat-input" dir="ltr" autocomplete="off" autofocus type="text">
+                            <span class="icon" id="chat-input-icon">
+                                <span class="fa fa-send"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="phone__notch">
+                    <div class="phone__speaker"></div>
+                    <div class="phone__camera"></div>
+                </div>
+            </div>
+            <div class="phone__btn">
+                <button class="phone__btn--power"></button>
+                <div class="phone__btn--volume">
+                    <button class="phone__btn--volume-up"></button>
+                    <button class="phone__btn--volume-down"></button>
+                </div>
+                <button class="phone__btn--mute"></button>
             </div>
         </div>
     </div>
-    <!--chat body starts-->
-    <div class="chat-body" id="body" style="padding: 8px 16px; display: flex; flex-direction: column">
-
-    </div>
-    <!--chat body ends-->
-    <div class="footer">
-        <input id="chat-input" autofocus type="text">
-        <span class="icon">
-                <span class="fa fa-send"></span>
-            </span>
-    </div>
 </div>
-<script src="main.ts"></script>
 
+<script src="main.ts"></script>
 </body>
 </html>
 

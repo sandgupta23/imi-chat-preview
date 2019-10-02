@@ -1,10 +1,10 @@
 import {makePostReq} from "./ajax";
 import {environment} from "./environment";
 import {IHeaderData} from "./typings/http";
-import {EBotMessageMediaType, IGeneratedMessageItem, IMessageData, ISendApiResp} from "./typings/send-api";
+import {EBotMessageMediaType, ESourceType, IGeneratedMessageItem, IMessageData, ISendApiResp} from "./typings/send-api";
 
 export function sendMessageToBot(bot_access_token: string, enterprise_unique_name: string, humanMessage: string): Promise<ISendApiResp> {
-    const url = 'https://staging.imibot.ai/api/v1/webhook/web/';
+    const url = 'https://dev.imibot.ai/api/v1/webhook/web/';
     const body = {
         "consumer": environment.consumer,
         "type": "human",
@@ -29,8 +29,8 @@ export function serializeGeneratedMessagesToPreviewMessages(generatedMessage: IG
             ...message,
             bot_message_id,
             time: Date.now(),
-            messageMediatype: null,
-            sourceType: 'bot',
+            messageMediaType: null,
+            sourceType: ESourceType.bot,
             isLast,
             response_language
         };
@@ -38,20 +38,20 @@ export function serializeGeneratedMessagesToPreviewMessages(generatedMessage: IG
         if (Object.keys(message)[0] === 'media') {
             messageData = {
                 ...messageData,
-                messageMediatype: message.media[0] && message.media[0].type,
+                messageMediaType: message.media[0] && message.media[0].type,
                 text: EBotMessageMediaType.image, // this is for preview of last message in chat room list,
             };
         } else if (Object.keys(message)[0] === 'quick_reply') {
             messageData = {
                 ...messageData,
-                messageMediatype: EBotMessageMediaType.quickReply, //
+                messageMediaType: EBotMessageMediaType.quickReply, //
                 text: (<any>message).quick_reply.text || EBotMessageMediaType.quickReply, // this is for preview of last message in chat room list
             };
         } else {
             /*if message type = text*/
             messageData = {
                 ...messageData,
-                messageMediatype: EBotMessageMediaType.text,
+                messageMediaType: EBotMessageMediaType.text,
             };
         }
 

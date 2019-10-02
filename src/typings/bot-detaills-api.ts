@@ -73,7 +73,7 @@ export interface IBotDetailsApiResp {
     "data_persistence_period": 0,
     "description": "",
     "enterprise_id": 4,
-    "enterprise_logo": "https://staging.imibot.ai/static/assets/img/connect-copy@2x.png",
+    "enterprise_logo": "https://dev.imibot.ai/static/assets/img/connect-copy@2x.png",
     "enterprise_name": "Ayesh",
     "error_message": "",
     "first_message": "",
