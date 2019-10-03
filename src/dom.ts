@@ -5,6 +5,7 @@ export const $chatInput = document.getElementById('chat-input') as HTMLInputElem
 export const $chatInputIcon = document.getElementById('chat-input-icon') as HTMLInputElement;
 export const $botIntro = document.getElementById('botIntro');
 export const $chatBody = document.getElementById('body');
+export const $envOptions = document.getElementById('env-options');
 
 export function setIntroDetails(intro: { logo: string, title: string, description: string }) {
     $botIntro.innerHTML = `<span class="bot-logo">
@@ -12,7 +13,12 @@ export function setIntroDetails(intro: { logo: string, title: string, descriptio
                 </span>
                 <div class="bot-details">
                     <div class="title">${intro.title}</div>
-                </div>`;
+                </div>
+                <div class="options">
+                    <i class="fa fa-ellipsis-v"></i>
+                </div>
+
+`;
 }
 
 export function AppendMessageInChatBody(messages: IMessageData[]) {

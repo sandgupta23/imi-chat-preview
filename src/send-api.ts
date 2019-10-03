@@ -4,7 +4,7 @@ import {IHeaderData} from "./typings/http";
 import {EBotMessageMediaType, ESourceType, IGeneratedMessageItem, IMessageData, ISendApiResp} from "./typings/send-api";
 
 export function sendMessageToBot(bot_access_token: string, enterprise_unique_name: string, humanMessage: string): Promise<ISendApiResp> {
-    const url = 'https://dev.imibot.ai/api/v1/webhook/web/';
+    const url = `https://${environment.root}imibot.ai/api/v1/webhook/web/`;
     const body = {
         "consumer": environment.consumer,
         "type": "human",

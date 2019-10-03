@@ -1,4 +1,4 @@
-import {$chatBody, $chatInput, $chatInputIcon, AppendMessageInChatBody, setIntroDetails} from "./dom";
+import {$chatBody, $chatInput, $chatInputIcon, $envOptions, AppendMessageInChatBody, setIntroDetails} from "./dom";
 import {getBotDetails} from "./bot-details";
 import {IBotDetailsApiResp} from "./typings/bot-detaills-api";
 import 'regenerator-runtime/runtime'
@@ -9,7 +9,7 @@ import {getQueryStringValue} from "./utility";
 
 async function initApp() {
     initEvents();
-    initLang();
+    initParams();
     const botDetails = await getBotDetails<IBotDetailsApiResp>();
     environment.bot_access_token = botDetails.bot_access_token;
     setIntroDetails({description: botDetails.description, logo: botDetails.logo, title: botDetails.name});
@@ -33,6 +33,10 @@ function initEvents() {
         }
         humanMessageHandler(humanMessage);
     });
+
+    $envOptions.addEventListener('click', () => {
+
+    });
 }
 
 async function humanMessageHandler(humanMessage: string) {
@@ -47,15 +51,34 @@ async function humanMessageHandler(humanMessage: string) {
 
 }
 
-function initLang() {
+function initParams() {
     const lang = getQueryStringValue('lang');
     if (lang === 'ar' || lang === 'rtl') {
         document.body.classList.add('lang-rtl');
         $chatInput.setAttribute("dir", "rtl");
     }
+
+    debugger;
+    const root = getQueryStringValue('root');
+    if (root) {
+        if (root === '.') {
+            environment.root = "";
+        } else {
+            environment.root = root + '.';
+        }
+
+    }
+    const enterprise_unique_name = getQueryStringValue('enterprise_unique_name');
+    if (enterprise_unique_name) {
+        environment.enterprise_unique_name = enterprise_unique_name;
+    }
+    const bot_unique_name = getQueryStringValue('bot_unique_name');
+    if (bot_unique_name) {
+        environment.bot_unique_name = bot_unique_name;
+    }
 }
 
-
-setTimeout(() => {
-    initApp().then(_ => console.log('app init success'));
-}, 2000);
+initApp().then(_ => console.log('app init success'));
+// setTimeout(() => {
+//
+// }, 2000);

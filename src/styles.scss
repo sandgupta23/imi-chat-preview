@@ -91,6 +91,7 @@ body {
           color: #191919;
           @include msg-shadow();
           text-align: left;
+          word-break: break-word;
         }
 
         .msg-img, .msg-audio, .msg-video {
@@ -148,6 +149,11 @@ body {
         width: 40px;
         border-radius: 50%;
       }
+    }
+
+    .options{
+      margin-right: 16px;
+      font-size: 18px;
     }
 
     .bot-details {
