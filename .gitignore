@@ -7,6 +7,8 @@
 
 # dependencies
 /node_modules
+/.cache
+src/.cache
 node_modules1
 
 cypress/screenshots

@@ -98,16 +98,17 @@ body {
 }
 
 .grid-container {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 60px 1fr 60px;
-  grid-template-areas: "header" "body" "footer";
+  //grid-template-columns: 1fr;
+  //grid-template-rows: 60px 1fr 60px;
+  //grid-template-areas: "header" "body" "footer";
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
 }
 
 .chat-body {
-  grid-area: body;
+  flex-grow: 1;
   overflow-y: auto;
   overflow-x: hidden;
 
@@ -190,7 +191,10 @@ body {
 }
 
 .header {
-  grid-area: header;
+  height: 60px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  //grid-area: header;
   border-bottom: 1px solid #e0e0e0;
   padding: 10px;
   display: flex;
@@ -237,6 +241,9 @@ body {
 }
 
 .footer {
+  height: 60px;
+  flex-shrink: 0;
+  flex-grow: 0;
   grid-area: footer;
   border-top: 1px solid #e0e0e0;
   display: flex;
