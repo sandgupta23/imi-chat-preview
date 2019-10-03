@@ -127,7 +127,7 @@ function getBotMessageTemplateForVideo(url: string) {
 function getBotMessageTemplateForImage(url: string) {
     const htmlStr = `
                 <div class="message-wrapper message-wrapper-bot">
-                    <img class="msg-img" src="${url}" alt=""/>
+                    <img class="msg-img click-to-zoom" src="${url}" alt=""/>
                 </div>
             `;
     return htmlStr;

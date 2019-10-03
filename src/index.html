@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>IMIBot.ai</title>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GITEX Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="description" content="DEWA - IMIbot.ai">
     <meta name="author" content="https://github.com/nea">
     <meta property="og:type" content="website"/>
@@ -21,6 +20,7 @@
     <link rel="stylesheet" href="styles.scss">
     <link rel="stylesheet" href="iphone.scss">
     <link rel="stylesheet" href="scroll-bar.scss">
+    <link rel="stylesheet" href="click-to-zoom.scss">
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
           integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -29,6 +29,12 @@
 <div class="loader">
     <img src="https://whizkey.ae/wisdom/static/media/rammas.42381205.gif" alt="">
 </div>
+<!-- The Modal -->
+<div id="myModal" class="modal2">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="img01">
+    <div id="caption"></div>
+</div>
 
 <div class="page1">
     <div class="page__content">
@@ -36,15 +42,16 @@
             <div class="phone__body">
                 <div class="phone__view">
                     <div id="phone-modal" class="modal1" style="">
+                        <i class="fa fa-times" id="close-modal1"></i>
                         <div class="lang-panel">
                             <h1>Select language</h1>
                             <div>
-                                <select id="lang-select" style="margin: 10px 10px">
+                                <select id="lang-select" style="margin: 20px 10px">
                                     <option value="en">English</option>
-                                    <option value="ar">arabic</option>
+                                    <option value="ar">عربى</option>
                                 </select>
                             </div>
-                            <button id="lang-submit">Submit</button>
+                            <button class="imi-button-primary" id="lang-submit">Submit</button>
                         </div>
                     </div>
                     <div class="grid-container">
@@ -96,7 +103,8 @@
     </div>
 </div>
 
-
+<!--7.2.5/polyfill.min.js: for promise support-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.2.5/polyfill.min.js"></script>
 <script src="main.ts"></script>
 </body>
 </html>
