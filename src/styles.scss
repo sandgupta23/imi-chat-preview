@@ -119,7 +119,7 @@ body {
 
   .msg-bubble {
     display: flex;
-
+    flex-shrink: 0;
     &.msg-bubble-human {
       flex-direction: column-reverse;
 
@@ -144,12 +144,14 @@ body {
     }
 
     .message-container {
+      flex-shrink: 0;
       margin-bottom: 8px;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
 
       .message-wrapper {
+        flex-shrink: 0;
         //max-width: 90%;
         margin-bottom: 8px;
         //display: inline-block;
