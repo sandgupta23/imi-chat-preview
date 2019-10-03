@@ -20,7 +20,7 @@ body {
   display: flex !important;
 }
 
-.d-none{
+.d-none {
   display: none !important;
 }
 
@@ -37,7 +37,8 @@ body {
 .bg-opaque {
   background: rgba(0, 0, 0, .32) !important;
   opacity: 0.2;
-  *{
+
+  * {
     opacity: 0.5;
   }
 }
@@ -91,6 +92,7 @@ body {
 .chat-body {
   grid-area: body;
   overflow-y: auto;
+  overflow-x: hidden;
 
   .message-wrapper, .time {
     animation: human-slide-right 0.5s;

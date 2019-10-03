@@ -14,9 +14,9 @@ export function sendMessageToBot(bot_access_token: string, enterprise_unique_nam
     };
 
     const headerData:IHeaderData = {
-        enterprise_unique_name: enterprise_unique_name,
+        // enterprise_unique_name: enterprise_unique_name,
         "bot-access-token": bot_access_token
-    }
+    };
     return makePostReq<ISendApiResp>({url, body, headerData})
 }
 
