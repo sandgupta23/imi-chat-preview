@@ -7,7 +7,7 @@ export const environment = {
     //bot_unique_name: "weatherytesting",
     // bot_unique_name:"Diliptest",
     enterprise_unique_name: "anirudh.t",
-    root: "staging",
+    root: "staging.",
     consumer: {
         uid: Date.now()
     }
