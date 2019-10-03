@@ -22,7 +22,7 @@ export function sendMessageToBot(bot_access_token: string, enterprise_unique_nam
 
 
 export function serializeGeneratedMessagesToPreviewMessages(generatedMessage: IGeneratedMessageItem[], bot_message_id?: number, response_language?): IMessageData[] {
-    debugger;
+
     return generatedMessage.map((message: IGeneratedMessageItem, index) => {
         const isLast = index === generatedMessage.length - 1;
         let messageData: IMessageData = {

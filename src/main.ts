@@ -80,7 +80,7 @@ function initEvents() {
     $langSubmit.addEventListener('click', ($event) => {
         const lang = $langSelect.value;
         if (lang) {
-            debugger;
+
             let splits = environment.bot_unique_name.split("_");
             splits.pop();
             environment.bot_unique_name = splits.join("_") + '_' + lang;

@@ -33,7 +33,7 @@ export function setIntroDetails(intro: { logo: string, title: string, descriptio
 export function AppendMessageInChatBody(messages: IMessageData[]) {
     let str = "";
     let frag = document.createDocumentFragment();
-    debugger;
+
     messages.forEach((message) => {
         if (message.text) {
             str = str + getBotMessageTemplateForText(message.text, message.sourceType);
@@ -65,7 +65,7 @@ export function AppendMessageInChatBody(messages: IMessageData[]) {
             </div>  
             
         `;
-    debugger;
+
     // $chatBody.innerHTML = $chatBody.innerHTML + str;
     frag.appendChild(getElementsFromHtmlStr(str));
     $chatBody.appendChild(frag);

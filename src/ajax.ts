@@ -14,7 +14,7 @@ export function makeGetReq<T>(reqObj: IGetReq): Promise<T> {
 }
 
 export function makePostReq<T>(reqObj: IPostReq): Promise<T> {
-    debugger;
+
     const xmlHttp = new XMLHttpRequest();
     xmlHttp.open("POST", reqObj.url, true); // true for asynchronous
     setHeaders(xmlHttp, reqObj.headerData);
