@@ -1,22 +1,69 @@
-import {$chatBody, $chatInput, $chatInputIcon, $envOptions, AppendMessageInChatBody, setIntroDetails} from "./dom";
+import {
+    $chatBody,
+    $chatFooter,
+    $chatInput,
+    $chatInputIcon,
+    $envOptions,
+    $langSelect,
+    $langSubmit,
+    $loader,
+    $phoneModel,
+    AppendMessageInChatBody,
+    setIntroDetails
+} from "./dom";
 import {getBotDetails} from "./bot-details";
 import {IBotDetailsApiResp} from "./typings/bot-detaills-api";
 import 'regenerator-runtime/runtime'
 import {sendMessageToBot, serializeGeneratedMessagesToPreviewMessages} from "./send-api";
 import {environment} from "./environment";
-import {ESourceType} from "./typings/send-api";
-import {getQueryStringValue} from "./utility";
+import {ESourceType, IMessageData} from "./typings/send-api";
+import {getQueryStringValue, updateQueryStringParameter} from "./utility";
+
+let isModelShown = false;
 
 async function initApp() {
     initEvents();
-    initParams();
+    initEnvironment();
+    $chatFooter.classList.add('d-none');
     const botDetails = await getBotDetails<IBotDetailsApiResp>();
+    $loader.classList.add('d-none');
+    $chatFooter.classList.remove('d-none');
     environment.bot_access_token = botDetails.bot_access_token;
     setIntroDetails({description: botDetails.description, logo: botDetails.logo, title: botDetails.name});
+    const messageData: IMessageData[] = [{
+        sourceType: ESourceType.bot,
+        'text': botDetails.first_message
+    }];
+    AppendMessageInChatBody(messageData);
+}
+
+
+function removeModal() {
+    $phoneModel.classList.add('d-none');
+    $phoneModel.classList.remove('d-flex');
+    $chatBody.classList.remove('bg-opaque');
+    $chatFooter.classList.remove('opacity-0');
 }
 
 
 function initEvents() {
+
+    $chatBody.addEventListener('click', ($event) => {
+        removeModal();
+    });
+    $langSubmit.addEventListener('click', ($event) => {
+        const lang = $langSelect.value;
+        if (lang) {
+            debugger;
+            let splits = environment.bot_unique_name.split("_");
+            splits.pop();
+            environment.bot_unique_name = splits.join("_") + '_' + lang;
+            let newUrl = updateQueryStringParameter(location.href, "bot_unique_name", environment.bot_unique_name);
+            newUrl = updateQueryStringParameter(newUrl, "lang", lang);
+            location.href = newUrl;
+            initEnvironment();
+        }
+    });
     $chatInput.addEventListener('keypress', ($event) => {
         if ($event.key === 'Enter') {
             let humanMessage = $chatInput.value;
@@ -35,7 +82,22 @@ function initEvents() {
     });
 
     $envOptions.addEventListener('click', () => {
-
+        let $phoneView = document.getElementsByClassName('chat-body')[0];
+        let $langPanel = $phoneModel.querySelector('.lang-panel') as HTMLElement;
+        if (!isModelShown) {
+            $phoneView.classList.add('bg-opaque');
+            $phoneModel.classList.add('d-flex');
+            $phoneModel.classList.remove('d-none');
+            $chatFooter.classList.add('opacity-0');
+            $langPanel.classList.add('d-flex');
+        } else {
+            $phoneView.classList.remove('bg-opaque');
+            $phoneModel.classList.remove('d-flex');
+            $phoneModel.classList.add('d-none');
+            $chatFooter.classList.remove('opacity-0');
+            $langPanel.classList.remove('d-flex');
+        }
+        isModelShown = !isModelShown
     });
 }
 
@@ -51,7 +113,7 @@ async function humanMessageHandler(humanMessage: string) {
 
 }
 
-function initParams() {
+function initEnvironment() {
     const lang = getQueryStringValue('lang');
     if (lang === 'ar' || lang === 'rtl') {
         document.body.classList.add('lang-rtl');

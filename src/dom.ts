@@ -5,25 +5,35 @@ export const $chatInput = document.getElementById('chat-input') as HTMLInputElem
 export const $chatInputIcon = document.getElementById('chat-input-icon') as HTMLInputElement;
 export const $botIntro = document.getElementById('botIntro');
 export const $chatBody = document.getElementById('body');
+export const $chatFooter = document.getElementsByClassName('footer')[0];
+export const $loader = document.getElementsByClassName('loader')[0];
 export const $envOptions = document.getElementById('env-options');
+export const $botTitle = document.getElementById('bot-title');
+export const $botLogo = document.getElementById('bot-logo') as HTMLImageElement;
+export const $phoneModel = document.getElementById('phone-modal');
+export const $langSelect = document.getElementById('lang-select') as HTMLSelectElement;
+export const $langSubmit = document.getElementById('lang-submit');
 
 export function setIntroDetails(intro: { logo: string, title: string, description: string }) {
-    $botIntro.innerHTML = `<span class="bot-logo">
-                    <img src="${'https://whizkey.ae/wisdom/static/media/rammas.42381205.gif'}" alt="">
-                </span>
-                <div class="bot-details">
-                    <div class="title">${intro.title}</div>
-                </div>
-                <div class="options">
-                    <i class="fa fa-ellipsis-v"></i>
-                </div>
+    $botLogo.src = 'https://whizkey.ae/wisdom/static/media/rammas.42381205.gif';//intro.logo;
+    $botTitle.textContent = intro.title;
+    // $botIntro.innerHTML = `<span class="bot-logo">
+    //                 <img src="${'https://whizkey.ae/wisdom/static/media/rammas.42381205.gif'}" alt="">
+    //             </span>
+    //             <div class="bot-details">
+    //                 <div class="title">${intro.title}</div>
+    //             </div>
+    //             <div class="options">
+    //                 <i class="fa fa-ellipsis-v"></i>
+    //             </div>
 
-`;
+// `;
 }
 
 export function AppendMessageInChatBody(messages: IMessageData[]) {
     let str = "";
     let frag = document.createDocumentFragment();
+    debugger;
     messages.forEach((message) => {
         if (message.text) {
             str = str + getBotMessageTemplateForText(message.text, message.sourceType);

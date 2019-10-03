@@ -22,7 +22,7 @@ export function sendMessageToBot(bot_access_token: string, enterprise_unique_nam
 
 
 export function serializeGeneratedMessagesToPreviewMessages(generatedMessage: IGeneratedMessageItem[], bot_message_id?: number, response_language?): IMessageData[] {
-
+    debugger;
     return generatedMessage.map((message: IGeneratedMessageItem, index) => {
         const isLast = index === generatedMessage.length - 1;
         let messageData: IMessageData = {
@@ -39,13 +39,13 @@ export function serializeGeneratedMessagesToPreviewMessages(generatedMessage: IG
             messageData = {
                 ...messageData,
                 messageMediaType: message.media[0] && message.media[0].type,
-                text: EBotMessageMediaType.image, // this is for preview of last message in chat room list,
+                // text: EBotMessageMediaType.image, // this is for preview of last message in chat room list,
             };
         } else if (Object.keys(message)[0] === 'quick_reply') {
             messageData = {
                 ...messageData,
                 messageMediaType: EBotMessageMediaType.quickReply, //
-                text: (<any>message).quick_reply.text || EBotMessageMediaType.quickReply, // this is for preview of last message in chat room list
+                // text: (<any>message).quick_reply.text || EBotMessageMediaType.quickReply, // this is for preview of last message in chat room list
             };
         } else {
             /*if message type = text*/
