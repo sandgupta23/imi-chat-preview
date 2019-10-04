@@ -148,7 +148,7 @@ function initEnvironment() {
     if (lang === 'ar' || lang === 'rtl') {
         document.body.classList.add('lang-rtl');
         $chatInput.setAttribute("dir", "rtl");
-        $chatInput.placeholder = 'نوشتن یک پیغام...';
+        $chatInput.placeholder = "أكتب السؤال ..";
     }
     const root = getQueryStringValue('root');
     if (root) {

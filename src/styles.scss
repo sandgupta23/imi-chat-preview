@@ -178,13 +178,18 @@ body {
         }
 
         .msg-img, .msg-audio, .msg-video {
-          max-width: 90%;
-          max-height: 200px;
-          padding: 10px;
+          //max-width: 90%;
+          //max-height: 200px;
+          //padding: 10px;
           background: #eaeaea;
           box-sizing: content-box;
           border-radius: 8px;
           @include msg-shadow();
+        }
+        .msg-audio, .msg-video {
+          max-width: 90%;
+          max-height: 200px;
+          padding: 10px;
         }
       }
 
@@ -263,6 +268,7 @@ body {
   #chat-input {
     //flex-grow: 1;
     width: 90%; //flex-grow: 1; is causing overflow???
+    font-size: 16px;
     outline: none;
     border: none;
     color: #696969;

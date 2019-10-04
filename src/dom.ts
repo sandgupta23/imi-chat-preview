@@ -51,7 +51,7 @@ export function AppendMessageInChatBody(messages: IMessageData[]) {
         }
     });
 
-    let humanClass = messages[0].sourceType === ESourceType.human? 'msg-bubble-human': '';
+    let humanClass = messages[0].sourceType === ESourceType.human ? 'msg-bubble-human' : '';
     let time = getTimeInHHMM();
     str = `
             <div xmlns="http://www.w3.org/1999/xhtml" class="msg-bubble ${humanClass}">
@@ -115,7 +115,7 @@ function getBotMessageTemplateForAudio(url: string) {
 function getBotMessageTemplateForVideo(url: string) {
     const htmlStr = `
                 <div class="message-wrapper  message-wrapper-bot">
-                    <video class="msg-video" controls="">
+                    <video class="msg-video" controls="true">
                         <source src="${url}"/> 
                         Your browser does not support HTML5 video. 
                     </video>
@@ -126,8 +126,9 @@ function getBotMessageTemplateForVideo(url: string) {
 
 function getBotMessageTemplateForImage(url: string) {
     const htmlStr = `
-                <div class="message-wrapper message-wrapper-bot">
-                    <img class="msg-img click-to-zoom" src="${url}" alt=""/>
+                <div class="message-wrapper message-wrapper-bot" 
+                style="width: 100%; padding-top: 100%; position: relative; margin-bottom: 20px; background:#80808017;">
+                    <img style="position:absolute; top: 50%; left: 0; right: 0; bottom: 0;width: 100%; transform: translateY(-50%)" class="msg-img click-to-zoom" src="${url}" alt=""/>
                 </div>
             `;
     return htmlStr;
