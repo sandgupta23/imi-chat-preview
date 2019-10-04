@@ -33,7 +33,7 @@ export function setIntroDetails(intro: { logo: string, title: string, descriptio
 export function AppendMessageInChatBody(messages: IMessageData[]) {
     let str = "";
     let frag = document.createDocumentFragment();
-
+    let videoStr = "";
     messages.forEach((message) => {
         if (message.text) {
             str = str + getBotMessageTemplateForText(message.text, message.sourceType);
@@ -44,6 +44,10 @@ export function AppendMessageInChatBody(messages: IMessageData[]) {
             }
             if (message.media.video_url) {
                 str = str + getBotMessageTemplateForVideo(message.media.video_url);
+                videoStr = videoStr + `<video autoplay="autoplay" muted="muted"  class="msg-video" controls="true" playsinline="playsinline">
+                <source src="${message.media.video_url}"/>
+                    Your browser does not support HTML5 video.
+                </video>`;
             }
             if (message.media.image_url) {
                 str = str + getBotMessageTemplateForImage(message.media.image_url);
@@ -67,8 +71,14 @@ export function AppendMessageInChatBody(messages: IMessageData[]) {
         `;
 
     // $chatBody.innerHTML = $chatBody.innerHTML + str;
-    frag.appendChild(getElementsFromHtmlStr(str));
+    const el = getElementsFromHtmlStr(str);
+    frag.appendChild(el);
     $chatBody.appendChild(frag);
+    let msgVid = document.getElementsByClassName('msg-video');
+    if (videoStr) {
+        const lastMsgVid = msgVid[msgVid.length - 1];
+        lastMsgVid.innerHTML = videoStr;
+    }
     resetChatInput();
     scrollBodyToBottom();
 }
@@ -113,12 +123,17 @@ function getBotMessageTemplateForAudio(url: string) {
 }
 
 function getBotMessageTemplateForVideo(url: string) {
+    // const htmlStr = `
+    //             <div class="message-wrapper  message-wrapper-bot">
+    //                 <video autoplay="autoplay" muted="muted"  class="msg-video" controls="true" playsinline="playsinline">
+    //                     <source src="${url}"/>
+    //                     Your browser does not support HTML5 video.
+    //                 </video>
+    //             </div>
+    //         `;
     const htmlStr = `
-                <div class="message-wrapper  message-wrapper-bot">
-                    <video autoplay="autoplay" muted="muted"  class="msg-video" controls="true" playsinline="playsinline">
-                        <source src="${url}"/> 
-                        Your browser does not support HTML5 video. 
-                    </video>
+                <div class="message-wrapper  message-wrapper-bot msg-video">
+                    
                 </div>
             `;
     return htmlStr;
