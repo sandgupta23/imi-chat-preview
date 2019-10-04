@@ -183,13 +183,13 @@ body {
           //padding: 10px;
           background: #eaeaea;
           box-sizing: content-box;
-          border-radius: 8px;
           @include msg-shadow();
         }
         .msg-audio, .msg-video {
           max-width: 90%;
           max-height: 200px;
           padding: 10px;
+          border-radius: 8px;
         }
       }
 
