@@ -115,7 +115,7 @@ function getBotMessageTemplateForAudio(url: string) {
 function getBotMessageTemplateForVideo(url: string) {
     const htmlStr = `
                 <div class="message-wrapper  message-wrapper-bot">
-                    <video class="msg-video" controls="true">
+                    <video autoplay muted  class="msg-video" controls="true" playsinline>
                         <source src="${url}"/> 
                         Your browser does not support HTML5 video. 
                     </video>
