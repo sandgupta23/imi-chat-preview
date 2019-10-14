@@ -30,7 +30,7 @@
     "npm-run-all": "^4.0.0",
     "onchange": "^3.2.0",
     "parcel": "^1.12.3",
-    "sass": "^1.22.12",
+    "sass": "^1.23.0",
     "typescript": "^3.6.2"
   },
   "dependencies": {

@@ -18,23 +18,25 @@ import {sendMessageToBot, serializeGeneratedMessagesToPreviewMessages} from "./s
 import {environment} from "./environment";
 import {ESourceType, IMessageData} from "./typings/send-api";
 import {getQueryStringValue, updateQueryStringParameter} from "./utility";
+import {data} from "./mock-data";
 
 let isModelShown = false;
 
 async function initApp() {
+
     initEvents();
-    initEnvironment();
-    $chatFooter.classList.add('d-none');
+    // initEnvironment();
+    // $chatFooter.classList.add('d-none');
     const botDetails = await getBotDetails<IBotDetailsApiResp>();
     $loader.classList.add('d-none');
     $chatFooter.classList.remove('d-none');
-    environment.bot_access_token = botDetails.bot_access_token;
-    setIntroDetails({description: botDetails.description, logo: botDetails.logo, title: botDetails.name});
-    const messageData: IMessageData[] = [{
-        sourceType: ESourceType.bot,
-        'text': botDetails.first_message
-    }];
-    AppendMessageInChatBody(messageData);
+    // environment.bot_access_token = botDetails.bot_access_token;
+    // setIntroDetails({description: botDetails.description, logo: botDetails.logo, title: botDetails.name});
+    // const messageData: IMessageData[] = [{
+    //     sourceType: ESourceType.bot,
+    //     'text': botDetails.first_message
+    // }];
+    AppendMessageInChatBody(data.generated_msg);
 }
 
 
@@ -51,11 +53,16 @@ function initEvents() {
     document.getElementById('close-modal1').addEventListener('click', ($event) => {
         removeModal();
     });
+
+
+    console.log($chatBody);
     $chatBody.addEventListener('click', ($event) => {
+
+        const target = $event.target as HTMLElement;
         removeModal();
-        debugger;
+
         let img = $event.target as HTMLImageElement;
-        if(img.classList.contains('click-to-zoom')){
+        if (img.classList.contains('click-to-zoom')) {
             /*zoom the div  */
             // Get the modal
             const modal = document.getElementById("myModal");
@@ -64,19 +71,59 @@ function initEvents() {
             const modalImg = document.getElementById("img01") as HTMLImageElement;
             const captionText = document.getElementById("caption");
             // img.onclick = function(){
-                modal.style.display = "block";
-                modalImg.src = img.src;
-                // captionText.innerHTML = this.alt;
+            modal.style.display = "block";
+            modalImg.src = img.src;
+            // captionText.innerHTML = this.alt;
             // }
 
 // Get the <span> element that closes the modal
             const span = document.getElementsByClassName("close")[0] as HTMLElement;
 
 // When the user clicks on <span> (x), close the modal
-            span.onclick = function() {
+            span.onclick = function () {
                 modal.style.display = "none";
             }
         }
+
+        if (img.classList) {
+
+        }
+
+        if (target.classList.contains('control')) {
+            const itemInView = 2;
+            const $carasalContainer = findParentWithClass(target, 'carousal-container') as HTMLElement;
+            const shouldMoveRight = target.classList.contains('control-right');
+            const $carasalInner = $carasalContainer.querySelector('.carousal-container-inner') as HTMLElement;
+            const $carasalItemLength = ($carasalContainer.querySelectorAll('.item')).length;
+            let dataStep = Number($carasalContainer.getAttribute('data-step'));
+            $carasalContainer.classList.remove('hide-left-control');
+            $carasalContainer.classList.remove('hide-right-control');
+            if ((dataStep < $carasalItemLength - itemInView) && shouldMoveRight) {
+                dataStep++;
+                if (dataStep === ($carasalItemLength - itemInView)) {
+                    setTimeout(()=>{
+                        $carasalContainer.classList.add('hide-right-control');
+                    },350);
+                }
+            } else if ((dataStep > 0) && !shouldMoveRight) {
+                dataStep--;
+                if (dataStep === 0) {
+                    setTimeout(() => {
+                        $carasalContainer.classList.add('hide-left-control');
+                    }, 350);
+                }
+            } else {
+                return;
+            }
+
+            $carasalContainer.setAttribute('data-step', dataStep.toString());
+            const carasalContainerWidth = $carasalContainer.offsetWidth;
+            const itemWidth = ($carasalInner.querySelector('.item') as HTMLElement).offsetWidth;
+            const base = (itemWidth*100)/carasalContainerWidth;
+            $carasalInner.style.transform = `translateX(${-1 * base * dataStep}%)`;
+        }
+
+
     });
     $langSubmit.addEventListener('click', ($event) => {
         const lang = $langSelect.value;
@@ -128,7 +175,6 @@ function initEvents() {
     });
 
 
-
 }
 
 async function humanMessageHandler(humanMessage: string) {
@@ -166,6 +212,16 @@ function initEnvironment() {
     const bot_unique_name = getQueryStringValue('bot_unique_name');
     if (bot_unique_name) {
         environment.bot_unique_name = bot_unique_name;
+    }
+
+}
+
+function findParentWithClass($child, className) {
+    while ($child) {
+        if ($child.classList.contains(className)) {
+            return $child;
+        }
+        $child = $child.parentElement;
     }
 }
 

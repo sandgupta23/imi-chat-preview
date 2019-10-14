@@ -280,5 +280,6 @@ export interface IMessageData extends IGeneratedMessageItem {
         audio_url: string,
         image_url: string,
         video_url: string,
+        length:null
     }
 }

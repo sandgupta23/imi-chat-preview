@@ -38,6 +38,9 @@ export function AppendMessageInChatBody(messages: IMessageData[]) {
         if (message.text) {
             str = str + getBotMessageTemplateForText(message.text, message.sourceType);
         }
+        if (message.quick_reply) {
+            str = str + getBotMessageTemplateForText(message.text, message.sourceType);
+        }
         if (message.media) {
             if (message.media.audio_url) {
                 str = str + getBotMessageTemplateForAudio(message.media.audio_url);
@@ -51,6 +54,10 @@ export function AppendMessageInChatBody(messages: IMessageData[]) {
             }
             if (message.media.image_url) {
                 str = str + getBotMessageTemplateForImage(message.media.image_url);
+            }
+
+            if (message.media.length) {
+                str = str + getBotMessageTemplateForCarousal(message.media);
             }
         }
     });
@@ -71,9 +78,34 @@ export function AppendMessageInChatBody(messages: IMessageData[]) {
         `;
 
     // $chatBody.innerHTML = $chatBody.innerHTML + str;
-    const el = getElementsFromHtmlStr(str);
+    const el = getElementsFromHtmlStr(str) as HTMLElement;
+    const carousal = el.querySelector('.carousal-container') as HTMLElement;
     frag.appendChild(el);
+    carousal.style.opacity = '0';
     $chatBody.appendChild(frag);
+
+
+    let carousalWidth = $chatBody.offsetWidth as any - 60;
+    debugger;
+    if (carousalWidth > 0 && carousalWidth < 225) {
+        // carousalWidth = carousal;
+        // carousalWidth = 225;
+        carousal.setAttribute('data-itemToShow', '1');
+    } else {
+        if (carousalWidth > 0 && carousalWidth < 450) {
+            carousalWidth = 225;
+            carousal.setAttribute('data-itemToShow', '1');
+        } else if (carousalWidth >= 450 && carousalWidth < 675) {
+            carousalWidth = 450;
+            carousal.setAttribute('data-itemToShow', '2');
+        } else if (carousalWidth >= 675) {
+            carousalWidth = 675;
+            carousal.setAttribute('data-itemToShow', '3');
+        }
+    }
+    carousal.style.width = carousalWidth + 'px';
+    carousal.style.opacity = '1';
+
     let msgVid = document.getElementsByClassName('msg-video');
     if (videoStr) {
         const lastMsgVid = msgVid[msgVid.length - 1];
@@ -98,19 +130,62 @@ function getElementsFromHtmlStr(htmlStr: string) {
 
 
 function getBotMessageTemplateForText(text, source?: ESourceType) {
-    const fragment = document.createDocumentFragment();
-    let botLogoStr = `<!--<div class="msg-bot-logo">-->
-<!--                        <img style="height: 100%; width: 100%" src="https://whizkey.ae/wisdom/static/media/rammas.42381205.gif" alt=""/>-->
-<!--                    </div>-->`;
-    // if(source === ESourceType.human){
-    //     botLogoStr = "";
-    // }
     const htmlStr = `
                 <div class="message-wrapper ${source === ESourceType.human ? 'message-wrapper-human' : ''}">
                     <div class="content">${text}</div>
                 </div>
             `;
     return htmlStr;
+}
+
+function createCarousalButtons(buttons) {
+    let str = "";
+    buttons.forEach((button) => {
+        str = str + `
+            <li class="title" data-payload="${button.payload}" data-type="${button.type}">${button.title}</li>
+        `;
+    });
+    return str;
+}
+
+function createCarousalItems(mediaItem: any) {
+    return `
+    <div class="item">
+            <div class="bot-carousal-item shadow-theme">
+                <div class="banner">
+                    <img src="https://s3.eu-west-1.amazonaws.com/imibot-production/assets/search-bot-icon.svg" alt=""/>
+                </div>
+                <ul style="list-style: none">
+                    <li class="title">
+                        ${mediaItem.title}
+                    </li>
+                    ${createCarousalButtons(mediaItem.buttons)}
+                </ul>
+            </div>
+        </div>
+    `
+}
+
+function createCarousalStr(media) {
+    let str = "";
+    media.forEach((mediaItem) => {
+        str = str + createCarousalItems(mediaItem);
+    });
+    return str;
+}
+
+function getBotMessageTemplateForCarousal(media, source?: ESourceType) {
+
+    const carousalStr = createCarousalStr(media);
+    return `
+               <div class="carousal-container hide-left-control" data-step="0">
+                   <div class="carousal-container-inner">
+                        ${carousalStr}
+                   </div>
+                   <div class="fa fa-angle-left control control-left"></div>
+                   <div class="fa fa-angle-right control control-right"></div>
+                </div>
+            `;
 }
 
 function getBotMessageTemplateForAudio(url: string) {
