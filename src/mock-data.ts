@@ -8,7 +8,7 @@ export const data = {
         {
             "text": "asdad"
         },
-        {
+        {quick_reply:{
             "quick_replies": [
                 {
                     "content_type": "text",
@@ -52,7 +52,7 @@ export const data = {
                 }
             ],
             "text": "Would you like us to activate this ?"
-        },
+        }},
         {
             "media": [
                 {
@@ -92,18 +92,6 @@ export const data = {
                     "url": "https://s3-us-west-2.amazonaws.com/o2bot/image/carousel_pay_bills.jpg"
                 }
             ]
-        },
-        {
-            "quick_reply": {
-                "quick_replies": [
-                    {
-                        "content_type": "text",
-                        "payload": "what can you do?",
-                        "title": "qqbutton"
-                    }
-                ],
-                "text": "Would you like us to activate this ?"
-            }
         }
     ],
     "language": "en",

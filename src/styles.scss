@@ -129,6 +129,22 @@ ul, li{
     animation: human-slide-right 0.5s;
     animation-fill-mode: forwards;
   }
+  .message-wrapper-quick-reply{
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    button{
+      flex-shrink: 0;
+      margin-right: 10px;
+      background-color: white;
+      color: black;
+      height: 32px;
+      border: 1px solid black;
+      border-radius: 5px;
+      margin-bottom: 5px;
+      cursor: pointer;
+    }
+  }
 
   .msg-bubble {
     display: flex;

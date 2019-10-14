@@ -39,7 +39,8 @@ export function AppendMessageInChatBody(messages: IMessageData[]) {
             str = str + getBotMessageTemplateForText(message.text, message.sourceType);
         }
         if (message.quick_reply) {
-            str = str + getBotMessageTemplateForText(message.text, message.sourceType);
+            debugger;
+            str = str + getBotMessageTemplateForQuickReply(message.quick_reply, message.sourceType);
         }
         if (message.media) {
             if (message.media.audio_url) {
@@ -126,6 +127,24 @@ export function resetChatInput() {
 function getElementsFromHtmlStr(htmlStr: string) {
     const doc = new DOMParser().parseFromString(htmlStr, "text/xml");
     return doc.firstChild;
+}
+
+function createQuickReplyButtons(quick_reply) {
+    let str = "";
+    quick_reply.quick_replies.forEach((quick_reply)=>{
+        str = str + `<button data-payload="${quick_reply.payload}">${quick_reply.title}</button>`
+    });
+    debugger;
+    return str;
+}
+
+function getBotMessageTemplateForQuickReply(quick_replies, source?: ESourceType) {
+    const htmlStr = `
+                <div class="message-wrapper-quick-reply">
+                    ${createQuickReplyButtons(quick_replies)}
+                </div>
+            `;
+    return htmlStr;
 }
 
 
