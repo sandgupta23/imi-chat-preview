@@ -8,7 +8,7 @@ import {
     $langSubmit,
     $loader,
     $phoneModel,
-    AppendMessageInChatBody,
+    AppendMessageInChatBody, domInit,
     setIntroDetails
 } from "./dom";
 import {getBotDetails} from "./bot-details";
@@ -21,23 +21,39 @@ import {getQueryStringValue, updateQueryStringParameter} from "./utility";
 import {data} from "./mock-data";
 
 let isModelShown = false;
-
+// const imiPreview = new ImiPreview();
+// imiPreview.init('body');
+// imiPreview.appendMessageInChatBody(data.generated_msg);
 async function initApp() {
-
     initEvents();
     // initEnvironment();
     // $chatFooter.classList.add('d-none');
-    const botDetails = await getBotDetails<IBotDetailsApiResp>();
-    $loader.classList.add('d-none');
-    $chatFooter.classList.remove('d-none');
+    // const botDetails = await getBotDetails<IBotDetailsApiResp>();
+    // $loader.classList.add('d-none');
+    // $chatFooter.classList.remove('d-none');
     // environment.bot_access_token = botDetails.bot_access_token;
     // setIntroDetails({description: botDetails.description, logo: botDetails.logo, title: botDetails.name});
     // const messageData: IMessageData[] = [{
     //     sourceType: ESourceType.bot,
     //     'text': botDetails.first_message
     // }];
-    AppendMessageInChatBody(data.generated_msg);
+    // AppendMessageInChatBody(data.generated_msg);
 }
+
+class ImiPreview {
+    init(selector) {
+        let mainParent = document.querySelector(selector) as HTMLElement;
+        mainParent.innerHTML = mainBodyTemplate();
+        domInit();
+        initApp();
+    }
+
+    appendMessageInChatBody(generated_msg) {
+        AppendMessageInChatBody(generated_msg);
+    }
+}
+
+(<any>window).ImiPreview = ImiPreview;
 
 
 function removeModal() {
@@ -101,9 +117,9 @@ function initEvents() {
             if ((dataStep < $carasalItemLength - itemInView) && shouldMoveRight) {
                 dataStep++;
                 if (dataStep === ($carasalItemLength - itemInView)) {
-                    setTimeout(()=>{
+                    setTimeout(() => {
                         $carasalContainer.classList.add('hide-right-control');
-                    },350);
+                    }, 350);
                 }
             } else if ((dataStep > 0) && !shouldMoveRight) {
                 dataStep--;
@@ -119,7 +135,7 @@ function initEvents() {
             $carasalContainer.setAttribute('data-step', dataStep.toString());
             const carasalContainerWidth = $carasalContainer.offsetWidth;
             const itemWidth = ($carasalInner.querySelector('.item') as HTMLElement).offsetWidth;
-            const base = (itemWidth*100)/carasalContainerWidth;
+            const base = (itemWidth * 100) / carasalContainerWidth;
             $carasalInner.style.transform = `translateX(${-1 * base * dataStep}%)`;
         }
 
@@ -229,3 +245,87 @@ initApp().then(_ => console.log('app init success'));
 // setTimeout(() => {
 //
 // }, 2000);
+
+
+function mainBodyTemplate() {
+    return `
+<div class="loader">
+    <img src="https://whizkey.ae/wisdom/static/media/rammas.42381205.gif" alt="">
+</div>
+    <!-- The Modal -->
+<div id="myModal" class="modal2">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="img01">
+    <div id="caption"></div>
+</div>
+
+<div class="page1">
+    <div class="page__content">
+        <div class="phone">
+            <div class="phone__body">
+                <div class="phone__view">
+                    <div id="phone-modal" class="modal1" style="">
+                        <i class="fa fa-times" id="close-modal1"></i>
+                        <div class="lang-panel">
+                            <h1>Select language</h1>
+                            <div>
+                                <select id="lang-select">
+                                    <option value="en">English</option>
+                                    <option value="ar" style="direction: rtl;">عربي</option>
+                                </select>
+                            </div>
+                            <button class="imi-button-primary" id="lang-submit">Submit</button>
+                        </div>
+                    </div>
+                    <div class="grid-container">
+
+                        <div class="header" style="z-index: 1">
+                            <div class="basel-bg"></div>
+                            <div class="bot-intro" id="botIntro">
+                                <span class="bot-logo">
+                                    <img id="bot-logo" src="https://whizkey.ae/wisdom/static/media/rammas.42381205.gif"
+                                         alt="">
+                                </span>
+                                <div class="bot-details">
+                                    <div id="bot-title" class="title"></div>
+                                </div>
+                                <div class="options" id="env-options">
+                                    <i class="fa fa-ellipsis-v"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <!--chat body starts-->
+                        <div class="chat-body" id="body"
+                             style="padding: 8px 6px; display: flex; flex-direction: column; z-index: 0">
+
+                        </div>
+                        <!--chat body ends-->
+                        <div class="footer">
+                            <input placeholder="Type a message" id="chat-input" dir="ltr" autocomplete="off" autofocus
+                                   type="text">
+                            <span class="icon" id="chat-input-icon">
+                                <span class="fa fa-send"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="phone__notch">
+                    <div class="phone__speaker"></div>
+                    <div class="phone__camera"></div>
+                </div>
+            </div>
+            <div class="phone__btn">
+                <button class="phone__btn--power"></button>
+                <div class="phone__btn--volume">
+                    <button class="phone__btn--volume-up"></button>
+                    <button class="phone__btn--volume-down"></button>
+                </div>
+                <button class="phone__btn--mute"></button>
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+    `
+}

@@ -18,92 +18,90 @@
           content="The bot building platform for your enterprise"/>
 
     <link rel="stylesheet" href="styles.scss">
-    <link rel="stylesheet" href="iphone.scss">
-    <link rel="stylesheet" href="scroll-bar.scss">
-    <link rel="stylesheet" href="click-to-zoom.scss">
+<!--    <link rel="stylesheet" href="iphone.scss">-->
+<!--    <link rel="stylesheet" href="scroll-bar.scss">-->
+<!--    <link rel="stylesheet" href="click-to-zoom.scss">-->
+<!--    <link rel="stylesheet" href="carousal.scss">-->
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
           integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
-    <link rel="stylesheet" href="carousal.scss">
 </head>
 <body class="dewa-theme">
-<div class="loader">
-    <img src="https://whizkey.ae/wisdom/static/media/rammas.42381205.gif" alt="">
-</div>
-<!-- The Modal -->
-<div id="myModal" class="modal2">
-    <span class="close">&times;</span>
-    <img class="modal-content" id="img01">
-    <div id="caption"></div>
-</div>
 
-<div class="page1">
-    <div class="page__content">
-        <div class="phone">
-            <div class="phone__body">
-                <div class="phone__view">
-                    <div id="phone-modal" class="modal1" style="">
-                        <i class="fa fa-times" id="close-modal1"></i>
-                        <div class="lang-panel">
-                            <h1>Select language</h1>
-                            <div>
-                                <select id="lang-select">
-                                    <option value="en">English</option>
-                                    <option value="ar" style="direction: rtl;">عربي</option>
-                                </select>
-                            </div>
-                            <button class="imi-button-primary" id="lang-submit">Submit</button>
-                        </div>
-                    </div>
-                    <div class="grid-container">
+<!--&lt;!&ndash; The Modal &ndash;&gt;-->
+<!--<div id="myModal" class="modal2">-->
+<!--    <span class="close">&times;</span>-->
+<!--    <img class="modal-content" id="img01">-->
+<!--    <div id="caption"></div>-->
+<!--</div>-->
 
-                        <div class="header" style="z-index: 1">
-                            <div class="basel-bg"></div>
-                            <div class="bot-intro" id="botIntro">
-                                <span class="bot-logo">
-                                    <img id="bot-logo" src="https://whizkey.ae/wisdom/static/media/rammas.42381205.gif"
-                                         alt="">
-                                </span>
-                                <div class="bot-details">
-                                    <div id="bot-title" class="title"></div>
-                                </div>
-                                <div class="options" id="env-options">
-                                    <i class="fa fa-ellipsis-v"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <!--chat body starts-->
-                        <div class="chat-body" id="body"
-                             style="padding: 8px 6px; display: flex; flex-direction: column; z-index: 0">
+<!--<div class="page1">-->
+<!--    <div class="page__content">-->
+<!--        <div class="phone">-->
+<!--            <div class="phone__body">-->
+<!--                <div class="phone__view">-->
+<!--                    <div id="phone-modal" class="modal1" style="">-->
+<!--                        <i class="fa fa-times" id="close-modal1"></i>-->
+<!--                        <div class="lang-panel">-->
+<!--                            <h1>Select language</h1>-->
+<!--                            <div>-->
+<!--                                <select id="lang-select">-->
+<!--                                    <option value="en">English</option>-->
+<!--                                    <option value="ar" style="direction: rtl;">عربي</option>-->
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                            <button class="imi-button-primary" id="lang-submit">Submit</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="grid-container">-->
 
-                        </div>
-                        <!--chat body ends-->
-                        <div class="footer">
-                            <input placeholder="Type a message" id="chat-input" dir="ltr" autocomplete="off" autofocus
-                                   type="text">
-                            <span class="icon" id="chat-input-icon">
-                                <span class="fa fa-send"></span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="phone__notch">
-                    <div class="phone__speaker"></div>
-                    <div class="phone__camera"></div>
-                </div>
-            </div>
-            <div class="phone__btn">
-                <button class="phone__btn--power"></button>
-                <div class="phone__btn--volume">
-                    <button class="phone__btn--volume-up"></button>
-                    <button class="phone__btn--volume-down"></button>
-                </div>
-                <button class="phone__btn--mute"></button>
-            </div>
-        </div>
-    </div>
-</div>
+<!--                        <div class="header" style="z-index: 1">-->
+<!--                            <div class="basel-bg"></div>-->
+<!--                            <div class="bot-intro" id="botIntro">-->
+<!--                                <span class="bot-logo">-->
+<!--                                    <img id="bot-logo" src="https://whizkey.ae/wisdom/static/media/rammas.42381205.gif"-->
+<!--                                         alt="">-->
+<!--                                </span>-->
+<!--                                <div class="bot-details">-->
+<!--                                    <div id="bot-title" class="title"></div>-->
+<!--                                </div>-->
+<!--                                <div class="options" id="env-options">-->
+<!--                                    <i class="fa fa-ellipsis-v"></i>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        &lt;!&ndash;chat body starts&ndash;&gt;-->
+<!--                        <div class="chat-body" id="body"-->
+<!--                             style="padding: 8px 6px; display: flex; flex-direction: column; z-index: 0">-->
+
+<!--                        </div>-->
+<!--                        &lt;!&ndash;chat body ends&ndash;&gt;-->
+<!--                        <div class="footer">-->
+<!--                            <input placeholder="Type a message" id="chat-input" dir="ltr" autocomplete="off" autofocus-->
+<!--                                   type="text">-->
+<!--                            <span class="icon" id="chat-input-icon">-->
+<!--                                <span class="fa fa-send"></span>-->
+<!--                            </span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="phone__notch">-->
+<!--                    <div class="phone__speaker"></div>-->
+<!--                    <div class="phone__camera"></div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="phone__btn">-->
+<!--                <button class="phone__btn&#45;&#45;power"></button>-->
+<!--                <div class="phone__btn&#45;&#45;volume">-->
+<!--                    <button class="phone__btn&#45;&#45;volume-up"></button>-->
+<!--                    <button class="phone__btn&#45;&#45;volume-down"></button>-->
+<!--                </div>-->
+<!--                <button class="phone__btn&#45;&#45;mute"></button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 
 <!--7.2.5/polyfill.min.js: for promise support-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.2.5/polyfill.min.js"></script>

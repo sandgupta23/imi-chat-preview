@@ -1,18 +1,32 @@
 import {ESourceType, IMessageData} from "./typings/send-api";
 import {getTimeInHHMM} from "./utility";
+export let $chatInput;
+export let $chatInputIcon;
+export let $botIntro;
+export let $chatBody;
+export let $chatFooter;
+export let $loader;
+export let $envOptions;
+export let $botTitle;
+export let $botLogo;
+export let $phoneModel;
+export let $langSelect;
+export let $langSubmit;
 
-export const $chatInput = document.getElementById('chat-input') as HTMLInputElement;
-export const $chatInputIcon = document.getElementById('chat-input-icon') as HTMLInputElement;
-export const $botIntro = document.getElementById('botIntro');
-export const $chatBody = document.getElementById('body');
-export const $chatFooter = document.getElementsByClassName('footer')[0];
-export const $loader = document.getElementsByClassName('loader')[0];
-export const $envOptions = document.getElementById('env-options');
-export const $botTitle = document.getElementById('bot-title');
-export const $botLogo = document.getElementById('bot-logo') as HTMLImageElement;
-export const $phoneModel = document.getElementById('phone-modal');
-export const $langSelect = document.getElementById('lang-select') as HTMLSelectElement;
-export const $langSubmit = document.getElementById('lang-submit');
+export function domInit() {
+    $chatInput = document.getElementById('chat-input') as HTMLInputElement;
+    $chatInputIcon = document.getElementById('chat-input-icon') as HTMLInputElement;
+    $botIntro = document.getElementById('botIntro');
+    $chatBody = document.getElementById('body');
+    $chatFooter = document.getElementsByClassName('footer')[0];
+    $loader = document.getElementsByClassName('loader')[0];
+    $envOptions = document.getElementById('env-options');
+    $botTitle = document.getElementById('bot-title');
+    $botLogo = document.getElementById('bot-logo') as HTMLImageElement;
+    $phoneModel = document.getElementById('phone-modal');
+    $langSelect = document.getElementById('lang-select') as HTMLSelectElement;
+    $langSubmit = document.getElementById('lang-submit');
+}
 
 export function setIntroDetails(intro: { logo: string, title: string, description: string }) {
     $botLogo.src = 'https://whizkey.ae/wisdom/static/media/rammas.42381205.gif';//intro.logo;
@@ -242,4 +256,5 @@ function getBotMessageTemplateForImage(url: string) {
             `;
     return htmlStr;
 }
+
 

@@ -1,3 +1,7 @@
+@import "iphone";
+@import "scroll-bar";
+@import "carousal";
+@import "click-to-zoom";
 $color-brand: #34b233;
 
 body {
@@ -391,7 +395,7 @@ ul, li{
 }
 
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 1600px) {
   .grid-container {
     position: fixed !important;
     padding: 0 !important;

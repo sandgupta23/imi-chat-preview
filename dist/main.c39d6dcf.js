@@ -117,28 +117,170 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"dom.ts":[function(require,module,exports) {
+})({"typings/send-api.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.$chatInput = document.getElementById('chat-input');
-exports.$botIntro = document.getElementById('botIntro');
-exports.$chatBody = document.getElementById('body');
+var EChatFrame;
+
+(function (EChatFrame) {
+  EChatFrame["WELCOME_BOX"] = "WELCOME_BOX";
+  EChatFrame["CHAT_LIST"] = "CHAT_LIST";
+  EChatFrame["CHAT_BOX"] = "CHAT_BOX";
+})(EChatFrame = exports.EChatFrame || (exports.EChatFrame = {}));
+
+var EBotMessageMediaType;
+
+(function (EBotMessageMediaType) {
+  EBotMessageMediaType["image"] = "image";
+  EBotMessageMediaType["text"] = "text";
+  EBotMessageMediaType["quickReply"] = "quickReply";
+  EBotMessageMediaType["bot_thinking"] = "bot_thinking";
+})(EBotMessageMediaType = exports.EBotMessageMediaType || (exports.EBotMessageMediaType = {}));
+
+var ESourceType;
+
+(function (ESourceType) {
+  ESourceType["bot"] = "bot";
+  ESourceType["human"] = "human";
+})(ESourceType = exports.ESourceType || (exports.ESourceType = {}));
+},{}],"utility.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function getTimeInHHMM() {
+  var time = new Date();
+  return ("0" + time.getHours()).slice(-2) + ":" + ("0" + time.getMinutes()).slice(-2);
+}
+
+exports.getTimeInHHMM = getTimeInHHMM;
+
+function getQueryStringValue(key) {
+  return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
+}
+
+exports.getQueryStringValue = getQueryStringValue;
+
+function updateQueryStringParameter(uri, key, value) {
+  var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+  var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+
+  if (uri.match(re)) {
+    return uri.replace(re, '$1' + key + "=" + value + '$2');
+  } else {
+    return uri + separator + key + "=" + value;
+  }
+}
+
+exports.updateQueryStringParameter = updateQueryStringParameter;
+},{}],"dom.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var send_api_1 = require("./typings/send-api");
+
+var utility_1 = require("./utility");
+
+function domInit() {
+  exports.$chatInput = document.getElementById('chat-input');
+  exports.$chatInputIcon = document.getElementById('chat-input-icon');
+  exports.$botIntro = document.getElementById('botIntro');
+  exports.$chatBody = document.getElementById('body');
+  exports.$chatFooter = document.getElementsByClassName('footer')[0];
+  exports.$loader = document.getElementsByClassName('loader')[0];
+  exports.$envOptions = document.getElementById('env-options');
+  exports.$botTitle = document.getElementById('bot-title');
+  exports.$botLogo = document.getElementById('bot-logo');
+  exports.$phoneModel = document.getElementById('phone-modal');
+  exports.$langSelect = document.getElementById('lang-select');
+  exports.$langSubmit = document.getElementById('lang-submit');
+}
+
+exports.domInit = domInit;
 
 function setIntroDetails(intro) {
-  exports.$botIntro.innerHTML = "<span class=\"bot-logo\">\n                    <img src=\"".concat(intro.logo, "\" alt=\"\">\n                </span>\n                <div class=\"bot-details\">\n                    <div class=\"title\">").concat(intro.title, "</div>\n                    <div class=\"description\">").concat(intro.description, "</div>\n                </div>");
+  exports.$botLogo.src = 'https://whizkey.ae/wisdom/static/media/rammas.42381205.gif';
+  exports.$botTitle.textContent = intro.title;
 }
 
 exports.setIntroDetails = setIntroDetails;
 
 function AppendMessageInChatBody(messages) {
   var str = "";
+  var frag = document.createDocumentFragment();
+  var videoStr = "";
   messages.forEach(function (message) {
-    str = str + getBotMessageTemplate(message.text);
+    if (message.text) {
+      str = str + getBotMessageTemplateForText(message.text, message.sourceType);
+    }
+
+    if (message.quick_reply) {
+      debugger;
+      str = str + getBotMessageTemplateForQuickReply(message.quick_reply, message.sourceType);
+    }
+
+    if (message.media) {
+      if (message.media.audio_url) {
+        str = str + getBotMessageTemplateForAudio(message.media.audio_url);
+      }
+
+      if (message.media.video_url) {
+        str = str + getBotMessageTemplateForVideo(message.media.video_url);
+        videoStr = videoStr + ("<video autoplay=\"autoplay\" muted=\"muted\"  class=\"msg-video\" controls=\"true\" playsinline=\"playsinline\">\n                <source src=\"" + message.media.video_url + "\"/>\n                    Your browser does not support HTML5 video.\n                </video>");
+      }
+
+      if (message.media.image_url) {
+        str = str + getBotMessageTemplateForImage(message.media.image_url);
+      }
+
+      if (message.media.length) {
+        str = str + getBotMessageTemplateForCarousal(message.media);
+      }
+    }
   });
-  exports.$chatBody.innerHTML = exports.$chatBody.innerHTML + str;
+  var humanClass = messages[0].sourceType === send_api_1.ESourceType.human ? 'msg-bubble-human' : '';
+  var time = utility_1.getTimeInHHMM();
+  str = "\n            <div xmlns=\"http://www.w3.org/1999/xhtml\" class=\"msg-bubble " + humanClass + "\">\n                <div class=\"msg-bot-logo\">\n                    <img style=\"height: 100%; width: 100%\" src=\"https://whizkey.ae/wisdom/static/media/rammas.42381205.gif\" alt=\"\"/>\n                </div>\n                <div class=\"message-container\">\n                    " + str + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                </div>\n            </div>  \n            \n        ";
+  var el = getElementsFromHtmlStr(str);
+  var carousal = el.querySelector('.carousal-container');
+  frag.appendChild(el);
+  carousal.style.opacity = '0';
+  exports.$chatBody.appendChild(frag);
+  var carousalWidth = exports.$chatBody.offsetWidth - 60;
+  debugger;
+
+  if (carousalWidth > 0 && carousalWidth < 225) {
+    carousal.setAttribute('data-itemToShow', '1');
+  } else {
+    if (carousalWidth > 0 && carousalWidth < 450) {
+      carousalWidth = 225;
+      carousal.setAttribute('data-itemToShow', '1');
+    } else if (carousalWidth >= 450 && carousalWidth < 675) {
+      carousalWidth = 450;
+      carousal.setAttribute('data-itemToShow', '2');
+    } else if (carousalWidth >= 675) {
+      carousalWidth = 675;
+      carousal.setAttribute('data-itemToShow', '3');
+    }
+  }
+
+  carousal.style.width = carousalWidth + 'px';
+  carousal.style.opacity = '1';
+  var msgVid = document.getElementsByClassName('msg-video');
+
+  if (videoStr) {
+    var lastMsgVid = msgVid[msgVid.length - 1];
+    lastMsgVid.innerHTML = videoStr;
+  }
+
   resetChatInput();
   scrollBodyToBottom();
 }
@@ -155,95 +297,70 @@ function resetChatInput() {
 
 exports.resetChatInput = resetChatInput;
 
-function getBotMessageTemplate(text) {
-  return "<div class=\"message-container\">\n                <div class=\"message-wrapper\">\n                    <div class=\"content\">".concat(text, "</div>\n                </div>\n            </div>");
-}
-},{}],"environment.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.environment = {
-  bot_access_token: null,
-  bot_unique_name: "FAQLogic",
-  enterprise_unique_name: "ayeshreddy.k",
-  consumer: {
-    uid: Date.now()
-  }
-};
-},{}],"ajax.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function makeGetReq(reqObj) {
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("GET", reqObj.url, true);
-  setHeaders(xmlHttp, reqObj.headerData);
-  xmlHttp.send(null);
-  return new Promise(function (resolve, reject) {
-    xmlHttp.onreadystatechange = function () {
-      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) resolve(JSON.parse(xmlHttp.responseText));
-    };
-  });
+function getElementsFromHtmlStr(htmlStr) {
+  var doc = new DOMParser().parseFromString(htmlStr, "text/xml");
+  return doc.firstChild;
 }
 
-exports.makeGetReq = makeGetReq;
-
-function makePostReq(reqObj) {
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("POST", reqObj.url, true);
-  setHeaders(xmlHttp, reqObj.headerData);
-  xmlHttp.send(JSON.stringify(reqObj.body));
-  return new Promise(function (resolve, reject) {
-    xmlHttp.onreadystatechange = function () {
-      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) resolve(JSON.parse(xmlHttp.responseText));
-    };
+function createQuickReplyButtons(quick_reply) {
+  var str = "";
+  quick_reply.quick_replies.forEach(function (quick_reply) {
+    str = str + ("<button data-payload=\"" + quick_reply.payload + "\">" + quick_reply.title + "</button>");
   });
+  debugger;
+  return str;
 }
 
-exports.makePostReq = makePostReq;
-
-function setHeaders(xmlHttp, headerData) {
-  if (!headerData) {
-    return;
-  }
-
-  headerData = Object.assign(Object.assign({}, headerData), {
-    'content-type': 'application/json'
-  });
-  Object.keys(headerData).forEach(function (key) {
-    var val = headerData[key];
-
-    if (val) {
-      xmlHttp.setRequestHeader(key, val);
-    }
-  });
-}
-},{}],"bot-details.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var environment_1 = require("./environment");
-
-var ajax_1 = require("./ajax");
-
-function getBotDetails() {
-  var env = environment_1.environment;
-  var url = "https://staging.imibot.ai/api/v1/bot/preview/?bot_unique_name=".concat(env.bot_unique_name, "&enterprise_unique_name=").concat(env.enterprise_unique_name);
-  return ajax_1.makeGetReq({
-    url: url
-  });
+function getBotMessageTemplateForQuickReply(quick_replies, source) {
+  var htmlStr = "\n                <div class=\"message-wrapper-quick-reply\">\n                    " + createQuickReplyButtons(quick_replies) + "\n                </div>\n            ";
+  return htmlStr;
 }
 
-exports.getBotDetails = getBotDetails;
-},{"./environment":"environment.ts","./ajax":"ajax.ts"}],"../node_modules/regenerator-runtime/runtime.js":[function(require,module,exports) {
+function getBotMessageTemplateForText(text, source) {
+  var htmlStr = "\n                <div class=\"message-wrapper " + (source === send_api_1.ESourceType.human ? 'message-wrapper-human' : '') + "\">\n                    <div class=\"content\">" + text + "</div>\n                </div>\n            ";
+  return htmlStr;
+}
+
+function createCarousalButtons(buttons) {
+  var str = "";
+  buttons.forEach(function (button) {
+    str = str + ("\n            <li class=\"title\" data-payload=\"" + button.payload + "\" data-type=\"" + button.type + "\">" + button.title + "</li>\n        ");
+  });
+  return str;
+}
+
+function createCarousalItems(mediaItem) {
+  return "\n    <div class=\"item\">\n            <div class=\"bot-carousal-item shadow-theme\">\n                <div class=\"banner\">\n                    <img src=\"https://s3.eu-west-1.amazonaws.com/imibot-production/assets/search-bot-icon.svg\" alt=\"\"/>\n                </div>\n                <ul style=\"list-style: none\">\n                    <li class=\"title\">\n                        " + mediaItem.title + "\n                    </li>\n                    " + createCarousalButtons(mediaItem.buttons) + "\n                </ul>\n            </div>\n        </div>\n    ";
+}
+
+function createCarousalStr(media) {
+  var str = "";
+  media.forEach(function (mediaItem) {
+    str = str + createCarousalItems(mediaItem);
+  });
+  return str;
+}
+
+function getBotMessageTemplateForCarousal(media, source) {
+  var carousalStr = createCarousalStr(media);
+  return "\n               <div class=\"carousal-container hide-left-control\" data-step=\"0\">\n                   <div class=\"carousal-container-inner\">\n                        " + carousalStr + "\n                   </div>\n                   <div class=\"fa fa-angle-left control control-left\"></div>\n                   <div class=\"fa fa-angle-right control control-right\"></div>\n                </div>\n            ";
+}
+
+function getBotMessageTemplateForAudio(url) {
+  var htmlStr = "\n                <div class=\"message-wrapper  message-wrapper-bot\">\n                    <audio class=\"msg-audio\" src=\"" + url + "\"></audio>\n                </div>\n            ";
+  return htmlStr;
+}
+
+function getBotMessageTemplateForVideo(url) {
+  var htmlStr = "\n                <div class=\"message-wrapper  message-wrapper-bot msg-video\">\n                    \n                </div>\n            ";
+  return htmlStr;
+}
+
+function getBotMessageTemplateForImage(url) {
+  var htmlStr = "\n                <div class=\"message-wrapper message-wrapper-bot msg-shadow\" \n                style=\"width: 100%; padding-top: 105%; position: relative; margin-bottom: 20px; background:#80808017; border-radius: 8px; overflow: hidden\">\n                    <img style=\"position:absolute; top: 50%; left: 0; right: 0; bottom: 0;width: 100%; transform: translateY(-50%)\" class=\"msg-img click-to-zoom\" src=\"" + url + "\" alt=\"\"/>\n                </div>\n            ";
+  return htmlStr;
+}
+},{"./typings/send-api":"typings/send-api.ts","./utility":"utility.ts"}],"../node_modules/regenerator-runtime/runtime.js":[function(require,module,exports) {
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -971,30 +1088,106 @@ try {
   Function("r", "regeneratorRuntime = r")(runtime);
 }
 
-},{}],"typings/send-api.ts":[function(require,module,exports) {
+},{}],"ajax.ts":[function(require,module,exports) {
+"use strict";
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function makeGetReq(reqObj) {
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("GET", reqObj.url, true);
+  setHeaders(xmlHttp, reqObj.headerData);
+  xmlHttp.send(null);
+  return new Promise(function (resolve, reject) {
+    xmlHttp.onreadystatechange = function () {
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) resolve(JSON.parse(xmlHttp.responseText));
+    };
+  });
+}
+
+exports.makeGetReq = makeGetReq;
+
+function makePostReq(reqObj) {
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("POST", reqObj.url, true);
+  setHeaders(xmlHttp, reqObj.headerData);
+  xmlHttp.send(JSON.stringify(reqObj.body));
+  return new Promise(function (resolve, reject) {
+    xmlHttp.onreadystatechange = function () {
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) resolve(JSON.parse(xmlHttp.responseText));
+    };
+  });
+}
+
+exports.makePostReq = makePostReq;
+
+function setHeaders(xmlHttp, headerData) {
+  if (!headerData) {
+    return;
+  }
+
+  headerData = __assign(__assign({}, headerData), {
+    'content-type': 'application/json'
+  });
+  Object.keys(headerData).forEach(function (key) {
+    var val = headerData[key];
+
+    if (val) {
+      xmlHttp.setRequestHeader(key, val);
+    }
+  });
+}
+},{}],"environment.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var EChatFrame;
-
-(function (EChatFrame) {
-  EChatFrame["WELCOME_BOX"] = "WELCOME_BOX";
-  EChatFrame["CHAT_LIST"] = "CHAT_LIST";
-  EChatFrame["CHAT_BOX"] = "CHAT_BOX";
-})(EChatFrame = exports.EChatFrame || (exports.EChatFrame = {}));
-
-var EBotMessageMediaType;
-
-(function (EBotMessageMediaType) {
-  EBotMessageMediaType["image"] = "image";
-  EBotMessageMediaType["text"] = "text";
-  EBotMessageMediaType["quickReply"] = "quickReply";
-  EBotMessageMediaType["bot_thinking"] = "bot_thinking";
-})(EBotMessageMediaType = exports.EBotMessageMediaType || (exports.EBotMessageMediaType = {}));
+exports.environment = {
+  bot_access_token: null,
+  bot_unique_name: "dewa_gitex_en",
+  enterprise_unique_name: "dewa_demo",
+  root: "",
+  consumer: {
+    uid: Date.now()
+  }
+};
 },{}],"send-api.ts":[function(require,module,exports) {
 "use strict";
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -1007,7 +1200,7 @@ var environment_1 = require("./environment");
 var send_api_1 = require("./typings/send-api");
 
 function sendMessageToBot(bot_access_token, enterprise_unique_name, humanMessage) {
-  var url = 'https://staging.imibot.ai/api/v1/webhook/web/';
+  var url = "https://" + environment_1.environment.root + "imibot.ai/api/v1/webhook/web/";
   var body = {
     "consumer": environment_1.environment.consumer,
     "type": "human",
@@ -1016,7 +1209,6 @@ function sendMessageToBot(bot_access_token, enterprise_unique_name, humanMessage
     "is_test": false
   };
   var headerData = {
-    enterprise_unique_name: enterprise_unique_name,
     "bot-access-token": bot_access_token
   };
   return ajax_1.makePostReq({
@@ -1031,28 +1223,27 @@ exports.sendMessageToBot = sendMessageToBot;
 function serializeGeneratedMessagesToPreviewMessages(generatedMessage, bot_message_id, response_language) {
   return generatedMessage.map(function (message, index) {
     var isLast = index === generatedMessage.length - 1;
-    var messageData = Object.assign(Object.assign({}, message), {
+
+    var messageData = __assign(__assign({}, message), {
       bot_message_id: bot_message_id,
       time: Date.now(),
-      messageMediatype: null,
-      sourceType: 'bot',
+      messageMediaType: null,
+      sourceType: send_api_1.ESourceType.bot,
       isLast: isLast,
       response_language: response_language
     });
 
     if (Object.keys(message)[0] === 'media') {
-      messageData = Object.assign(Object.assign({}, messageData), {
-        messageMediatype: message.media[0] && message.media[0].type,
-        text: send_api_1.EBotMessageMediaType.image
+      messageData = __assign(__assign({}, messageData), {
+        messageMediaType: message.media[0] && message.media[0].type
       });
     } else if (Object.keys(message)[0] === 'quick_reply') {
-      messageData = Object.assign(Object.assign({}, messageData), {
-        messageMediatype: send_api_1.EBotMessageMediaType.quickReply,
-        text: message.quick_reply.text || send_api_1.EBotMessageMediaType.quickReply
+      messageData = __assign(__assign({}, messageData), {
+        messageMediaType: send_api_1.EBotMessageMediaType.quickReply
       });
     } else {
-      messageData = Object.assign(Object.assign({}, messageData), {
-        messageMediatype: send_api_1.EBotMessageMediaType.text
+      messageData = __assign(__assign({}, messageData), {
+        messageMediaType: send_api_1.EBotMessageMediaType.text
       });
     }
 
@@ -1096,13 +1287,122 @@ var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, gene
   });
 };
 
+var __generator = this && this.__generator || function (thisArg, body) {
+  var _ = {
+    label: 0,
+    sent: function sent() {
+      if (t[0] & 1) throw t[1];
+      return t[1];
+    },
+    trys: [],
+    ops: []
+  },
+      f,
+      y,
+      t,
+      g;
+  return g = {
+    next: verb(0),
+    "throw": verb(1),
+    "return": verb(2)
+  }, typeof Symbol === "function" && (g[Symbol.iterator] = function () {
+    return this;
+  }), g;
+
+  function verb(n) {
+    return function (v) {
+      return step([n, v]);
+    };
+  }
+
+  function step(op) {
+    if (f) throw new TypeError("Generator is already executing.");
+
+    while (_) {
+      try {
+        if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+        if (y = 0, t) op = [op[0] & 2, t.value];
+
+        switch (op[0]) {
+          case 0:
+          case 1:
+            t = op;
+            break;
+
+          case 4:
+            _.label++;
+            return {
+              value: op[1],
+              done: false
+            };
+
+          case 5:
+            _.label++;
+            y = op[1];
+            op = [0];
+            continue;
+
+          case 7:
+            op = _.ops.pop();
+
+            _.trys.pop();
+
+            continue;
+
+          default:
+            if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+              _ = 0;
+              continue;
+            }
+
+            if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+              _.label = op[1];
+              break;
+            }
+
+            if (op[0] === 6 && _.label < t[1]) {
+              _.label = t[1];
+              t = op;
+              break;
+            }
+
+            if (t && _.label < t[2]) {
+              _.label = t[2];
+
+              _.ops.push(op);
+
+              break;
+            }
+
+            if (t[2]) _.ops.pop();
+
+            _.trys.pop();
+
+            continue;
+        }
+
+        op = body.call(thisArg, _);
+      } catch (e) {
+        op = [6, e];
+        y = 0;
+      } finally {
+        f = t = 0;
+      }
+    }
+
+    if (op[0] & 5) throw op[1];
+    return {
+      value: op[0] ? op[1] : void 0,
+      done: true
+    };
+  }
+};
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
 var dom_1 = require("./dom");
-
-var bot_details_1 = require("./bot-details");
 
 require("regenerator-runtime/runtime");
 
@@ -1110,81 +1410,237 @@ var send_api_1 = require("./send-api");
 
 var environment_1 = require("./environment");
 
+var send_api_2 = require("./typings/send-api");
+
+var utility_1 = require("./utility");
+
+var isModelShown = false;
+
 function initApp() {
-  return __awaiter(this, void 0, void 0,
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee() {
-    var botDetails;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            initEvents();
-            _context.next = 3;
-            return bot_details_1.getBotDetails();
+  return __awaiter(this, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+      initEvents();
+      return [2];
+    });
+  });
+}
 
-          case 3:
-            botDetails = _context.sent;
-            environment_1.environment.bot_access_token = botDetails.bot_access_token;
-            dom_1.setIntroDetails({
-              description: botDetails.description,
-              logo: botDetails.logo,
-              title: botDetails.name
-            });
+var ImiPreview = function () {
+  function ImiPreview() {}
 
-          case 6:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
+  ImiPreview.prototype.init = function (selector) {
+    var mainParent = document.querySelector(selector);
+    mainParent.innerHTML = mainBodyTemplate();
+    dom_1.domInit();
+    initApp();
+  };
+
+  ImiPreview.prototype.appendMessageInChatBody = function (generated_msg) {
+    dom_1.AppendMessageInChatBody(generated_msg);
+  };
+
+  return ImiPreview;
+}();
+
+window.ImiPreview = ImiPreview;
+
+function removeModal() {
+  dom_1.$phoneModel.classList.add('d-none');
+  dom_1.$phoneModel.classList.remove('d-flex');
+  dom_1.$chatBody.classList.remove('bg-opaque');
+  dom_1.$chatFooter.classList.remove('opacity-0');
 }
 
 function initEvents() {
-  dom_1.$chatInput.addEventListener('keypress', function ($event) {
-    return __awaiter(this, void 0, void 0,
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee2() {
-      var humanMessage, botResponse, messageData;
-      return regeneratorRuntime.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              if (!($event.key === 'Enter')) {
-                _context2.next = 9;
-                break;
-              }
-
-              humanMessage = dom_1.$chatInput.value;
-              dom_1.AppendMessageInChatBody([{
-                sourceType: "bot",
-                text: humanMessage,
-                time: Date.now()
-              }]);
-              _context2.next = 5;
-              return send_api_1.sendMessageToBot(environment_1.environment.bot_access_token, environment_1.environment.enterprise_unique_name, humanMessage);
-
-            case 5:
-              botResponse = _context2.sent;
-              messageData = send_api_1.serializeGeneratedMessagesToPreviewMessages(botResponse.generated_msg);
-              debugger;
-              dom_1.AppendMessageInChatBody(messageData);
-
-            case 9:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2);
-    }));
+  document.getElementById('close-modal1').addEventListener('click', function ($event) {
+    removeModal();
   });
+  console.log(dom_1.$chatBody);
+  dom_1.$chatBody.addEventListener('click', function ($event) {
+    var target = $event.target;
+    removeModal();
+    var img = $event.target;
+
+    if (img.classList.contains('click-to-zoom')) {
+      var modal_1 = document.getElementById("myModal");
+      var modalImg = document.getElementById("img01");
+      var captionText = document.getElementById("caption");
+      modal_1.style.display = "block";
+      modalImg.src = img.src;
+      var span = document.getElementsByClassName("close")[0];
+
+      span.onclick = function () {
+        modal_1.style.display = "none";
+      };
+    }
+
+    if (img.classList) {}
+
+    if (target.classList.contains('control')) {
+      var itemInView = 2;
+      var $carasalContainer_1 = findParentWithClass(target, 'carousal-container');
+      var shouldMoveRight = target.classList.contains('control-right');
+      var $carasalInner = $carasalContainer_1.querySelector('.carousal-container-inner');
+      var $carasalItemLength = $carasalContainer_1.querySelectorAll('.item').length;
+      var dataStep = Number($carasalContainer_1.getAttribute('data-step'));
+      $carasalContainer_1.classList.remove('hide-left-control');
+      $carasalContainer_1.classList.remove('hide-right-control');
+
+      if (dataStep < $carasalItemLength - itemInView && shouldMoveRight) {
+        dataStep++;
+
+        if (dataStep === $carasalItemLength - itemInView) {
+          setTimeout(function () {
+            $carasalContainer_1.classList.add('hide-right-control');
+          }, 350);
+        }
+      } else if (dataStep > 0 && !shouldMoveRight) {
+        dataStep--;
+
+        if (dataStep === 0) {
+          setTimeout(function () {
+            $carasalContainer_1.classList.add('hide-left-control');
+          }, 350);
+        }
+      } else {
+        return;
+      }
+
+      $carasalContainer_1.setAttribute('data-step', dataStep.toString());
+      var carasalContainerWidth = $carasalContainer_1.offsetWidth;
+      var itemWidth = $carasalInner.querySelector('.item').offsetWidth;
+      var base = itemWidth * 100 / carasalContainerWidth;
+      $carasalInner.style.transform = "translateX(" + -1 * base * dataStep + "%)";
+    }
+  });
+  dom_1.$langSubmit.addEventListener('click', function ($event) {
+    var lang = dom_1.$langSelect.value;
+
+    if (lang) {
+      var splits = environment_1.environment.bot_unique_name.split("_");
+      splits.pop();
+      environment_1.environment.bot_unique_name = splits.join("_") + '_' + lang;
+      var newUrl = utility_1.updateQueryStringParameter(location.href, "bot_unique_name", environment_1.environment.bot_unique_name);
+      newUrl = utility_1.updateQueryStringParameter(newUrl, "lang", lang);
+      location.href = newUrl;
+      initEnvironment();
+    }
+  });
+  dom_1.$chatInput.addEventListener('keypress', function ($event) {
+    if ($event.key === 'Enter') {
+      var humanMessage = dom_1.$chatInput.value;
+
+      if (!humanMessage || !humanMessage.trim()) {
+        return;
+      }
+
+      humanMessageHandler(humanMessage);
+    }
+  });
+  dom_1.$chatInputIcon.addEventListener('click', function () {
+    var humanMessage = dom_1.$chatInput.value;
+
+    if (!humanMessage || !humanMessage.trim()) {
+      return;
+    }
+
+    humanMessageHandler(humanMessage);
+  });
+  dom_1.$envOptions.addEventListener('click', function () {
+    var $phoneView = document.getElementsByClassName('chat-body')[0];
+    var $langPanel = dom_1.$phoneModel.querySelector('.lang-panel');
+
+    if (!isModelShown) {
+      $phoneView.classList.add('bg-opaque');
+      dom_1.$phoneModel.classList.add('d-flex');
+      dom_1.$phoneModel.classList.remove('d-none');
+      dom_1.$chatFooter.classList.add('opacity-0');
+      $langPanel.classList.add('d-flex');
+    } else {
+      $phoneView.classList.remove('bg-opaque');
+      dom_1.$phoneModel.classList.remove('d-flex');
+      dom_1.$phoneModel.classList.add('d-none');
+      dom_1.$chatFooter.classList.remove('opacity-0');
+      $langPanel.classList.remove('d-flex');
+    }
+
+    isModelShown = !isModelShown;
+  });
+}
+
+function humanMessageHandler(humanMessage) {
+  return __awaiter(this, void 0, void 0, function () {
+    var botResponse, messageData;
+    return __generator(this, function (_a) {
+      switch (_a.label) {
+        case 0:
+          dom_1.AppendMessageInChatBody([{
+            sourceType: send_api_2.ESourceType.human,
+            text: humanMessage,
+            time: Date.now()
+          }]);
+          return [4, send_api_1.sendMessageToBot(environment_1.environment.bot_access_token, environment_1.environment.enterprise_unique_name, humanMessage)];
+
+        case 1:
+          botResponse = _a.sent();
+          messageData = send_api_1.serializeGeneratedMessagesToPreviewMessages(botResponse.generated_msg);
+          dom_1.AppendMessageInChatBody(messageData);
+          return [2];
+      }
+    });
+  });
+}
+
+function initEnvironment() {
+  var lang = utility_1.getQueryStringValue('lang');
+
+  if (lang === 'ar' || lang === 'rtl') {
+    document.body.classList.add('lang-rtl');
+    dom_1.$chatInput.setAttribute("dir", "rtl");
+    dom_1.$chatInput.placeholder = "أكتب السؤال ..";
+  }
+
+  var root = utility_1.getQueryStringValue('root');
+
+  if (root) {
+    if (root === '.') {
+      environment_1.environment.root = "";
+    } else {
+      environment_1.environment.root = root + '.';
+    }
+  }
+
+  var enterprise_unique_name = utility_1.getQueryStringValue('enterprise_unique_name');
+
+  if (enterprise_unique_name) {
+    environment_1.environment.enterprise_unique_name = enterprise_unique_name;
+  }
+
+  var bot_unique_name = utility_1.getQueryStringValue('bot_unique_name');
+
+  if (bot_unique_name) {
+    environment_1.environment.bot_unique_name = bot_unique_name;
+  }
+}
+
+function findParentWithClass($child, className) {
+  while ($child) {
+    if ($child.classList.contains(className)) {
+      return $child;
+    }
+
+    $child = $child.parentElement;
+  }
 }
 
 initApp().then(function (_) {
   return console.log('app init success');
 });
-},{"./dom":"dom.ts","./bot-details":"bot-details.ts","regenerator-runtime/runtime":"../node_modules/regenerator-runtime/runtime.js","./send-api":"send-api.ts","./environment":"environment.ts"}],"C:/Users/sandeepkumar.g/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+
+function mainBodyTemplate() {
+  return "\n<div class=\"loader\">\n    <img src=\"https://whizkey.ae/wisdom/static/media/rammas.42381205.gif\" alt=\"\">\n</div>\n    <!-- The Modal -->\n<div id=\"myModal\" class=\"modal2\">\n    <span class=\"close\">&times;</span>\n    <img class=\"modal-content\" id=\"img01\">\n    <div id=\"caption\"></div>\n</div>\n\n<div class=\"page1\">\n    <div class=\"page__content\">\n        <div class=\"phone\">\n            <div class=\"phone__body\">\n                <div class=\"phone__view\">\n                    <div id=\"phone-modal\" class=\"modal1\" style=\"\">\n                        <i class=\"fa fa-times\" id=\"close-modal1\"></i>\n                        <div class=\"lang-panel\">\n                            <h1>Select language</h1>\n                            <div>\n                                <select id=\"lang-select\">\n                                    <option value=\"en\">English</option>\n                                    <option value=\"ar\" style=\"direction: rtl;\">\u0639\u0631\u0628\u064A</option>\n                                </select>\n                            </div>\n                            <button class=\"imi-button-primary\" id=\"lang-submit\">Submit</button>\n                        </div>\n                    </div>\n                    <div class=\"grid-container\">\n\n                        <div class=\"header\" style=\"z-index: 1\">\n                            <div class=\"basel-bg\"></div>\n                            <div class=\"bot-intro\" id=\"botIntro\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\" src=\"https://whizkey.ae/wisdom/static/media/rammas.42381205.gif\"\n                                         alt=\"\">\n                                </span>\n                                <div class=\"bot-details\">\n                                    <div id=\"bot-title\" class=\"title\"></div>\n                                </div>\n                                <div class=\"options\" id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n                            </div>\n                        </div>\n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"padding: 8px 6px; display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        <!--chat body ends-->\n                        <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"phone__notch\">\n                    <div class=\"phone__speaker\"></div>\n                    <div class=\"phone__camera\"></div>\n                </div>\n            </div>\n            <div class=\"phone__btn\">\n                <button class=\"phone__btn--power\"></button>\n                <div class=\"phone__btn--volume\">\n                    <button class=\"phone__btn--volume-up\"></button>\n                    <button class=\"phone__btn--volume-down\"></button>\n                </div>\n                <button class=\"phone__btn--mute\"></button>\n            </div>\n        </div>\n    </div>\n</div>\n    \n    \n    ";
+}
+},{"./dom":"dom.ts","regenerator-runtime/runtime":"../node_modules/regenerator-runtime/runtime.js","./send-api":"send-api.ts","./environment":"environment.ts","./typings/send-api":"typings/send-api.ts","./utility":"utility.ts"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -1212,7 +1668,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58428" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64127" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -1243,8 +1699,9 @@ if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
         assetsToAccept.forEach(function (v) {
           hmrAcceptRun(v[0], v[1]);
         });
-      } else {
-        window.location.reload();
+      } else if (location.reload) {
+        // `location` global exists in a web worker context but lacks `.reload()` function.
+        location.reload();
       }
     }
 
@@ -1387,5 +1844,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["C:/Users/sandeepkumar.g/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main.ts"], null)
+},{}]},{},["../node_modules/parcel/src/builtins/hmr-runtime.js","main.ts"], null)
 //# sourceMappingURL=/main.c39d6dcf.js.map
