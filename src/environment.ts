@@ -5,6 +5,7 @@ export const environment = {
     enterprise_unique_name: "dewa_demo",//"anirudh.t",//
     root: "",
     consumer: {
-        uid: Date.now()
-    }
+        uid: Date.now().toString()
+    },
+    logo:""
 };

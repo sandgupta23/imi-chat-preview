@@ -10,7 +10,7 @@ export function sendMessageToBot(bot_access_token: string, enterprise_unique_nam
         "type": "human",
         "msg": humanMessage,
         "platform": "web",
-        "is_test": false
+        "is_test": true
     };
 
     const headerData:IHeaderData = {

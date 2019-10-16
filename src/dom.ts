@@ -1,5 +1,8 @@
-import {ESourceType, IMessageData} from "./typings/send-api";
+import {ESourceType, IMessageData, ISendApiResponsePayload} from "./typings/send-api";
 import {getTimeInHHMM} from "./utility";
+import {IBotDetailsApiResp} from "./typings/bot-detaills-api";
+import {environment} from "./environment";
+
 export let $chatInput;
 export let $chatInputIcon;
 export let $botIntro;
@@ -28,9 +31,14 @@ export function domInit() {
     $langSubmit = document.getElementById('lang-submit');
 }
 
-export function setIntroDetails(intro: { logo: string, title: string, description: string }) {
-    $botLogo.src = 'https://whizkey.ae/wisdom/static/media/rammas.42381205.gif';//intro.logo;
-    $botTitle.textContent = intro.title;
+export function setOptions(intro: IBotDetailsApiResp) {
+    debugger;
+    if ($botLogo) {
+        $botLogo.src = intro.logo;//intro.logo;
+    }
+    if ($botTitle) {
+        $botTitle.textContent = intro.name;
+    }
     // $botIntro.innerHTML = `<span class="bot-logo">
     //                 <img src="${'https://whizkey.ae/wisdom/static/media/rammas.42381205.gif'}" alt="">
     //             </span>
@@ -53,10 +61,11 @@ export function AppendMessageInChatBody(messages: IMessageData[]) {
             str = str + getBotMessageTemplateForText(message.text, message.sourceType);
         }
         if (message.quick_reply) {
-            debugger;
+
             str = str + getBotMessageTemplateForQuickReply(message.quick_reply, message.sourceType);
         }
         if (message.media) {
+            debugger;
             if (message.media.audio_url) {
                 str = str + getBotMessageTemplateForAudio(message.media.audio_url);
             }
@@ -72,6 +81,7 @@ export function AppendMessageInChatBody(messages: IMessageData[]) {
             }
 
             if (message.media.length) {
+
                 str = str + getBotMessageTemplateForCarousal(message.media);
             }
         }
@@ -82,7 +92,10 @@ export function AppendMessageInChatBody(messages: IMessageData[]) {
     str = `
             <div xmlns="http://www.w3.org/1999/xhtml" class="msg-bubble ${humanClass}">
                 <div class="msg-bot-logo">
-                    <img style="height: 100%; width: 100%" src="https://whizkey.ae/wisdom/static/media/rammas.42381205.gif" alt=""/>
+                    <img 
+                    src="${environment.logo}"
+                    onerror="this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'"
+                     style="height: 100%; width: 100%" />
                 </div>
                 <div class="message-container">
                     ${str}
@@ -96,37 +109,41 @@ export function AppendMessageInChatBody(messages: IMessageData[]) {
     const el = getElementsFromHtmlStr(str) as HTMLElement;
     const carousal = el.querySelector('.carousal-container') as HTMLElement;
     frag.appendChild(el);
-    carousal.style.opacity = '0';
+    if (carousal) {
+        carousal.style.opacity = '0';
+    }
     $chatBody.appendChild(frag);
 
 
-    let carousalWidth = $chatBody.offsetWidth as any - 60;
-    debugger;
-    if (carousalWidth > 0 && carousalWidth < 225) {
-        // carousalWidth = carousal;
-        // carousalWidth = 225;
-        carousal.setAttribute('data-itemToShow', '1');
-    } else {
-        if (carousalWidth > 0 && carousalWidth < 450) {
-            carousalWidth = 225;
-            carousal.setAttribute('data-itemToShow', '1');
-        } else if (carousalWidth >= 450 && carousalWidth < 675) {
-            carousalWidth = 450;
-            carousal.setAttribute('data-itemToShow', '2');
-        } else if (carousalWidth >= 675) {
-            carousalWidth = 675;
-            carousal.setAttribute('data-itemToShow', '3');
-        }
-    }
-    carousal.style.width = carousalWidth + 'px';
-    carousal.style.opacity = '1';
+    if (carousal) {
+        let carousalWidth = $chatBody.offsetWidth as any - 60;
 
+        if (carousalWidth > 0 && carousalWidth < 225) {
+            // carousalWidth = carousal;
+            // carousalWidth = 225;
+            carousal.setAttribute('data-itemToShow', '1');
+        } else {
+            if (carousalWidth > 0 && carousalWidth < 450) {
+                // carousalWidth = 225;
+                carousal.setAttribute('data-itemToShow', '2');
+            } else if (carousalWidth >= 450 && carousalWidth < 675) {
+                carousalWidth = 450;
+                carousal.setAttribute('data-itemToShow', '2');
+            } else if (carousalWidth >= 675) {
+                carousalWidth = 675;
+                carousal.setAttribute('data-itemToShow', '3');
+            }
+        }
+        carousal.style.width = carousalWidth + 'px';
+        carousal.style.opacity = '1';
+
+    }
     let msgVid = document.getElementsByClassName('msg-video');
     if (videoStr) {
         const lastMsgVid = msgVid[msgVid.length - 1];
         lastMsgVid.innerHTML = videoStr;
     }
-    resetChatInput();
+    // resetChatInput();
     scrollBodyToBottom();
 }
 
@@ -145,10 +162,10 @@ function getElementsFromHtmlStr(htmlStr: string) {
 
 function createQuickReplyButtons(quick_reply) {
     let str = "";
-    quick_reply.quick_replies.forEach((quick_reply)=>{
+    quick_reply.quick_replies.forEach((quick_reply) => {
         str = str + `<button data-payload="${quick_reply.payload}">${quick_reply.title}</button>`
     });
-    debugger;
+
     return str;
 }
 
@@ -175,19 +192,18 @@ function createCarousalButtons(buttons) {
     let str = "";
     buttons.forEach((button) => {
         str = str + `
-            <li class="title" data-payload="${button.payload}" data-type="${button.type}">${button.title}</li>
+            <li class="action" data-payload="${button.payload}" data-type="${button.type}">${button.title}</li>
         `;
     });
     return str;
 }
 
 function createCarousalItems(mediaItem: any) {
+    let url = mediaItem.url.split("&").join("&amp;");
     return `
     <div class="item">
             <div class="bot-carousal-item shadow-theme">
-                <div class="banner">
-                    <img src="https://s3.eu-west-1.amazonaws.com/imibot-production/assets/search-bot-icon.svg" alt=""/>
-                </div>
+                <div class="banner" style="background-image: url(${url})"></div>
                 <ul style="list-style: none">
                     <li class="title">
                         ${mediaItem.title}
@@ -251,7 +267,9 @@ function getBotMessageTemplateForImage(url: string) {
     const htmlStr = `
                 <div class="message-wrapper message-wrapper-bot msg-shadow" 
                 style="width: 100%; padding-top: 105%; position: relative; margin-bottom: 20px; background:#80808017; border-radius: 8px; overflow: hidden">
-                    <img style="position:absolute; top: 50%; left: 0; right: 0; bottom: 0;width: 100%; transform: translateY(-50%)" class="msg-img click-to-zoom" src="${url}" alt=""/>
+                    <img 
+                    style="position:absolute; top: 50%; left: 0; right: 0; bottom: 0;width: 100%; transform: translateY(-50%)" 
+                    class="msg-img click-to-zoom" src="${url}" alt=""/>
                 </div>
             `;
     return htmlStr;

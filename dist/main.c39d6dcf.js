@@ -178,6 +178,22 @@ function updateQueryStringParameter(uri, key, value) {
 }
 
 exports.updateQueryStringParameter = updateQueryStringParameter;
+},{}],"environment.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.environment = {
+  bot_access_token: null,
+  bot_unique_name: "dewa_gitex_en",
+  enterprise_unique_name: "dewa_demo",
+  root: "",
+  consumer: {
+    uid: Date.now().toString()
+  },
+  logo: ""
+};
 },{}],"dom.ts":[function(require,module,exports) {
 "use strict";
 
@@ -188,6 +204,8 @@ Object.defineProperty(exports, "__esModule", {
 var send_api_1 = require("./typings/send-api");
 
 var utility_1 = require("./utility");
+
+var environment_1 = require("./environment");
 
 function domInit() {
   exports.$chatInput = document.getElementById('chat-input');
@@ -206,12 +224,19 @@ function domInit() {
 
 exports.domInit = domInit;
 
-function setIntroDetails(intro) {
-  exports.$botLogo.src = 'https://whizkey.ae/wisdom/static/media/rammas.42381205.gif';
-  exports.$botTitle.textContent = intro.title;
+function setOptions(intro) {
+  debugger;
+
+  if (exports.$botLogo) {
+    exports.$botLogo.src = intro.logo;
+  }
+
+  if (exports.$botTitle) {
+    exports.$botTitle.textContent = intro.name;
+  }
 }
 
-exports.setIntroDetails = setIntroDetails;
+exports.setOptions = setOptions;
 
 function AppendMessageInChatBody(messages) {
   var str = "";
@@ -223,11 +248,12 @@ function AppendMessageInChatBody(messages) {
     }
 
     if (message.quick_reply) {
-      debugger;
       str = str + getBotMessageTemplateForQuickReply(message.quick_reply, message.sourceType);
     }
 
     if (message.media) {
+      debugger;
+
       if (message.media.audio_url) {
         str = str + getBotMessageTemplateForAudio(message.media.audio_url);
       }
@@ -248,32 +274,38 @@ function AppendMessageInChatBody(messages) {
   });
   var humanClass = messages[0].sourceType === send_api_1.ESourceType.human ? 'msg-bubble-human' : '';
   var time = utility_1.getTimeInHHMM();
-  str = "\n            <div xmlns=\"http://www.w3.org/1999/xhtml\" class=\"msg-bubble " + humanClass + "\">\n                <div class=\"msg-bot-logo\">\n                    <img style=\"height: 100%; width: 100%\" src=\"https://whizkey.ae/wisdom/static/media/rammas.42381205.gif\" alt=\"\"/>\n                </div>\n                <div class=\"message-container\">\n                    " + str + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                </div>\n            </div>  \n            \n        ";
+  str = "\n            <div xmlns=\"http://www.w3.org/1999/xhtml\" class=\"msg-bubble " + humanClass + "\">\n                <div class=\"msg-bot-logo\">\n                    <img \n                    src=\"" + environment_1.environment.logo + "\"\n                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\"\n                     style=\"height: 100%; width: 100%\" />\n                </div>\n                <div class=\"message-container\">\n                    " + str + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                </div>\n            </div>  \n            \n        ";
   var el = getElementsFromHtmlStr(str);
   var carousal = el.querySelector('.carousal-container');
   frag.appendChild(el);
-  carousal.style.opacity = '0';
-  exports.$chatBody.appendChild(frag);
-  var carousalWidth = exports.$chatBody.offsetWidth - 60;
-  debugger;
 
-  if (carousalWidth > 0 && carousalWidth < 225) {
-    carousal.setAttribute('data-itemToShow', '1');
-  } else {
-    if (carousalWidth > 0 && carousalWidth < 450) {
-      carousalWidth = 225;
-      carousal.setAttribute('data-itemToShow', '1');
-    } else if (carousalWidth >= 450 && carousalWidth < 675) {
-      carousalWidth = 450;
-      carousal.setAttribute('data-itemToShow', '2');
-    } else if (carousalWidth >= 675) {
-      carousalWidth = 675;
-      carousal.setAttribute('data-itemToShow', '3');
-    }
+  if (carousal) {
+    carousal.style.opacity = '0';
   }
 
-  carousal.style.width = carousalWidth + 'px';
-  carousal.style.opacity = '1';
+  exports.$chatBody.appendChild(frag);
+
+  if (carousal) {
+    var carousalWidth = exports.$chatBody.offsetWidth - 60;
+
+    if (carousalWidth > 0 && carousalWidth < 225) {
+      carousal.setAttribute('data-itemToShow', '1');
+    } else {
+      if (carousalWidth > 0 && carousalWidth < 450) {
+        carousal.setAttribute('data-itemToShow', '2');
+      } else if (carousalWidth >= 450 && carousalWidth < 675) {
+        carousalWidth = 450;
+        carousal.setAttribute('data-itemToShow', '2');
+      } else if (carousalWidth >= 675) {
+        carousalWidth = 675;
+        carousal.setAttribute('data-itemToShow', '3');
+      }
+    }
+
+    carousal.style.width = carousalWidth + 'px';
+    carousal.style.opacity = '1';
+  }
+
   var msgVid = document.getElementsByClassName('msg-video');
 
   if (videoStr) {
@@ -281,7 +313,6 @@ function AppendMessageInChatBody(messages) {
     lastMsgVid.innerHTML = videoStr;
   }
 
-  resetChatInput();
   scrollBodyToBottom();
 }
 
@@ -307,7 +338,6 @@ function createQuickReplyButtons(quick_reply) {
   quick_reply.quick_replies.forEach(function (quick_reply) {
     str = str + ("<button data-payload=\"" + quick_reply.payload + "\">" + quick_reply.title + "</button>");
   });
-  debugger;
   return str;
 }
 
@@ -324,13 +354,14 @@ function getBotMessageTemplateForText(text, source) {
 function createCarousalButtons(buttons) {
   var str = "";
   buttons.forEach(function (button) {
-    str = str + ("\n            <li class=\"title\" data-payload=\"" + button.payload + "\" data-type=\"" + button.type + "\">" + button.title + "</li>\n        ");
+    str = str + ("\n            <li class=\"action\" data-payload=\"" + button.payload + "\" data-type=\"" + button.type + "\">" + button.title + "</li>\n        ");
   });
   return str;
 }
 
 function createCarousalItems(mediaItem) {
-  return "\n    <div class=\"item\">\n            <div class=\"bot-carousal-item shadow-theme\">\n                <div class=\"banner\">\n                    <img src=\"https://s3.eu-west-1.amazonaws.com/imibot-production/assets/search-bot-icon.svg\" alt=\"\"/>\n                </div>\n                <ul style=\"list-style: none\">\n                    <li class=\"title\">\n                        " + mediaItem.title + "\n                    </li>\n                    " + createCarousalButtons(mediaItem.buttons) + "\n                </ul>\n            </div>\n        </div>\n    ";
+  var url = mediaItem.url.split("&").join("&amp;");
+  return "\n    <div class=\"item\">\n            <div class=\"bot-carousal-item shadow-theme\">\n                <div class=\"banner\" style=\"background-image: url(" + url + ")\"></div>\n                <ul style=\"list-style: none\">\n                    <li class=\"title\">\n                        " + mediaItem.title + "\n                    </li>\n                    " + createCarousalButtons(mediaItem.buttons) + "\n                </ul>\n            </div>\n        </div>\n    ";
 }
 
 function createCarousalStr(media) {
@@ -357,10 +388,97 @@ function getBotMessageTemplateForVideo(url) {
 }
 
 function getBotMessageTemplateForImage(url) {
-  var htmlStr = "\n                <div class=\"message-wrapper message-wrapper-bot msg-shadow\" \n                style=\"width: 100%; padding-top: 105%; position: relative; margin-bottom: 20px; background:#80808017; border-radius: 8px; overflow: hidden\">\n                    <img style=\"position:absolute; top: 50%; left: 0; right: 0; bottom: 0;width: 100%; transform: translateY(-50%)\" class=\"msg-img click-to-zoom\" src=\"" + url + "\" alt=\"\"/>\n                </div>\n            ";
+  var htmlStr = "\n                <div class=\"message-wrapper message-wrapper-bot msg-shadow\" \n                style=\"width: 100%; padding-top: 105%; position: relative; margin-bottom: 20px; background:#80808017; border-radius: 8px; overflow: hidden\">\n                    <img \n                    style=\"position:absolute; top: 50%; left: 0; right: 0; bottom: 0;width: 100%; transform: translateY(-50%)\" \n                    class=\"msg-img click-to-zoom\" src=\"" + url + "\" alt=\"\"/>\n                </div>\n            ";
   return htmlStr;
 }
-},{"./typings/send-api":"typings/send-api.ts","./utility":"utility.ts"}],"../node_modules/regenerator-runtime/runtime.js":[function(require,module,exports) {
+},{"./typings/send-api":"typings/send-api.ts","./utility":"utility.ts","./environment":"environment.ts"}],"ajax.ts":[function(require,module,exports) {
+"use strict";
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function makeGetReq(reqObj) {
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("GET", reqObj.url, true);
+  setHeaders(xmlHttp, reqObj.headerData);
+  xmlHttp.send(null);
+  return new Promise(function (resolve, reject) {
+    xmlHttp.onreadystatechange = function () {
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) resolve(JSON.parse(xmlHttp.responseText));
+    };
+  });
+}
+
+exports.makeGetReq = makeGetReq;
+
+function makePostReq(reqObj) {
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("POST", reqObj.url, true);
+  setHeaders(xmlHttp, reqObj.headerData);
+  xmlHttp.send(JSON.stringify(reqObj.body));
+  return new Promise(function (resolve, reject) {
+    xmlHttp.onreadystatechange = function () {
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) resolve(JSON.parse(xmlHttp.responseText));
+    };
+  });
+}
+
+exports.makePostReq = makePostReq;
+
+function setHeaders(xmlHttp, headerData) {
+  if (!headerData) {
+    return;
+  }
+
+  headerData = __assign(__assign({}, headerData), {
+    'content-type': 'application/json'
+  });
+  Object.keys(headerData).forEach(function (key) {
+    var val = headerData[key];
+
+    if (val) {
+      xmlHttp.setRequestHeader(key, val);
+    }
+  });
+}
+},{}],"bot-details.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var environment_1 = require("./environment");
+
+var ajax_1 = require("./ajax");
+
+function getBotDetails() {
+  var env = environment_1.environment;
+  var url = "https://" + env.root + "imibot.ai/api/v1/bot/preview/?bot_unique_name=" + env.bot_unique_name + "&enterprise_unique_name=" + env.enterprise_unique_name;
+  return ajax_1.makeGetReq({
+    url: url
+  });
+}
+
+exports.getBotDetails = getBotDetails;
+},{"./environment":"environment.ts","./ajax":"ajax.ts"}],"../node_modules/regenerator-runtime/runtime.js":[function(require,module,exports) {
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -1088,88 +1206,6 @@ try {
   Function("r", "regeneratorRuntime = r")(runtime);
 }
 
-},{}],"ajax.ts":[function(require,module,exports) {
-"use strict";
-
-var __assign = this && this.__assign || function () {
-  __assign = Object.assign || function (t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-      s = arguments[i];
-
-      for (var p in s) {
-        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-      }
-    }
-
-    return t;
-  };
-
-  return __assign.apply(this, arguments);
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function makeGetReq(reqObj) {
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("GET", reqObj.url, true);
-  setHeaders(xmlHttp, reqObj.headerData);
-  xmlHttp.send(null);
-  return new Promise(function (resolve, reject) {
-    xmlHttp.onreadystatechange = function () {
-      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) resolve(JSON.parse(xmlHttp.responseText));
-    };
-  });
-}
-
-exports.makeGetReq = makeGetReq;
-
-function makePostReq(reqObj) {
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("POST", reqObj.url, true);
-  setHeaders(xmlHttp, reqObj.headerData);
-  xmlHttp.send(JSON.stringify(reqObj.body));
-  return new Promise(function (resolve, reject) {
-    xmlHttp.onreadystatechange = function () {
-      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) resolve(JSON.parse(xmlHttp.responseText));
-    };
-  });
-}
-
-exports.makePostReq = makePostReq;
-
-function setHeaders(xmlHttp, headerData) {
-  if (!headerData) {
-    return;
-  }
-
-  headerData = __assign(__assign({}, headerData), {
-    'content-type': 'application/json'
-  });
-  Object.keys(headerData).forEach(function (key) {
-    var val = headerData[key];
-
-    if (val) {
-      xmlHttp.setRequestHeader(key, val);
-    }
-  });
-}
-},{}],"environment.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.environment = {
-  bot_access_token: null,
-  bot_unique_name: "dewa_gitex_en",
-  enterprise_unique_name: "dewa_demo",
-  root: "",
-  consumer: {
-    uid: Date.now()
-  }
-};
 },{}],"send-api.ts":[function(require,module,exports) {
 "use strict";
 
@@ -1206,7 +1242,7 @@ function sendMessageToBot(bot_access_token, enterprise_unique_name, humanMessage
     "type": "human",
     "msg": humanMessage,
     "platform": "web",
-    "is_test": false
+    "is_test": true
   };
   var headerData = {
     "bot-access-token": bot_access_token
@@ -1252,7 +1288,181 @@ function serializeGeneratedMessagesToPreviewMessages(generatedMessage, bot_messa
 }
 
 exports.serializeGeneratedMessagesToPreviewMessages = serializeGeneratedMessagesToPreviewMessages;
-},{"./ajax":"ajax.ts","./environment":"environment.ts","./typings/send-api":"typings/send-api.ts"}],"main.ts":[function(require,module,exports) {
+},{"./ajax":"ajax.ts","./environment":"environment.ts","./typings/send-api":"typings/send-api.ts"}],"mock-data.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.data = {
+  "TimeStamp": 1570611015235,
+  "bot_message_id": 185654,
+  "bot_msg": "",
+  "extra_params": {},
+  "extras": {},
+  "generated_msg": [{
+    "text": "asdad"
+  }, {
+    quick_reply: {
+      "quick_replies": [{
+        "content_type": "text",
+        "payload": "New Reply Payload",
+        "title": "New Reply"
+      }, {
+        "content_type": "text",
+        "payload": "New Reply Payload",
+        "title": "New Reply"
+      }, {
+        "content_type": "text",
+        "payload": "New Reply Payload",
+        "title": "New Reply"
+      }, {
+        "content_type": "text",
+        "payload": "New Reply Payload",
+        "title": "New Reply"
+      }, {
+        "content_type": "text",
+        "payload": "New Reply Payload",
+        "title": "New Reply"
+      }, {
+        "content_type": "text",
+        "payload": "New Reply Payload",
+        "title": "New Reply"
+      }, {
+        "content_type": "text",
+        "payload": "New Reply Payload",
+        "title": "New Reply"
+      }, {
+        "content_type": "text",
+        "payload": "New Reply Payload",
+        "title": "New Reply"
+      }],
+      "text": "Would you like us to activate this ?"
+    }
+  }, {
+    "media": [{
+      "buttons": [{
+        "payload": "what can you do?",
+        "title": "bb2",
+        "type": "postback"
+      }],
+      "title": "Contract Renewal",
+      "type": "image",
+      "url": "https://s3-us-west-2.amazonaws.com/o2bot/image/carousel_pay_bills.jpg"
+    }, {
+      "buttons": [{
+        "payload": "expire",
+        "title": "Renew Now",
+        "type": "postback"
+      }],
+      "title": "Contract Renewal",
+      "type": "image",
+      "url": "https://s3-us-west-2.amazonaws.com/o2bot/image/carousel_pay_bills.jpg"
+    }, {
+      "buttons": [{
+        "payload": "expire",
+        "title": "Renew Now",
+        "type": "postback"
+      }],
+      "title": "Contract Renewal",
+      "type": "image",
+      "url": "https://s3-us-west-2.amazonaws.com/o2bot/image/carousel_pay_bills.jpg"
+    }]
+  }],
+  "language": "en",
+  "messageStore": {
+    "agent_handover_by_rules": false,
+    "corpus_id": 779,
+    "n_sections": [{
+      "first_question": "what is your HP",
+      "score": 1,
+      "section_id": "1"
+    }, {
+      "first_question": "What can you do?",
+      "score": 0.16,
+      "section_id": "help"
+    }],
+    "partial_match_sections": [],
+    "response_type": "rich",
+    "sendtoagent": false,
+    "thresholding_scores": {
+      "n_results": 3,
+      "threshold_diff_score": 0.05,
+      "threshold_min_score": 0.3
+    },
+    "top_match_section": {
+      "first_question": "what is your HP",
+      "score": 1,
+      "section_id": "1"
+    }
+  },
+  "partial_match": false,
+  "platform": "web",
+  "progressive": false,
+  "response_flag": true,
+  "room": {
+    "_id": "5d9d9e82a39cfe0041193325",
+    "agent_handover": false,
+    "agent_handover_rules_count": {
+      "consecutive_count": 0,
+      "fallback_count": 0,
+      "last_triggered": "",
+      "partial_match_count": 0
+    },
+    "allow_anonymization": false,
+    "bot_disabled": false,
+    "bot_id": 1428,
+    "callback": false,
+    "channels": ["web"],
+    "consent_permissions": [],
+    "consumer_id": 22480,
+    "created_at": 1570610818234,
+    "cross_retention_period": false,
+    "data_store": {},
+    "df_state": {},
+    "downvoted_message_count": 0,
+    "error_message_count": 0,
+    "feedback_count": {
+      "downvote": 0,
+      "upvote": 0
+    },
+    "id": 68067,
+    "imichat_agent": {},
+    "imiconnect_conversation_id": "",
+    "is_anonymized": false,
+    "is_test": true,
+    "last_message_time": "2019-10-09T08:50:15.233792",
+    "last_updated_job_id": "5d9d9f465d2301cf1b307152",
+    "manager_bot_room_id": 0,
+    "message_count": {
+      "agent": 0,
+      "bot": 7,
+      "total": 13,
+      "user": 6
+    },
+    "metadata": {},
+    "room_state_closed": false,
+    "selected_avatar": {},
+    "sendtoagent_count": 0,
+    "session_id": "",
+    "total_message_count": 13,
+    "updated_at": 1570611015234,
+    "upvoted_message_count": 0
+  },
+  "section_matched": [{
+    "first_question": "what is your HP",
+    "score": 1,
+    "section_id": "1"
+  }],
+  "sendtoagent": false,
+  "thresholding_scores": {
+    "n_results": 3,
+    "threshold_diff_score": 0.05,
+    "threshold_min_score": 0.3
+  },
+  "transaction_id": "06661e981cc944718db02e66b8ad9ea7"
+};
+},{}],"main.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -1404,6 +1614,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var dom_1 = require("./dom");
 
+var bot_details_1 = require("./bot-details");
+
 require("regenerator-runtime/runtime");
 
 var send_api_1 = require("./send-api");
@@ -1414,12 +1626,100 @@ var send_api_2 = require("./typings/send-api");
 
 var utility_1 = require("./utility");
 
-var isModelShown = false;
+var mock_data_1 = require("./mock-data");
 
-function initApp() {
+var isModelShown = false;
+var modes;
+
+(function (modes) {
+  modes["responsive"] = "responsive";
+  modes["full_screen"] = "full_screen";
+})(modes = exports.modes || (exports.modes = {}));
+
+document.addEventListener('DOMContentLoaded', function () {
+  return __awaiter(this, void 0, void 0, function () {
+    var botDetails, imiPreview, fullBody, phoneCasing, brandColor, theme;
+    return __generator(this, function (_a) {
+      switch (_a.label) {
+        case 0:
+          initEnvironment();
+          return [4, bot_details_1.getBotDetails()];
+
+        case 1:
+          botDetails = _a.sent();
+          initEnvironment(botDetails);
+          debugger;
+
+          try {
+            dom_1.$loader && dom_1.$loader.classList.add('d-none');
+            dom_1.$chatFooter && dom_1.$chatFooter.classList.remove('d-none');
+          } catch (e) {
+            console.log(e);
+          }
+
+          imiPreview = new ImiPreview();
+          imiPreview.setEventCallback(function (val) {
+            humanMessageHandler(val);
+          });
+          fullBody = true || utility_1.getQueryStringValue('fullbody') === "true";
+          phoneCasing = true || utility_1.getQueryStringValue('phonecasing') === "true";
+          brandColor = utility_1.getQueryStringValue('brandcolor');
+          imiPreview.viewInit('.test-container', fullBody, phoneCasing);
+          imiPreview.appendMessageInChatBody(mock_data_1.data.generated_msg);
+          theme = {
+            brandColor: brandColor || 'green',
+            showMenu: false
+          };
+          imiPreview.setOptions(botDetails, theme);
+          imiPreview.appendMessageInChatBody([{
+            sourceType: 'human',
+            text: "humanMessage",
+            time: Date.now()
+          }]);
+          initClientEvents();
+          return [2];
+      }
+    });
+  });
+});
+
+function initClientEvents() {
+  try {
+    dom_1.$chatInput.addEventListener('keypress', function ($event) {
+      if ($event.key === 'Enter') {
+        var humanMessage = dom_1.$chatInput.value;
+
+        if (!humanMessage || !humanMessage.trim()) {
+          return;
+        }
+
+        dom_1.$chatInput.value = "";
+        humanMessageHandler(humanMessage);
+      }
+    });
+  } catch (e) {
+    console.log(e);
+  }
+
+  try {
+    dom_1.$chatInputIcon.addEventListener('click', function () {
+      var humanMessage = dom_1.$chatInput.value;
+
+      if (!humanMessage || !humanMessage.trim()) {
+        return;
+      }
+
+      humanMessageHandler(humanMessage);
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function initApp(imiPreview) {
   return __awaiter(this, void 0, void 0, function () {
     return __generator(this, function (_a) {
-      initEvents();
+      initEvents(imiPreview);
       return [2];
     });
   });
@@ -1428,15 +1728,42 @@ function initApp() {
 var ImiPreview = function () {
   function ImiPreview() {}
 
-  ImiPreview.prototype.init = function (selector) {
+  ImiPreview.prototype.viewInit = function (selector, fullBody, phoneCasing) {
+    if (fullBody === void 0) {
+      fullBody = true;
+    }
+
+    if (phoneCasing === void 0) {
+      phoneCasing = true;
+    }
+
+    debugger;
     var mainParent = document.querySelector(selector);
-    mainParent.innerHTML = mainBodyTemplate();
+    mainParent.innerHTML = mainBodyTemplate(fullBody, phoneCasing);
     dom_1.domInit();
-    initApp();
+    initApp(this);
+  };
+
+  ImiPreview.prototype.setEventCallback = function (cb) {
+    this._cb = cb;
+  };
+
+  ImiPreview.prototype.setOptions = function (botDetails, theme) {
+    dom_1.setOptions(botDetails);
+    initEnvironment(botDetails);
+  };
+
+  ImiPreview.prototype.setTheme = function (theme) {
+    var root = document.documentElement;
+    root.style.setProperty('--color-brand', theme.brandColor || 'red');
   };
 
   ImiPreview.prototype.appendMessageInChatBody = function (generated_msg) {
     dom_1.AppendMessageInChatBody(generated_msg);
+  };
+
+  ImiPreview.prototype.removeAllChatMessages = function () {
+    dom_1.$chatBody.innerHTML = "";
   };
 
   return ImiPreview;
@@ -1451,121 +1778,128 @@ function removeModal() {
   dom_1.$chatFooter.classList.remove('opacity-0');
 }
 
-function initEvents() {
-  document.getElementById('close-modal1').addEventListener('click', function ($event) {
-    removeModal();
-  });
+function initEvents(imiPreview) {
   console.log(dom_1.$chatBody);
   dom_1.$chatBody.addEventListener('click', function ($event) {
     var target = $event.target;
-    removeModal();
-    var img = $event.target;
 
-    if (img.classList.contains('click-to-zoom')) {
-      var modal_1 = document.getElementById("myModal");
-      var modalImg = document.getElementById("img01");
-      var captionText = document.getElementById("caption");
-      modal_1.style.display = "block";
-      modalImg.src = img.src;
-      var span = document.getElementsByClassName("close")[0];
+    if (target.hasAttribute('data-payload')) {
+      imiPreview._cb(target.getAttribute('data-payload'));
 
-      span.onclick = function () {
-        modal_1.style.display = "none";
-      };
-    }
-
-    if (img.classList) {}
-
-    if (target.classList.contains('control')) {
-      var itemInView = 2;
-      var $carasalContainer_1 = findParentWithClass(target, 'carousal-container');
-      var shouldMoveRight = target.classList.contains('control-right');
-      var $carasalInner = $carasalContainer_1.querySelector('.carousal-container-inner');
-      var $carasalItemLength = $carasalContainer_1.querySelectorAll('.item').length;
-      var dataStep = Number($carasalContainer_1.getAttribute('data-step'));
-      $carasalContainer_1.classList.remove('hide-left-control');
-      $carasalContainer_1.classList.remove('hide-right-control');
-
-      if (dataStep < $carasalItemLength - itemInView && shouldMoveRight) {
-        dataStep++;
-
-        if (dataStep === $carasalItemLength - itemInView) {
-          setTimeout(function () {
-            $carasalContainer_1.classList.add('hide-right-control');
-          }, 350);
-        }
-      } else if (dataStep > 0 && !shouldMoveRight) {
-        dataStep--;
-
-        if (dataStep === 0) {
-          setTimeout(function () {
-            $carasalContainer_1.classList.add('hide-left-control');
-          }, 350);
-        }
-      } else {
-        return;
-      }
-
-      $carasalContainer_1.setAttribute('data-step', dataStep.toString());
-      var carasalContainerWidth = $carasalContainer_1.offsetWidth;
-      var itemWidth = $carasalInner.querySelector('.item').offsetWidth;
-      var base = itemWidth * 100 / carasalContainerWidth;
-      $carasalInner.style.transform = "translateX(" + -1 * base * dataStep + "%)";
-    }
-  });
-  dom_1.$langSubmit.addEventListener('click', function ($event) {
-    var lang = dom_1.$langSelect.value;
-
-    if (lang) {
-      var splits = environment_1.environment.bot_unique_name.split("_");
-      splits.pop();
-      environment_1.environment.bot_unique_name = splits.join("_") + '_' + lang;
-      var newUrl = utility_1.updateQueryStringParameter(location.href, "bot_unique_name", environment_1.environment.bot_unique_name);
-      newUrl = utility_1.updateQueryStringParameter(newUrl, "lang", lang);
-      location.href = newUrl;
-      initEnvironment();
-    }
-  });
-  dom_1.$chatInput.addEventListener('keypress', function ($event) {
-    if ($event.key === 'Enter') {
-      var humanMessage = dom_1.$chatInput.value;
-
-      if (!humanMessage || !humanMessage.trim()) {
-        return;
-      }
-
-      humanMessageHandler(humanMessage);
-    }
-  });
-  dom_1.$chatInputIcon.addEventListener('click', function () {
-    var humanMessage = dom_1.$chatInput.value;
-
-    if (!humanMessage || !humanMessage.trim()) {
       return;
     }
 
-    humanMessageHandler(humanMessage);
-  });
-  dom_1.$envOptions.addEventListener('click', function () {
-    var $phoneView = document.getElementsByClassName('chat-body')[0];
-    var $langPanel = dom_1.$phoneModel.querySelector('.lang-panel');
-
-    if (!isModelShown) {
-      $phoneView.classList.add('bg-opaque');
-      dom_1.$phoneModel.classList.add('d-flex');
-      dom_1.$phoneModel.classList.remove('d-none');
-      dom_1.$chatFooter.classList.add('opacity-0');
-      $langPanel.classList.add('d-flex');
-    } else {
-      $phoneView.classList.remove('bg-opaque');
-      dom_1.$phoneModel.classList.remove('d-flex');
-      dom_1.$phoneModel.classList.add('d-none');
-      dom_1.$chatFooter.classList.remove('opacity-0');
-      $langPanel.classList.remove('d-flex');
+    try {
+      removeModal();
+    } catch (e) {
+      console.log(e);
     }
 
-    isModelShown = !isModelShown;
+    try {
+      var img = $event.target;
+
+      if (img.classList.contains('click-to-zoom')) {
+        var modal_1 = document.getElementById("myModal");
+        var modalImg = document.getElementById("img01");
+        var captionText = document.getElementById("caption");
+        modal_1.style.display = "block";
+        modalImg.src = img.src;
+        var span = document.getElementsByClassName("close")[0];
+
+        span.onclick = function () {
+          modal_1.style.display = "none";
+        };
+      }
+
+      if (img.classList) {}
+    } catch (e) {
+      console.log(e);
+    }
+
+    try {
+      if (target.classList.contains('control')) {
+        var itemInView = 2;
+        var $carasalContainer_1 = findParentWithClass(target, 'carousal-container');
+        var shouldMoveRight = target.classList.contains('control-right');
+        var $carasalInner = $carasalContainer_1.querySelector('.carousal-container-inner');
+        var $carasalItemLength = $carasalContainer_1.querySelectorAll('.item').length;
+        var dataStep = Number($carasalContainer_1.getAttribute('data-step'));
+        $carasalContainer_1.classList.remove('hide-left-control');
+        $carasalContainer_1.classList.remove('hide-right-control');
+
+        if (dataStep < $carasalItemLength - itemInView && shouldMoveRight) {
+          dataStep++;
+
+          if (dataStep === $carasalItemLength - itemInView) {
+            setTimeout(function () {
+              $carasalContainer_1.classList.add('hide-right-control');
+            }, 350);
+          }
+        } else if (dataStep > 0 && !shouldMoveRight) {
+          dataStep--;
+
+          if (dataStep === 0) {
+            setTimeout(function () {
+              $carasalContainer_1.classList.add('hide-left-control');
+            }, 350);
+          }
+        } else {
+          return;
+        }
+
+        $carasalContainer_1.setAttribute('data-step', dataStep.toString());
+        var carasalContainerWidth = $carasalContainer_1.offsetWidth;
+        var itemWidth = $carasalInner.querySelector('.item').offsetWidth;
+        var base = itemWidth * 100 / carasalContainerWidth;
+        $carasalInner.style.transform = "translateX(" + -1 * base * dataStep + "%)";
+      }
+    } catch (e) {
+      console.log(e);
+    }
   });
+
+  try {
+    dom_1.$langSubmit.addEventListener('click', function ($event) {
+      var lang = dom_1.$langSelect.value;
+
+      if (lang) {
+        var splits = environment_1.environment.bot_unique_name.split("_");
+        splits.pop();
+        environment_1.environment.bot_unique_name = splits.join("_") + '_' + lang;
+        var newUrl = utility_1.updateQueryStringParameter(location.href, "bot_unique_name", environment_1.environment.bot_unique_name);
+        newUrl = utility_1.updateQueryStringParameter(newUrl, "lang", lang);
+        location.href = newUrl;
+        initEnvironment();
+      }
+    });
+  } catch (e) {
+    console.log(e);
+  }
+
+  try {
+    dom_1.$envOptions.addEventListener('click', function () {
+      var $phoneView = document.getElementsByClassName('chat-body')[0];
+      var $langPanel = dom_1.$phoneModel.querySelector('.lang-panel');
+
+      if (!isModelShown) {
+        $phoneView.classList.add('bg-opaque');
+        dom_1.$phoneModel.classList.add('d-flex');
+        dom_1.$phoneModel.classList.remove('d-none');
+        dom_1.$chatFooter.classList.add('opacity-0');
+        $langPanel.classList.add('d-flex');
+      } else {
+        $phoneView.classList.remove('bg-opaque');
+        dom_1.$phoneModel.classList.remove('d-flex');
+        dom_1.$phoneModel.classList.add('d-none');
+        dom_1.$chatFooter.classList.remove('opacity-0');
+        $langPanel.classList.remove('d-flex');
+      }
+
+      isModelShown = !isModelShown;
+    });
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 function humanMessageHandler(humanMessage) {
@@ -1591,8 +1925,12 @@ function humanMessageHandler(humanMessage) {
   });
 }
 
-function initEnvironment() {
-  var lang = utility_1.getQueryStringValue('lang');
+function initEnvironment(botDetails) {
+  if (botDetails === void 0) {
+    botDetails = {};
+  }
+
+  var lang = botDetails.language || utility_1.getQueryStringValue('language') || utility_1.getQueryStringValue('lang') || 'en';
 
   if (lang === 'ar' || lang === 'rtl') {
     document.body.classList.add('lang-rtl');
@@ -1600,6 +1938,8 @@ function initEnvironment() {
     dom_1.$chatInput.placeholder = "أكتب السؤال ..";
   }
 
+  environment_1.environment.bot_access_token = botDetails.bot_access_token;
+  environment_1.environment.logo = botDetails.logo;
   var root = utility_1.getQueryStringValue('root');
 
   if (root) {
@@ -1610,13 +1950,13 @@ function initEnvironment() {
     }
   }
 
-  var enterprise_unique_name = utility_1.getQueryStringValue('enterprise_unique_name');
+  var enterprise_unique_name = botDetails.enterprise_unique_name || utility_1.getQueryStringValue('enterprise_unique_name');
 
   if (enterprise_unique_name) {
     environment_1.environment.enterprise_unique_name = enterprise_unique_name;
   }
 
-  var bot_unique_name = utility_1.getQueryStringValue('bot_unique_name');
+  var bot_unique_name = botDetails.bot_unique_name || utility_1.getQueryStringValue('bot_unique_name');
 
   if (bot_unique_name) {
     environment_1.environment.bot_unique_name = bot_unique_name;
@@ -1633,14 +1973,42 @@ function findParentWithClass($child, className) {
   }
 }
 
-initApp().then(function (_) {
-  return console.log('app init success');
-});
+function mainBodyTemplate(fullBody, phoneCasing) {
+  var str = "";
 
-function mainBodyTemplate() {
-  return "\n<div class=\"loader\">\n    <img src=\"https://whizkey.ae/wisdom/static/media/rammas.42381205.gif\" alt=\"\">\n</div>\n    <!-- The Modal -->\n<div id=\"myModal\" class=\"modal2\">\n    <span class=\"close\">&times;</span>\n    <img class=\"modal-content\" id=\"img01\">\n    <div id=\"caption\"></div>\n</div>\n\n<div class=\"page1\">\n    <div class=\"page__content\">\n        <div class=\"phone\">\n            <div class=\"phone__body\">\n                <div class=\"phone__view\">\n                    <div id=\"phone-modal\" class=\"modal1\" style=\"\">\n                        <i class=\"fa fa-times\" id=\"close-modal1\"></i>\n                        <div class=\"lang-panel\">\n                            <h1>Select language</h1>\n                            <div>\n                                <select id=\"lang-select\">\n                                    <option value=\"en\">English</option>\n                                    <option value=\"ar\" style=\"direction: rtl;\">\u0639\u0631\u0628\u064A</option>\n                                </select>\n                            </div>\n                            <button class=\"imi-button-primary\" id=\"lang-submit\">Submit</button>\n                        </div>\n                    </div>\n                    <div class=\"grid-container\">\n\n                        <div class=\"header\" style=\"z-index: 1\">\n                            <div class=\"basel-bg\"></div>\n                            <div class=\"bot-intro\" id=\"botIntro\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\" src=\"https://whizkey.ae/wisdom/static/media/rammas.42381205.gif\"\n                                         alt=\"\">\n                                </span>\n                                <div class=\"bot-details\">\n                                    <div id=\"bot-title\" class=\"title\"></div>\n                                </div>\n                                <div class=\"options\" id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n                            </div>\n                        </div>\n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"padding: 8px 6px; display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        <!--chat body ends-->\n                        <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"phone__notch\">\n                    <div class=\"phone__speaker\"></div>\n                    <div class=\"phone__camera\"></div>\n                </div>\n            </div>\n            <div class=\"phone__btn\">\n                <button class=\"phone__btn--power\"></button>\n                <div class=\"phone__btn--volume\">\n                    <button class=\"phone__btn--volume-up\"></button>\n                    <button class=\"phone__btn--volume-down\"></button>\n                </div>\n                <button class=\"phone__btn--mute\"></button>\n            </div>\n        </div>\n    </div>\n</div>\n    \n    \n    ";
+  if (fullBody) {
+    str = phoneCasing ? getPhoneCoverTemplate() : getFullBodyExceptPhoneCover();
+  } else {
+    str = "\n    <!-- The Modal -->\n            <div id=\"myModal\" class=\"modal2\">\n                <span class=\"close\">&times;</span>\n                <img class=\"modal-content\" id=\"img01\">\n                <div id=\"caption\"></div>\n            </div>\n\n                <div class=\"imi-preview-grid-container\">\n\n                       \n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"padding: 8px 6px; display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        \n                    </div>\n    \n    \n    ";
+  }
+
+  return str;
 }
-},{"./dom":"dom.ts","regenerator-runtime/runtime":"../node_modules/regenerator-runtime/runtime.js","./send-api":"send-api.ts","./environment":"environment.ts","./typings/send-api":"typings/send-api.ts","./utility":"utility.ts"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+
+function getModelTemplate() {
+  return "\n        <div id=\"myModal\" class=\"modal2\">\n                <span class=\"close\">&times;</span>\n                <img class=\"modal-content\" id=\"img01\">\n                <div id=\"caption\"></div>\n            </div>\n    ";
+}
+
+function getChatBodyTemplate() {
+  return "\n    <div class=\"imi-preview-grid-container\">\n\n                       \n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"padding: 8px 6px; display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        \n                    </div>\n";
+}
+
+function getFullBodyExceptPhoneCover() {
+  return "\n        <div class=\"imi-preview-grid-container\">\n                        <div class=\"header\" style=\"z-index: 1\">\n                            <div class=\"bot-intro\" id=\"botIntro\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\"\n                                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\" \n                                    src=\"https://whizkey.ae/wisdom/static/media/rammas.42381205.gif\"\n                                         alt=\"\">\n                                </span>\n                                <div class=\"bot-details\">\n                                    <div id=\"bot-title\" class=\"title\"></div>\n                                    <div id=\"bot-title\" class=\"title\">asdadasd</div>\n                                </div>\n                                <div class=\"options\" id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n                            </div>\n                        </div>\n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"padding: 8px 6px; display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        <!--chat body ends-->\n                        <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>\n                    </div>\n    \n    ";
+}
+
+function getPhoneCoverTemplate() {
+  return "\n    <div class=\"page1\">\n    <div class=\"page__content\">\n        <div class=\"phone\">\n            <div class=\"phone__body\">\n                <div class=\"phone__view\">\n                    <div id=\"phone-modal\" class=\"modal1\" style=\"\">\n                        <i class=\"fa fa-times\" id=\"close-modal1\"></i>\n                        <div class=\"lang-panel\">\n                            <h1>Select language</h1>\n                            <div>\n                                <select id=\"lang-select\">\n                                    <option value=\"en\">English</option>\n                                    <option value=\"ar\" style=\"direction: rtl;\">\u0639\u0631\u0628\u064A</option>\n                                </select>\n                            </div>\n                            <button class=\"imi-button-primary\" id=\"lang-submit\">Submit</button>\n                        </div>\n                    </div>\n                    <div class=\"imi-preview-grid-container\">\n\n                        <div class=\"header\" style=\"z-index: 1\">\n                            <div class=\"basel-bg\"></div>\n                            <div class=\"bot-intro\" id=\"botIntro\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\"\n                                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\" \n                                       alt=\"\">\n                                </span>\n                                <div class=\"bot-details\">\n                                    <div id=\"bot-title\" class=\"title\"></div>\n                                </div>\n                                <div class=\"options\" id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n                            </div>\n                        </div>\n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"padding: 8px 6px; display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        <!--chat body ends-->\n                        <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"phone__notch\">\n                    <div class=\"phone__speaker\"></div>\n                    <div class=\"phone__camera\"></div>\n                </div>\n            </div>\n            <div class=\"phone__btn\">\n                <button class=\"phone__btn--power\"></button>\n                <div class=\"phone__btn--volume\">\n                    <button class=\"phone__btn--volume-up\"></button>\n                    <button class=\"phone__btn--volume-down\"></button>\n                </div>\n                <button class=\"phone__btn--mute\"></button>\n            </div>\n        </div>\n    </div>\n</div>\n    ";
+}
+
+function getHeaderTemplate() {
+  return "\n    <div class=\"header\" style=\"z-index: 1\">\n                            <div class=\"basel-bg\"></div>\n                            <div class=\"bot-intro\" id=\"botIntro\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\" src=\"https://whizkey.ae/wisdom/static/media/rammas.42381205.gif\"\n                                         alt=\"\">\n                                </span>\n                                <div class=\"bot-details\">\n                                    <div id=\"bot-title\" class=\"title\"></div>\n                                </div>\n                                <div class=\"options\" id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n                            </div>\n                        </div>\n    ";
+}
+
+function getFooterTemplate() {
+  return "\n    <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>";
+}
+},{"./dom":"dom.ts","./bot-details":"bot-details.ts","regenerator-runtime/runtime":"../node_modules/regenerator-runtime/runtime.js","./send-api":"send-api.ts","./environment":"environment.ts","./typings/send-api":"typings/send-api.ts","./utility":"utility.ts","./mock-data":"mock-data.ts"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -1668,7 +2036,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64127" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51461" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
