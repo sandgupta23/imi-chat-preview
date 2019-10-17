@@ -53,17 +53,17 @@ document.addEventListener('DOMContentLoaded', async function () {
     const fullBody = true;//getQueryStringValue('fullbody') === "true";
     const phoneCasing = false;//getQueryStringValue('phonecasing') === "true";
 
-    const brandColor = getQueryStringValue('brandcolor');
+    const brandColor = getQueryStringValue('brandcolor') || "#2b4f70";
     imiPreview.viewInit('.test-container', fullBody, phoneCasing);
 
-    imiPreview.appendMessageInChatBody(data.generated_msg, data);
+    // imiPreview.appendMessageInChatBody(data.generated_msg, data);
     // const botDetails = {description: "dummy description", logo: "dummy logo", title: "dummy title"};
     // const languageApi =
     const theme = {brandColor: brandColor || 'green', showMenu: false};
     imiPreview.setOptions(botDetails, theme);
     imiPreview.appendMessageInChatBody([{
-        sourceType: 'human',
-        text: "humanMessage",
+        sourceType: 'bit',
+        text: botDetails.first_message,
         time: Date.now()
     }]);
     initClientEvents();
