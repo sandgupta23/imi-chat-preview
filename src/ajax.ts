@@ -26,6 +26,19 @@ export function makePostReq<T>(reqObj: IPostReq): Promise<T> {
         }
     })
 }
+export function makePutReq<T>(reqObj: IPostReq): Promise<T> {
+
+    const xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("PUT", reqObj.url, true); // true for asynchronous
+    setHeaders(xmlHttp, reqObj.headerData);
+    xmlHttp.send(JSON.stringify(reqObj.body));
+    return new Promise((resolve, reject) => {
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                resolve(JSON.parse(xmlHttp.responseText));
+        }
+    })
+}
 
 
 function setHeaders(xmlHttp: XMLHttpRequest, headerData: IHeaderData) {

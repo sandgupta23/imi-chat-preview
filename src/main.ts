@@ -14,9 +14,9 @@ import {
 import {getBotDetails} from "./bot-details";
 import {IBotDetailsApiResp} from "./typings/bot-detaills-api";
 import 'regenerator-runtime/runtime'
-import {sendMessageToBot, serializeGeneratedMessagesToPreviewMessages} from "./send-api";
+import {sendFeedback, sendMessageToBot, serializeGeneratedMessagesToPreviewMessages} from "./send-api";
 import {environment} from "./environment";
-import {ESourceType, IMessageData} from "./typings/send-api";
+import {ESourceType, IMessageData, ISendApiResp, ISendApiResponsePayload} from "./typings/send-api";
 import {getQueryStringValue, updateQueryStringParameter} from "./utility";
 import {data} from "./mock-data";
 
@@ -27,13 +27,14 @@ export enum modes {
     full_screen = "full_screen",
 }
 
+const botResponses: ISendApiResp[] = [];
 
 document.addEventListener('DOMContentLoaded', async function () {
 
     initEnvironment();
     const botDetails = await getBotDetails<IBotDetailsApiResp>();
     initEnvironment(botDetails);
-    debugger;
+
     // $chatFooter.classList.add('d-none');
     try {
         $loader && $loader.classList.add('d-none');
@@ -43,19 +44,19 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     const imiPreview = new ImiPreview();
-    imiPreview.setEventCallback((val)=>{
+    imiPreview.setSendHumanMessageCallback((val) => {
         humanMessageHandler(val);
-        // imiPreview.appendMessageInChatBody([{
-        //     sourceType: 'human',
-        //     text: val,
-        //     time: Date.now()
-        // }]);
     });
-    const fullBody = true || getQueryStringValue('fullbody') === "true";
-    const phoneCasing = true || getQueryStringValue('phonecasing') === "true";
-    const brandColor =  getQueryStringValue('brandcolor');
+    imiPreview.setSendFeedback((val, feedback) => {
+        sendFeedbackHandler(val, feedback);
+    });
+    const fullBody = true;//getQueryStringValue('fullbody') === "true";
+    const phoneCasing = false;//getQueryStringValue('phonecasing') === "true";
+
+    const brandColor = getQueryStringValue('brandcolor');
     imiPreview.viewInit('.test-container', fullBody, phoneCasing);
-    imiPreview.appendMessageInChatBody(data.generated_msg);
+
+    imiPreview.appendMessageInChatBody(data.generated_msg, data);
     // const botDetails = {description: "dummy description", logo: "dummy logo", title: "dummy title"};
     // const languageApi =
     const theme = {brandColor: brandColor || 'green', showMenu: false};
@@ -69,7 +70,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 });
 
 
-function initClientEvents(){
+function initClientEvents() {
     try {
         $chatInput.addEventListener('keypress', ($event) => {
             if ($event.key === 'Enter') {
@@ -112,21 +113,28 @@ async function initApp(imiPreview: ImiPreview) {
 
 class ImiPreview {
     _cb;
+    _feedbackCB;
+
     viewInit(selector, fullBody = true, phoneCasing = true) {
-        debugger;
+
         let mainParent = document.querySelector(selector) as HTMLElement;
         mainParent.innerHTML = mainBodyTemplate(fullBody, phoneCasing);
         domInit();
         initApp(this);
     }
 
-    setEventCallback(cb){
+    setSendHumanMessageCallback(cb) {
         this._cb = cb;
+    }
+
+    setSendFeedback(cb) {
+        this._feedbackCB = cb;
     }
 
     setOptions(botDetails: { description: string, logo: string, title: string }, theme: { brandColor: string }) {
         setOptions(botDetails);
         initEnvironment(botDetails);
+        this.setTheme(theme);
     }
 
     setTheme(theme: { brandColor: string }) {
@@ -134,8 +142,9 @@ class ImiPreview {
         root.style.setProperty('--color-brand', theme.brandColor || 'red');
     }
 
-    appendMessageInChatBody(generated_msg) {
-        AppendMessageInChatBody(generated_msg);
+    appendMessageInChatBody(generated_msg, sendApiResp:ISendApiResponsePayload) {
+        debugger;
+        AppendMessageInChatBody(generated_msg, sendApiResp);
     }
 
     removeAllChatMessages() {
@@ -165,7 +174,21 @@ function initEvents(imiPreview: ImiPreview) {
     $chatBody.addEventListener('click', ($event) => {
         const target = $event.target as HTMLElement;
 
-        if(target.hasAttribute('data-payload')){
+        if (target.classList.contains('feedback-like') || target.classList.contains('feedback-dislike')) {
+            const $feedbackWrapper = findParentWithClass(target, 'msg-bubble-options-panel');
+            const oldFeedback = $feedbackWrapper.getAttribute('data-feedback');
+            if(oldFeedback != null){
+                return;
+            }
+            const $messageBubble = findParentWithClass(target, 'msg-bubble');
+            const feedback = target.getAttribute('data-feedback-value');
+            const txn = $messageBubble.getAttribute('data-txn');
+            const bot_message_id = $messageBubble.getAttribute('data-bot_message_id');
+            $feedbackWrapper.setAttribute('data-feedback', feedback);
+            target.classList.add('active');
+            imiPreview._feedbackCB({txn, bot_message_id}, Number(feedback));
+        }
+        if (target.hasAttribute('data-payload')) {
             imiPreview._cb(target.getAttribute('data-payload'));
             return;
         }
@@ -298,13 +321,39 @@ async function humanMessageHandler(humanMessage: string) {
         text: humanMessage,
         time: Date.now()
     }]);
-    const botResponse = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, humanMessage)
+    debugger;
+    const botResponse = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, humanMessage);
+    botResponses.push(botResponse);
     let messageData: any = serializeGeneratedMessagesToPreviewMessages(botResponse.generated_msg);
-    AppendMessageInChatBody(messageData);
+
+    AppendMessageInChatBody(messageData, botResponse);
 
 }
 
-function initEnvironment(botDetails:any = {}) {
+function getBotResponseByTxnId(txn) {
+    return botResponses.find(res => res.transaction_id === txn)
+}
+
+async function sendFeedbackHandler(resp:{txn: string, bot_message_id: string}, feedback: number) {
+    let parsedFeedback;
+    if (feedback === 0) {
+        parsedFeedback = 'NEGATIVE'
+    } else if (feedback === 1) {
+        parsedFeedback = 'POSITIVE'
+    }
+    const res = getBotResponseByTxnId(resp.txn);
+    try {
+        await sendFeedback({
+            consumer_id: res.room.consumer_id,
+            feedback: parsedFeedback,
+            bot_message_id: res.bot_message_id
+        });
+    } catch (e) {
+        /*todo: remove like from view*/
+    }
+}
+
+function initEnvironment(botDetails: any = {}) {
     // const lang = getQueryStringValue('lang');
     const lang = botDetails.language || getQueryStringValue('language') || getQueryStringValue('lang') || 'en';
 
@@ -407,9 +456,6 @@ function getChatBodyTemplate() {
                     </div>
 `
 }
-
-
-
 
 
 function getFullBodyExceptPhoneCover() {

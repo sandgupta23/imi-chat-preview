@@ -1,1 +1,110 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>GITEX Demo</title><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="DEWA - IMIbot.ai"><meta name="author" content="https://github.com/nea"><meta property="og:type" content="website"><meta property="og:url" content="http://imibot.ai"><meta property="og:site_name" content="DEWA - IMIbot.ai"><meta property="og:image" itemprop="image primaryImageOfPage" content="https://whizkey.ae/wisdom/static/media/rammas.42381205.gif"><meta name="twitter:card" content="summary"><meta name="twitter:domain" content="imibot.ai"><meta name="twitter:title" property="og:title" itemprop="name" content="IMIbot.ai"><meta name="twitter:description" property="og:description" itemprop="description" content="The bot building platform for your enterprise"><link rel="stylesheet" href="/styles.css"><link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans" rel="stylesheet"><link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"><script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script></head><body class="dewa-theme"> <div class="test-container" style="width:100vw;height:100vh;display:flex;justify-content:center;align-items:center"> </div>                                                                        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.2.5/polyfill.min.js"></script> <script src="/main.js"></script> </body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>IMIBot.ai</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="DEWA - IMIbot.ai">
+    <meta name="author" content="https://github.com/nea">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://imibot.ai">
+    <meta property="og:site_name" content="DEWA - IMIbot.ai">
+    <meta property="og:image" itemprop="image primaryImageOfPage" content="https://whizkey.ae/wisdom/static/media/rammas.42381205.gif">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:domain" content="imibot.ai">
+    <meta name="twitter:title" property="og:title" itemprop="name" content="IMIbot.ai">
+    <meta name="twitter:description" property="og:description" itemprop="description" content="The bot building platform for your enterprise">
+
+    <link rel="stylesheet" href="/styles.164d45a1.css">
+<!--    <link rel="stylesheet" href="iphone.scss">-->
+<!--    <link rel="stylesheet" href="scroll-bar.scss">-->
+<!--    <link rel="stylesheet" href="click-to-zoom.scss">-->
+<!--    <link rel="stylesheet" href="carousal.scss">-->
+    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+<script src="/styles.164d45a1.js"></script></head>
+<body class="dewa-theme">
+    <div class="test-container" style="width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center">
+
+    </div>
+<!--&lt;!&ndash; The Modal &ndash;&gt;-->
+<!--<div id="myModal" class="modal2">-->
+<!--    <span class="close">&times;</span>-->
+<!--    <img class="modal-content" id="img01">-->
+<!--    <div id="caption"></div>-->
+<!--</div>-->
+
+<!--<div class="page1">-->
+<!--    <div class="page__content">-->
+<!--        <div class="phone">-->
+<!--            <div class="phone__body">-->
+<!--                <div class="phone__view">-->
+<!--                    <div id="phone-modal" class="modal1" style="">-->
+<!--                        <i class="fa fa-times" id="close-modal1"></i>-->
+<!--                        <div class="lang-panel">-->
+<!--                            <h1>Select language</h1>-->
+<!--                            <div>-->
+<!--                                <select id="lang-select">-->
+<!--                                    <option value="en">English</option>-->
+<!--                                    <option value="ar" style="direction: rtl;">عربي</option>-->
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                            <button class="imi-button-primary" id="lang-submit">Submit</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="imi-preview-grid-container">-->
+
+<!--                        <div class="header" style="z-index: 1">-->
+<!--                            <div class="basel-bg"></div>-->
+<!--                            <div class="bot-intro" id="botIntro">-->
+<!--                                <span class="bot-logo">-->
+<!--                                    <img id="bot-logo" src="https://whizkey.ae/wisdom/static/media/rammas.42381205.gif"-->
+<!--                                         alt="">-->
+<!--                                </span>-->
+<!--                                <div class="bot-details">-->
+<!--                                    <div id="bot-title" class="title"></div>-->
+<!--                                </div>-->
+<!--                                <div class="options" id="env-options">-->
+<!--                                    <i class="fa fa-ellipsis-v"></i>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        &lt;!&ndash;chat body starts&ndash;&gt;-->
+<!--                        <div class="chat-body" id="body"-->
+<!--                             style="padding: 8px 6px; display: flex; flex-direction: column; z-index: 0">-->
+
+<!--                        </div>-->
+<!--                        &lt;!&ndash;chat body ends&ndash;&gt;-->
+<!--                        <div class="footer">-->
+<!--                            <input placeholder="Type a message" id="chat-input" dir="ltr" autocomplete="off" autofocus-->
+<!--                                   type="text">-->
+<!--                            <span class="icon" id="chat-input-icon">-->
+<!--                                <span class="fa fa-send"></span>-->
+<!--                            </span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="phone__notch">-->
+<!--                    <div class="phone__speaker"></div>-->
+<!--                    <div class="phone__camera"></div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="phone__btn">-->
+<!--                <button class="phone__btn&#45;&#45;power"></button>-->
+<!--                <div class="phone__btn&#45;&#45;volume">-->
+<!--                    <button class="phone__btn&#45;&#45;volume-up"></button>-->
+<!--                    <button class="phone__btn&#45;&#45;volume-down"></button>-->
+<!--                </div>-->
+<!--                <button class="phone__btn&#45;&#45;mute"></button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--7.2.5/polyfill.min.js: for promise support-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.2.5/polyfill.min.js"></script>
+<script src="/main.c39d6dcf.js"></script>
+</body>
+</html>
+

@@ -186,9 +186,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.environment = {
   bot_access_token: null,
-  bot_unique_name: "dewa_gitex_en",
-  enterprise_unique_name: "dewa_demo",
-  root: "",
+  bot_unique_name: "weatherytesting",
+  enterprise_unique_name: "ayeshreddy.k",
+  root: "dev.",
   consumer: {
     uid: Date.now().toString()
   },
@@ -225,8 +225,6 @@ function domInit() {
 exports.domInit = domInit;
 
 function setOptions(intro) {
-  debugger;
-
   if (exports.$botLogo) {
     exports.$botLogo.src = intro.logo;
   }
@@ -238,7 +236,10 @@ function setOptions(intro) {
 
 exports.setOptions = setOptions;
 
-function AppendMessageInChatBody(messages) {
+function AppendMessageInChatBody(messages, botResponse) {
+  debugger;
+  var txnId = botResponse && botResponse.transaction_id || 'human';
+  var bot_message_id = botResponse && botResponse.bot_message_id || 'human';
   var str = "";
   var frag = document.createDocumentFragment();
   var videoStr = "";
@@ -252,8 +253,6 @@ function AppendMessageInChatBody(messages) {
     }
 
     if (message.media) {
-      debugger;
-
       if (message.media.audio_url) {
         str = str + getBotMessageTemplateForAudio(message.media.audio_url);
       }
@@ -274,7 +273,7 @@ function AppendMessageInChatBody(messages) {
   });
   var humanClass = messages[0].sourceType === send_api_1.ESourceType.human ? 'msg-bubble-human' : '';
   var time = utility_1.getTimeInHHMM();
-  str = "\n            <div xmlns=\"http://www.w3.org/1999/xhtml\" class=\"msg-bubble " + humanClass + "\">\n                <div class=\"msg-bot-logo\">\n                    <img \n                    src=\"" + environment_1.environment.logo + "\"\n                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\"\n                     style=\"height: 100%; width: 100%\" />\n                </div>\n                <div class=\"message-container\">\n                    " + str + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                </div>\n            </div>  \n            \n        ";
+  str = "\n            <div xmlns=\"http://www.w3.org/1999/xhtml\" data-txn=\"" + txnId + "\" data-bot_message_id=\"" + bot_message_id + "\"\n             class=\"msg-bubble " + humanClass + "\" style=\"position:relative;\">\n                <div class=\"msg-bubble-options-panel\">\n                    <i class=\"fa fa-thumbs-up feedback-like\" data-feedback-value=\"1\" title=\"Helpful\"></i>\n                    <i class=\"fa fa-thumbs-down feedback-dislike\" title=\"Not helpful\" data-feedback-value=\"0\"></i>\n                </div>\n<!--                <div class=\"msg-bubble-options\">-->\n<!--                    <i class=\"fa fa-ellipsis-h\"></i>-->\n<!--                </div>-->\n                <div class=\"msg-bot-logo\">\n                    <img \n                    src=\"" + environment_1.environment.logo + "\"\n                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\"\n                     style=\"height: 100%; width: 100%\" />\n                </div>\n                <div class=\"message-container\">\n                    " + str + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                </div>\n            </div>  \n            \n        ";
   var el = getElementsFromHtmlStr(str);
   var carousal = el.querySelector('.carousal-container');
   frag.appendChild(el);
@@ -441,6 +440,20 @@ function makePostReq(reqObj) {
 }
 
 exports.makePostReq = makePostReq;
+
+function makePutReq(reqObj) {
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("PUT", reqObj.url, true);
+  setHeaders(xmlHttp, reqObj.headerData);
+  xmlHttp.send(JSON.stringify(reqObj.body));
+  return new Promise(function (resolve, reject) {
+    xmlHttp.onreadystatechange = function () {
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) resolve(JSON.parse(xmlHttp.responseText));
+    };
+  });
+}
+
+exports.makePutReq = makePutReq;
 
 function setHeaders(xmlHttp, headerData) {
   if (!headerData) {
@@ -1256,6 +1269,21 @@ function sendMessageToBot(bot_access_token, enterprise_unique_name, humanMessage
 
 exports.sendMessageToBot = sendMessageToBot;
 
+function sendFeedback(body) {
+  debugger;
+  var url = "https://" + environment_1.environment.root + "imibot.ai/api/v1/message/feedback/";
+  var headerData = {
+    "bot-access-token": environment_1.environment.bot_access_token
+  };
+  return ajax_1.makePutReq({
+    url: url,
+    body: body,
+    headerData: headerData
+  });
+}
+
+exports.sendFeedback = sendFeedback;
+
 function serializeGeneratedMessagesToPreviewMessages(generatedMessage, bot_message_id, response_language) {
   return generatedMessage.map(function (message, index) {
     var isLast = index === generatedMessage.length - 1;
@@ -1636,6 +1664,7 @@ var modes;
   modes["full_screen"] = "full_screen";
 })(modes = exports.modes || (exports.modes = {}));
 
+var botResponses = [];
 document.addEventListener('DOMContentLoaded', function () {
   return __awaiter(this, void 0, void 0, function () {
     var botDetails, imiPreview, fullBody, phoneCasing, brandColor, theme;
@@ -1648,7 +1677,6 @@ document.addEventListener('DOMContentLoaded', function () {
         case 1:
           botDetails = _a.sent();
           initEnvironment(botDetails);
-          debugger;
 
           try {
             dom_1.$loader && dom_1.$loader.classList.add('d-none');
@@ -1658,14 +1686,17 @@ document.addEventListener('DOMContentLoaded', function () {
           }
 
           imiPreview = new ImiPreview();
-          imiPreview.setEventCallback(function (val) {
+          imiPreview.setSendHumanMessageCallback(function (val) {
             humanMessageHandler(val);
           });
-          fullBody = true || utility_1.getQueryStringValue('fullbody') === "true";
-          phoneCasing = true || utility_1.getQueryStringValue('phonecasing') === "true";
+          imiPreview.setSendFeedback(function (val, feedback) {
+            sendFeedbackHandler(val, feedback);
+          });
+          fullBody = true;
+          phoneCasing = false;
           brandColor = utility_1.getQueryStringValue('brandcolor');
           imiPreview.viewInit('.test-container', fullBody, phoneCasing);
-          imiPreview.appendMessageInChatBody(mock_data_1.data.generated_msg);
+          imiPreview.appendMessageInChatBody(mock_data_1.data.generated_msg, mock_data_1.data);
           theme = {
             brandColor: brandColor || 'green',
             showMenu: false
@@ -1737,20 +1768,24 @@ var ImiPreview = function () {
       phoneCasing = true;
     }
 
-    debugger;
     var mainParent = document.querySelector(selector);
     mainParent.innerHTML = mainBodyTemplate(fullBody, phoneCasing);
     dom_1.domInit();
     initApp(this);
   };
 
-  ImiPreview.prototype.setEventCallback = function (cb) {
+  ImiPreview.prototype.setSendHumanMessageCallback = function (cb) {
     this._cb = cb;
+  };
+
+  ImiPreview.prototype.setSendFeedback = function (cb) {
+    this._feedbackCB = cb;
   };
 
   ImiPreview.prototype.setOptions = function (botDetails, theme) {
     dom_1.setOptions(botDetails);
     initEnvironment(botDetails);
+    this.setTheme(theme);
   };
 
   ImiPreview.prototype.setTheme = function (theme) {
@@ -1758,8 +1793,9 @@ var ImiPreview = function () {
     root.style.setProperty('--color-brand', theme.brandColor || 'red');
   };
 
-  ImiPreview.prototype.appendMessageInChatBody = function (generated_msg) {
-    dom_1.AppendMessageInChatBody(generated_msg);
+  ImiPreview.prototype.appendMessageInChatBody = function (generated_msg, sendApiResp) {
+    debugger;
+    dom_1.AppendMessageInChatBody(generated_msg, sendApiResp);
   };
 
   ImiPreview.prototype.removeAllChatMessages = function () {
@@ -1782,6 +1818,27 @@ function initEvents(imiPreview) {
   console.log(dom_1.$chatBody);
   dom_1.$chatBody.addEventListener('click', function ($event) {
     var target = $event.target;
+
+    if (target.classList.contains('feedback-like') || target.classList.contains('feedback-dislike')) {
+      var $feedbackWrapper = findParentWithClass(target, 'msg-bubble-options-panel');
+      var oldFeedback = $feedbackWrapper.getAttribute('data-feedback');
+
+      if (oldFeedback != null) {
+        return;
+      }
+
+      var $messageBubble = findParentWithClass(target, 'msg-bubble');
+      var feedback = target.getAttribute('data-feedback-value');
+      var txn = $messageBubble.getAttribute('data-txn');
+      var bot_message_id = $messageBubble.getAttribute('data-bot_message_id');
+      $feedbackWrapper.setAttribute('data-feedback', feedback);
+      target.classList.add('active');
+
+      imiPreview._feedbackCB({
+        txn: txn,
+        bot_message_id: bot_message_id
+      }, Number(feedback));
+    }
 
     if (target.hasAttribute('data-payload')) {
       imiPreview._cb(target.getAttribute('data-payload'));
@@ -1913,12 +1970,60 @@ function humanMessageHandler(humanMessage) {
             text: humanMessage,
             time: Date.now()
           }]);
+          debugger;
           return [4, send_api_1.sendMessageToBot(environment_1.environment.bot_access_token, environment_1.environment.enterprise_unique_name, humanMessage)];
 
         case 1:
           botResponse = _a.sent();
+          botResponses.push(botResponse);
           messageData = send_api_1.serializeGeneratedMessagesToPreviewMessages(botResponse.generated_msg);
-          dom_1.AppendMessageInChatBody(messageData);
+          dom_1.AppendMessageInChatBody(messageData, botResponse);
+          return [2];
+      }
+    });
+  });
+}
+
+function getBotResponseByTxnId(txn) {
+  return botResponses.find(function (res) {
+    return res.transaction_id === txn;
+  });
+}
+
+function sendFeedbackHandler(resp, feedback) {
+  return __awaiter(this, void 0, void 0, function () {
+    var parsedFeedback, res, e_1;
+    return __generator(this, function (_a) {
+      switch (_a.label) {
+        case 0:
+          if (feedback === 0) {
+            parsedFeedback = 'NEGATIVE';
+          } else if (feedback === 1) {
+            parsedFeedback = 'POSITIVE';
+          }
+
+          res = getBotResponseByTxnId(resp.txn);
+          _a.label = 1;
+
+        case 1:
+          _a.trys.push([1, 3,, 4]);
+
+          return [4, send_api_1.sendFeedback({
+            consumer_id: res.room.consumer_id,
+            feedback: parsedFeedback,
+            bot_message_id: res.bot_message_id
+          })];
+
+        case 2:
+          _a.sent();
+
+          return [3, 4];
+
+        case 3:
+          e_1 = _a.sent();
+          return [3, 4];
+
+        case 4:
           return [2];
       }
     });
@@ -2036,7 +2141,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51461" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61765" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -32,7 +32,7 @@ export function domInit() {
 }
 
 export function setOptions(intro: IBotDetailsApiResp) {
-    debugger;
+
     if ($botLogo) {
         $botLogo.src = intro.logo;//intro.logo;
     }
@@ -52,7 +52,10 @@ export function setOptions(intro: IBotDetailsApiResp) {
 // `;
 }
 
-export function AppendMessageInChatBody(messages: IMessageData[]) {
+export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload) {
+    debugger;
+    const txnId = botResponse && botResponse.transaction_id || 'human';
+    const bot_message_id = botResponse && botResponse.bot_message_id || 'human';
     let str = "";
     let frag = document.createDocumentFragment();
     let videoStr = "";
@@ -65,7 +68,7 @@ export function AppendMessageInChatBody(messages: IMessageData[]) {
             str = str + getBotMessageTemplateForQuickReply(message.quick_reply, message.sourceType);
         }
         if (message.media) {
-            debugger;
+
             if (message.media.audio_url) {
                 str = str + getBotMessageTemplateForAudio(message.media.audio_url);
             }
@@ -89,8 +92,17 @@ export function AppendMessageInChatBody(messages: IMessageData[]) {
 
     let humanClass = messages[0].sourceType === ESourceType.human ? 'msg-bubble-human' : '';
     let time = getTimeInHHMM();
+
     str = `
-            <div xmlns="http://www.w3.org/1999/xhtml" class="msg-bubble ${humanClass}">
+            <div xmlns="http://www.w3.org/1999/xhtml" data-txn="${txnId}" data-bot_message_id="${bot_message_id}"
+             class="msg-bubble ${humanClass}" style="position:relative;">
+                <div class="msg-bubble-options-panel">
+                    <i class="fa fa-thumbs-up feedback-like" data-feedback-value="1" title="Helpful"></i>
+                    <i class="fa fa-thumbs-down feedback-dislike" title="Not helpful" data-feedback-value="0"></i>
+                </div>
+<!--                <div class="msg-bubble-options">-->
+<!--                    <i class="fa fa-ellipsis-h"></i>-->
+<!--                </div>-->
                 <div class="msg-bot-logo">
                     <img 
                     src="${environment.logo}"

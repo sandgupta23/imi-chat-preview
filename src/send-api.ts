@@ -1,4 +1,4 @@
-import {makePostReq} from "./ajax";
+import {makePostReq, makePutReq} from "./ajax";
 import {environment} from "./environment";
 import {IHeaderData} from "./typings/http";
 import {EBotMessageMediaType, ESourceType, IGeneratedMessageItem, IMessageData, ISendApiResp} from "./typings/send-api";
@@ -13,11 +13,23 @@ export function sendMessageToBot(bot_access_token: string, enterprise_unique_nam
         "is_test": true
     };
 
-    const headerData:IHeaderData = {
+    const headerData: IHeaderData = {
         // enterprise_unique_name: enterprise_unique_name,
         "bot-access-token": bot_access_token
     };
     return makePostReq<ISendApiResp>({url, body, headerData})
+}
+
+
+export function sendFeedback(body: { "bot_message_id": number, "feedback": string, "consumer_id": number }): Promise<ISendApiResp> {
+    debugger
+    const url = `https://${environment.root}imibot.ai/api/v1/message/feedback/`;//https://dev.imibot.ai/api/v1/message/feedback/
+
+    const headerData: IHeaderData = {
+        // enterprise_unique_name: enterprise_unique_name,
+        "bot-access-token": environment.bot_access_token
+    };
+    return makePutReq<ISendApiResp>({url, body, headerData});
 }
 
 
