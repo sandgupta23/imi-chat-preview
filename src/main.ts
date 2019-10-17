@@ -57,7 +57,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const brandColor = getQueryStringValue('brandcolor') || "#2b4f70";
     imiPreview.viewInit('.test-container', fullBody, phoneCasing);
-
     // imiPreview.appendMessageInChatBody(data.generated_msg, data);
     // const botDetails = {description: "dummy description", logo: "dummy logo", title: "dummy title"};
     // const languageApi =
@@ -143,7 +142,7 @@ class ImiPreview {
     }
 
     appendMessageInChatBody(generated_msg, sendApiResp:ISendApiResponsePayload) {
-        debugger;
+
         AppendMessageInChatBody(generated_msg, sendApiResp);
     }
 
@@ -321,8 +320,14 @@ async function humanMessageHandler(humanMessage: string, sourceType?) {
         text: humanMessage,
         time: Date.now()
     }]);
-    debugger;
+
     const botResponse = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, humanMessage);
+        debugger;
+    if(environment.room && environment.room.id && botResponse.room.id !== environment.room.id){
+        AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null);
+        console.log(`previous room : ${environment.room}. new room ${botResponse.room.id}`);
+    }
+    environment.room = botResponse.room;
     botResponses.push(botResponse);
     let messageData: any = serializeGeneratedMessagesToPreviewMessages(botResponse.generated_msg);
 
@@ -471,7 +476,7 @@ function getFullBodyExceptPhoneCover() {
                                 </span>
                                 <div class="bot-details">
                                     <div id="bot-title" class="title"></div>
-<!--                                    <div id="bot-title" class="title"></div>-->
+                                    <div id="bot-description" class="title">hello</div>
                                 </div>
                                 <div class="options" id="env-options">
                                     <i class="fa fa-ellipsis-v"></i>

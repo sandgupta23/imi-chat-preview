@@ -192,6 +192,9 @@ exports.environment = {
   consumer: {
     uid: Date.now().toString()
   },
+  room: {
+    id: null
+  },
   logo: ""
 };
 },{}],"dom.ts":[function(require,module,exports) {
@@ -216,6 +219,7 @@ function domInit() {
   exports.$loader = document.getElementsByClassName('loader')[0];
   exports.$envOptions = document.getElementById('env-options');
   exports.$botTitle = document.getElementById('bot-title');
+  exports.$botDescription = document.getElementById('bot-description');
   exports.$botLogo = document.getElementById('bot-logo');
   exports.$phoneModel = document.getElementById('phone-modal');
   exports.$langSelect = document.getElementById('lang-select');
@@ -232,48 +236,62 @@ function setOptions(intro) {
   if (exports.$botTitle) {
     exports.$botTitle.textContent = intro.name;
   }
+
+  if (exports.$botDescription) {
+    exports.$botDescription.textContent = intro.description;
+  }
 }
 
 exports.setOptions = setOptions;
 
 function AppendMessageInChatBody(messages, botResponse) {
-  debugger;
   var txnId = botResponse && botResponse.transaction_id || 'human';
   var bot_message_id = botResponse && botResponse.bot_message_id || 'human';
   var str = "";
   var frag = document.createDocumentFragment();
   var videoStr = "";
-  messages.forEach(function (message) {
-    if (message.text) {
-      str = str + getBotMessageTemplateForText(message.text, message.sourceType);
-    }
+  ;
 
-    if (message.quick_reply) {
-      str = str + getBotMessageTemplateForQuickReply(message.quick_reply, message.sourceType);
-    }
-
-    if (message.media) {
-      if (message.media.audio_url) {
-        str = str + getBotMessageTemplateForAudio(message.media.audio_url);
+  if (messages[0].SESSION_EXPIRY) {
+    str = getBotMessageTemplateForSessionExpiry(messages[0]);
+  } else {
+    messages.forEach(function (message) {
+      if (message.text) {
+        str = str + getBotMessageTemplateForText(message.text, message.sourceType);
       }
 
-      if (message.media.video_url) {
-        str = str + getBotMessageTemplateForVideo(message.media.video_url);
-        videoStr = videoStr + ("<video autoplay=\"autoplay\" muted=\"muted\"  class=\"msg-video\" controls=\"true\" playsinline=\"playsinline\">\n                <source src=\"" + message.media.video_url + "\"/>\n                    Your browser does not support HTML5 video.\n                </video>");
+      if (message.SESSION_EXPIRY) {
+        str = str + getBotMessageTemplateForSessionExpiry(message.text, message.sourceType);
       }
 
-      if (message.media.image_url) {
-        str = str + getBotMessageTemplateForImage(message.media.image_url);
+      if (message.quick_reply) {
+        str = str + getBotMessageTemplateForQuickReply(message.quick_reply, message.sourceType);
       }
 
-      if (message.media.length) {
-        str = str + getBotMessageTemplateForCarousal(message.media);
+      if (message.media) {
+        if (message.media.audio_url) {
+          str = str + getBotMessageTemplateForAudio(message.media.audio_url);
+        }
+
+        if (message.media.video_url) {
+          str = str + getBotMessageTemplateForVideo(message.media.video_url);
+          videoStr = videoStr + ("<video autoplay=\"autoplay\" muted=\"muted\"  class=\"msg-video\" controls=\"true\" playsinline=\"playsinline\">\n                <source src=\"" + message.media.video_url + "\"/>\n                    Your browser does not support HTML5 video.\n                </video>");
+        }
+
+        if (message.media.image_url) {
+          str = str + getBotMessageTemplateForImage(message.media.image_url);
+        }
+
+        if (message.media.length) {
+          str = str + getBotMessageTemplateForCarousal(message.media);
+        }
       }
-    }
-  });
-  var humanClass = messages[0].sourceType === send_api_1.ESourceType.human ? 'msg-bubble-human' : '';
-  var time = utility_1.getTimeInHHMM();
-  str = "\n            <div xmlns=\"http://www.w3.org/1999/xhtml\" data-txn=\"" + txnId + "\" data-bot_message_id=\"" + bot_message_id + "\"\n             class=\"msg-bubble " + humanClass + "\" style=\"position:relative;\">\n                <div class=\"msg-bubble-options-panel\">\n                    <i class=\"fa fa-thumbs-up feedback-like\" data-feedback-value=\"1\" title=\"Helpful\"></i>\n                    <i class=\"fa fa-thumbs-down feedback-dislike\" title=\"Not helpful\" data-feedback-value=\"0\"></i>\n                </div>\n<!--                <div class=\"msg-bubble-options\">-->\n<!--                    <i class=\"fa fa-ellipsis-h\"></i>-->\n<!--                </div>-->\n                <div class=\"msg-bot-logo\">\n                    <img \n                    src=\"" + environment_1.environment.logo + "\"\n                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\"\n                     style=\"height: 100%; width: 100%\" />\n                </div>\n                <div class=\"message-container\">\n                    " + str + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                </div>\n            </div>  \n            \n        ";
+    });
+    var humanClass = messages[0].sourceType === send_api_1.ESourceType.human ? 'msg-bubble-human' : '';
+    var time = utility_1.getTimeInHHMM();
+    str = "\n            <div xmlns=\"http://www.w3.org/1999/xhtml\" data-txn=\"" + txnId + "\" data-bot_message_id=\"" + bot_message_id + "\"\n             class=\"msg-bubble " + humanClass + "\" style=\"position:relative;\">\n                <div class=\"msg-bubble-options-panel\">\n                    <i class=\"fa fa-thumbs-up feedback-like\" data-feedback-value=\"1\" title=\"Helpful\"></i>\n                    <i class=\"fa fa-thumbs-down feedback-dislike\" title=\"Not helpful\" data-feedback-value=\"0\"></i>\n                </div>\n<!--                <div class=\"msg-bubble-options\">-->\n<!--                    <i class=\"fa fa-ellipsis-h\"></i>-->\n<!--                </div>-->\n                <div class=\"msg-bot-logo\">\n                    <img \n                    src=\"" + environment_1.environment.logo + "\"\n                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\"\n                     style=\"height: 100%; width: 100%\" />\n                </div>\n                <div class=\"message-container\">\n                    " + str + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                </div>\n            </div>  \n            \n        ";
+  }
+
   var el = getElementsFromHtmlStr(str);
   var carousal = el.querySelector('.carousal-container');
   frag.appendChild(el);
@@ -347,6 +365,11 @@ function getBotMessageTemplateForQuickReply(quick_replies, source) {
 
 function getBotMessageTemplateForText(text, source) {
   var htmlStr = "\n                <div class=\"message-wrapper " + (source === send_api_1.ESourceType.human ? 'message-wrapper-human' : '') + "\">\n                    <div class=\"content\">" + text + "</div>\n                </div>\n            ";
+  return htmlStr;
+}
+
+function getBotMessageTemplateForSessionExpiry(text, source) {
+  var htmlStr = "\n                <div style=\"width: 100vw; display: flex; justify-content: center; align-items: center; margin: 10px 0\" xmlns=\"http://www.w3.org/1999/xhtml\">\n                    <div class=\"div\" style=\"width: 70%; display: flex\" >\n                        <hr style=\"border: none;background: #80808030; flex-grow: 1; ;flex-grow: 1;\"/>\n                        <div style=\"padding: 0 10px\">Session expired</div>\n                        <hr style=\"border: none;background: #80808030; flex-grow: 1; ;flex-grow: 1;\"/>\n                        \n                    </div>\n                </div>\n            ";
   return htmlStr;
 }
 
@@ -1270,7 +1293,6 @@ function sendMessageToBot(bot_access_token, enterprise_unique_name, humanMessage
 exports.sendMessageToBot = sendMessageToBot;
 
 function sendFeedback(body) {
-  debugger;
   var url = "https://" + environment_1.environment.root + "imibot.ai/api/v1/message/feedback/";
   var headerData = {
     "bot-access-token": environment_1.environment.bot_access_token
@@ -1617,7 +1639,6 @@ var ImiPreview = function () {
   };
 
   ImiPreview.prototype.appendMessageInChatBody = function (generated_msg, sendApiResp) {
-    debugger;
     dom_1.AppendMessageInChatBody(generated_msg, sendApiResp);
   };
 
@@ -1793,11 +1814,20 @@ function humanMessageHandler(humanMessage, sourceType) {
             text: humanMessage,
             time: Date.now()
           }]);
-          debugger;
           return [4, send_api_1.sendMessageToBot(environment_1.environment.bot_access_token, environment_1.environment.enterprise_unique_name, humanMessage)];
 
         case 1:
           botResponse = _a.sent();
+          debugger;
+
+          if (environment_1.environment.room && environment_1.environment.room.id && botResponse.room.id !== environment_1.environment.room.id) {
+            dom_1.AppendMessageInChatBody([{
+              SESSION_EXPIRY: true
+            }], null);
+            console.log("previous room : " + environment_1.environment.room + ". new room " + botResponse.room.id);
+          }
+
+          environment_1.environment.room = botResponse.room;
           botResponses.push(botResponse);
           messageData = send_api_1.serializeGeneratedMessagesToPreviewMessages(botResponse.generated_msg);
           dom_1.AppendMessageInChatBody(messageData, botResponse);
@@ -1922,7 +1952,7 @@ function getChatBodyTemplate() {
 }
 
 function getFullBodyExceptPhoneCover() {
-  return "\n        <div class=\"imi-preview-grid-container\">\n                        <div class=\"header\" style=\"z-index: 1\">\n                            <div class=\"bot-intro\" id=\"botIntro\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\"\n                                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\" \n                                    src=\"https://whizkey.ae/wisdom/static/media/rammas.42381205.gif\"\n                                         alt=\"\">\n                                </span>\n                                <div class=\"bot-details\">\n                                    <div id=\"bot-title\" class=\"title\"></div>\n<!--                                    <div id=\"bot-title\" class=\"title\"></div>-->\n                                </div>\n                                <div class=\"options\" id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n                            </div>\n                        </div>\n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"padding: 8px 6px; display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        <!--chat body ends-->\n                        <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>\n                    </div>\n    \n    ";
+  return "\n        <div class=\"imi-preview-grid-container\">\n                        <div class=\"header\" style=\"z-index: 1\">\n                            <div class=\"bot-intro\" id=\"botIntro\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\"\n                                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\" \n                                    src=\"https://whizkey.ae/wisdom/static/media/rammas.42381205.gif\"\n                                         alt=\"\">\n                                </span>\n                                <div class=\"bot-details\">\n                                    <div id=\"bot-title\" class=\"title\"></div>\n                                    <div id=\"bot-description\" class=\"title\">hello</div>\n                                </div>\n                                <div class=\"options\" id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n                            </div>\n                        </div>\n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"padding: 8px 6px; display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        <!--chat body ends-->\n                        <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>\n                    </div>\n    \n    ";
 }
 
 function getPhoneCoverTemplate() {
@@ -1964,7 +1994,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55823" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63092" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

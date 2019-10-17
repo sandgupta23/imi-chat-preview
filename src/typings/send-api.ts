@@ -269,6 +269,7 @@ export enum ESourceType {
 
 export interface IMessageData extends IGeneratedMessageItem {
     /*custom fields*/
+    SESSION_EXPIRY:true
     sourceType?: ESourceType; // TODO: "timePeriod" ||"human", gives error, see why
     time?: number;
     messageMediaType?: EBotMessageMediaType;

@@ -11,6 +11,7 @@ export let $chatFooter;
 export let $loader;
 export let $envOptions;
 export let $botTitle;
+export let $botDescription;
 export let $botLogo;
 export let $phoneModel;
 export let $langSelect;
@@ -25,6 +26,7 @@ export function domInit() {
     $loader = document.getElementsByClassName('loader')[0];
     $envOptions = document.getElementById('env-options');
     $botTitle = document.getElementById('bot-title');
+    $botDescription = document.getElementById('bot-description');
     $botLogo = document.getElementById('bot-logo') as HTMLImageElement;
     $phoneModel = document.getElementById('phone-modal');
     $langSelect = document.getElementById('lang-select') as HTMLSelectElement;
@@ -38,6 +40,10 @@ export function setOptions(intro: IBotDetailsApiResp) {
     }
     if ($botTitle) {
         $botTitle.textContent = intro.name;
+    }
+
+    if ($botDescription) {
+        $botDescription.textContent = intro.description;
     }
     // $botIntro.innerHTML = `<span class="bot-logo">
     //                 <img src="${'https://whizkey.ae/wisdom/static/media/rammas.42381205.gif'}" alt="">
@@ -53,47 +59,54 @@ export function setOptions(intro: IBotDetailsApiResp) {
 }
 
 export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload) {
-    debugger;
+
     const txnId = botResponse && botResponse.transaction_id || 'human';
     const bot_message_id = botResponse && botResponse.bot_message_id || 'human';
     let str = "";
     let frag = document.createDocumentFragment();
     let videoStr = "";
-    messages.forEach((message) => {
-        if (message.text) {
-            str = str + getBotMessageTemplateForText(message.text, message.sourceType);
-        }
-        if (message.quick_reply) {
-
-            str = str + getBotMessageTemplateForQuickReply(message.quick_reply, message.sourceType);
-        }
-        if (message.media) {
-
-            if (message.media.audio_url) {
-                str = str + getBotMessageTemplateForAudio(message.media.audio_url);
+    ;
+    if (messages[0].SESSION_EXPIRY) {
+        str = getBotMessageTemplateForSessionExpiry(messages[0]);
+    } else {
+        messages.forEach((message) => {
+            if (message.text) {
+                str = str + getBotMessageTemplateForText(message.text, message.sourceType);
             }
-            if (message.media.video_url) {
-                str = str + getBotMessageTemplateForVideo(message.media.video_url);
-                videoStr = videoStr + `<video autoplay="autoplay" muted="muted"  class="msg-video" controls="true" playsinline="playsinline">
+            if (message.SESSION_EXPIRY) {
+                str = str + getBotMessageTemplateForSessionExpiry(message.text, message.sourceType);
+            }
+            if (message.quick_reply) {
+
+                str = str + getBotMessageTemplateForQuickReply(message.quick_reply, message.sourceType);
+            }
+            if (message.media) {
+
+                if (message.media.audio_url) {
+                    str = str + getBotMessageTemplateForAudio(message.media.audio_url);
+                }
+                if (message.media.video_url) {
+                    str = str + getBotMessageTemplateForVideo(message.media.video_url);
+                    videoStr = videoStr + `<video autoplay="autoplay" muted="muted"  class="msg-video" controls="true" playsinline="playsinline">
                 <source src="${message.media.video_url}"/>
                     Your browser does not support HTML5 video.
                 </video>`;
+                }
+                if (message.media.image_url) {
+                    str = str + getBotMessageTemplateForImage(message.media.image_url);
+                }
+
+                if (message.media.length) {
+
+                    str = str + getBotMessageTemplateForCarousal(message.media);
+                }
             }
-            if (message.media.image_url) {
-                str = str + getBotMessageTemplateForImage(message.media.image_url);
-            }
+        });
 
-            if (message.media.length) {
+        let humanClass = messages[0].sourceType === ESourceType.human ? 'msg-bubble-human' : '';
+        let time = getTimeInHHMM();
 
-                str = str + getBotMessageTemplateForCarousal(message.media);
-            }
-        }
-    });
-
-    let humanClass = messages[0].sourceType === ESourceType.human ? 'msg-bubble-human' : '';
-    let time = getTimeInHHMM();
-
-    str = `
+        str = `
             <div xmlns="http://www.w3.org/1999/xhtml" data-txn="${txnId}" data-bot_message_id="${bot_message_id}"
              class="msg-bubble ${humanClass}" style="position:relative;">
                 <div class="msg-bubble-options-panel">
@@ -116,6 +129,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
             </div>  
             
         `;
+    }
 
     // $chatBody.innerHTML = $chatBody.innerHTML + str;
     const el = getElementsFromHtmlStr(str) as HTMLElement;
@@ -195,6 +209,20 @@ function getBotMessageTemplateForText(text, source?: ESourceType) {
     const htmlStr = `
                 <div class="message-wrapper ${source === ESourceType.human ? 'message-wrapper-human' : ''}">
                     <div class="content">${text}</div>
+                </div>
+            `;
+    return htmlStr;
+}
+
+function getBotMessageTemplateForSessionExpiry(text, source?: ESourceType) {
+    const htmlStr = `
+                <div style="width: 100vw; display: flex; justify-content: center; align-items: center; margin: 10px 0" xmlns="http://www.w3.org/1999/xhtml">
+                    <div class="div" style="width: 70%; display: flex" >
+                        <hr style="border: none;background: #80808030; flex-grow: 1; ;flex-grow: 1;"/>
+                        <div style="padding: 0 10px">Session expired</div>
+                        <hr style="border: none;background: #80808030; flex-grow: 1; ;flex-grow: 1;"/>
+                        
+                    </div>
                 </div>
             `;
     return htmlStr;
