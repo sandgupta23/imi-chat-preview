@@ -1248,11 +1248,11 @@ var environment_1 = require("./environment");
 
 var send_api_1 = require("./typings/send-api");
 
-function sendMessageToBot(bot_access_token, enterprise_unique_name, humanMessage) {
+function sendMessageToBot(bot_access_token, enterprise_unique_name, humanMessage, sourceType) {
   var url = "https://" + environment_1.environment.root + "imibot.ai/api/v1/webhook/web/";
   var body = {
     "consumer": environment_1.environment.consumer,
-    "type": "human",
+    "type": sourceType || send_api_1.ESourceType.human,
     "msg": humanMessage,
     "platform": "web",
     "is_test": true
@@ -1491,7 +1491,7 @@ var modes;
 var botResponses = [];
 document.addEventListener('DOMContentLoaded', function () {
   return __awaiter(this, void 0, void 0, function () {
-    var botDetails, imiPreview, fullBody, phoneCasing, brandColor, theme;
+    var botDetails, imiPreview, fullBody, phoneCasing, brandColor, theme, firstMessageData;
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
@@ -1525,11 +1525,11 @@ document.addEventListener('DOMContentLoaded', function () {
             showMenu: false
           };
           imiPreview.setOptions(botDetails, theme);
-          imiPreview.appendMessageInChatBody([{
-            sourceType: 'bit',
-            text: botDetails.first_message,
-            time: Date.now()
-          }]);
+          return [4, send_api_1.sendMessageToBot(environment_1.environment.bot_access_token, environment_1.environment.enterprise_unique_name, 'hi', send_api_2.ESourceType.bot)];
+
+        case 2:
+          firstMessageData = _a.sent();
+          imiPreview.appendMessageInChatBody(firstMessageData.generated_msg);
           initClientEvents();
           return [2];
       }
@@ -1782,14 +1782,14 @@ function initEvents(imiPreview) {
   }
 }
 
-function humanMessageHandler(humanMessage) {
+function humanMessageHandler(humanMessage, sourceType) {
   return __awaiter(this, void 0, void 0, function () {
     var botResponse, messageData;
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
           dom_1.AppendMessageInChatBody([{
-            sourceType: send_api_2.ESourceType.human,
+            sourceType: sourceType || send_api_2.ESourceType.human,
             text: humanMessage,
             time: Date.now()
           }]);
@@ -1964,7 +1964,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61765" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55823" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -8,7 +8,8 @@ import {
     $langSubmit,
     $loader,
     $phoneModel,
-    AppendMessageInChatBody, domInit,
+    AppendMessageInChatBody,
+    domInit,
     setOptions
 } from "./dom";
 import {getBotDetails} from "./bot-details";
@@ -16,9 +17,8 @@ import {IBotDetailsApiResp} from "./typings/bot-detaills-api";
 import 'regenerator-runtime/runtime'
 import {sendFeedback, sendMessageToBot, serializeGeneratedMessagesToPreviewMessages} from "./send-api";
 import {environment} from "./environment";
-import {ESourceType, IMessageData, ISendApiResp, ISendApiResponsePayload} from "./typings/send-api";
+import {ESourceType, ISendApiResp, ISendApiResponsePayload} from "./typings/send-api";
 import {getQueryStringValue, updateQueryStringParameter} from "./utility";
-import {data} from "./mock-data";
 
 let isModelShown = false;
 
@@ -34,6 +34,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     initEnvironment();
     const botDetails = await getBotDetails<IBotDetailsApiResp>();
     initEnvironment(botDetails);
+
+
 
     // $chatFooter.classList.add('d-none');
     try {
@@ -61,11 +63,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     // const languageApi =
     const theme = {brandColor: brandColor || 'green', showMenu: false};
     imiPreview.setOptions(botDetails, theme);
-    imiPreview.appendMessageInChatBody([{
-        sourceType: 'bit',
-        text: botDetails.first_message,
-        time: Date.now()
-    }]);
+    const firstMessageData = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, 'hi', ESourceType.bot);
+
+    imiPreview.appendMessageInChatBody(firstMessageData.generated_msg);
     initClientEvents();
 });
 
@@ -315,9 +315,9 @@ function initEvents(imiPreview: ImiPreview) {
 
 }
 
-async function humanMessageHandler(humanMessage: string) {
+async function humanMessageHandler(humanMessage: string, sourceType?) {
     AppendMessageInChatBody([{
-        sourceType: ESourceType.human,
+        sourceType: sourceType || ESourceType.human,
         text: humanMessage,
         time: Date.now()
     }]);
