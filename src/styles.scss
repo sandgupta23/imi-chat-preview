@@ -303,6 +303,7 @@ ul, li {
     display: flex;
     flex-shrink: 0;
     align-items: flex-start;
+    max-width: 650px;
 
     .msg-bubble-options-panel {
       opacity: 0;
@@ -315,6 +316,7 @@ ul, li {
       border-radius: 15px;
       z-index: 2;
       transition: opacity .3s;
+      display: none;
 
       .fa {
         cursor: pointer;
@@ -325,14 +327,21 @@ ul, li {
       }
 
       &[data-feedback] {
-        opacity: 1!important;
+        opacity: 1 !important;
+        display: inline-block !important;
         *:not(.active) {
           display: none;
         }
-        .active{
+
+        .active {
           margin-right: 0;
-          //opacity: 1!important;
         }
+      }
+    }
+
+    &:last-child {
+      .msg-bubble-options-panel {
+        display: inline-block;
       }
     }
 
@@ -436,6 +445,8 @@ ul, li {
         }
       }
     }
+
+
   }
 }
 
