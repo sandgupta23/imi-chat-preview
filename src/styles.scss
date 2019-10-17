@@ -339,7 +339,7 @@ ul, li {
       }
     }
 
-    &:last-child {
+    &:last-child:not(:first-child) {
       .msg-bubble-options-panel {
         display: inline-block;
       }

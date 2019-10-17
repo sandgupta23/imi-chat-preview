@@ -913,7 +913,7 @@ ul, li {
 .chat-body .msg-bubble .msg-bubble-options-panel[data-feedback] .active {
   margin-right: 0;
 }
-.chat-body .msg-bubble:last-child .msg-bubble-options-panel {
+.chat-body .msg-bubble:last-child:not(:first-child) .msg-bubble-options-panel {
   display: inline-block;
 }
 .chat-body .msg-bubble .msg-bubble-options {

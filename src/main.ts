@@ -471,7 +471,7 @@ function getFullBodyExceptPhoneCover() {
                                 </span>
                                 <div class="bot-details">
                                     <div id="bot-title" class="title"></div>
-                                    <div id="bot-title" class="title">asdadasd</div>
+<!--                                    <div id="bot-title" class="title"></div>-->
                                 </div>
                                 <div class="options" id="env-options">
                                     <i class="fa fa-ellipsis-v"></i>
