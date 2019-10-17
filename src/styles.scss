@@ -183,7 +183,7 @@ body {
           //padding: 10px;
           background: #eaeaea;
           box-sizing: content-box;
-          @include msg-shadow();
+          //@include msg-shadow();
         }
         .msg-audio, .msg-video {
           max-width: 90%;
