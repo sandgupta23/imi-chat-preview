@@ -106,12 +106,22 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
         let humanClass = messages[0].sourceType === ESourceType.human ? 'msg-bubble-human' : '';
         let time = getTimeInHHMM();
 
+        let feedbackSTr = "";
+        const messageWithFeedback = (messages.find((message) => message.feedback != null));
+        let likeActive;
+        let disLikeActive;
+        if (messageWithFeedback) {
+            const feedback = messageWithFeedback.feedback
+            likeActive = (feedback === "1" || feedback === "POSITIVE") ? 'active' : '';
+            disLikeActive = (feedback === "0" || feedback === "NEGATIVE") ? 'active' : '';
+            feedbackSTr = `data-feedback="${feedback}"`;
+        }
         str = `
-            <div xmlns="http://www.w3.org/1999/xhtml" data-txn="${txnId}" data-bot_message_id="${bot_message_id}"
+            <div xmlns="http://www.w3.org/1999/xhtml" data-txn="${txnId}"  data-bot_message_id="${bot_message_id}"
              class="msg-bubble ${humanClass}" style="position:relative;">
-                <div class="msg-bubble-options-panel">
-                    <i class="fa fa-thumbs-up feedback-like" data-feedback-value="1" title="Helpful"></i>
-                    <i class="fa fa-thumbs-down feedback-dislike" title="Not helpful" data-feedback-value="0"></i>
+                <div class="msg-bubble-options-panel" ${feedbackSTr}>
+                    <i class="fa fa-thumbs-up feedback-like ${likeActive}" data-feedback-value="1" title="Helpful"></i>
+                    <i class="fa fa-thumbs-down feedback-dislike ${disLikeActive}" title="Not helpful" data-feedback-value="0"></i>
                 </div>
 <!--                <div class="msg-bubble-options">-->
 <!--                    <i class="fa fa-ellipsis-h"></i>-->
@@ -143,26 +153,28 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
 
     if (carousal) {
         let carousalWidth = $chatBody.offsetWidth as any - 60;
-
+        let dataItemToShow = '1';
         if (carousalWidth > 0 && carousalWidth < 225) {
-            // carousalWidth = carousal;
-            // carousalWidth = 225;
-            carousal.setAttribute('data-itemToShow', '1');
+            dataItemToShow = '1';
         } else {
             if (carousalWidth > 0 && carousalWidth < 450) {
-                // carousalWidth = 225;
-                carousal.setAttribute('data-itemToShow', '2');
+                dataItemToShow = '2';
             } else if (carousalWidth >= 450 && carousalWidth < 675) {
                 carousalWidth = 450;
-                carousal.setAttribute('data-itemToShow', '2');
+                dataItemToShow = '2';
             } else if (carousalWidth >= 675) {
                 carousalWidth = 675;
-                carousal.setAttribute('data-itemToShow', '3');
+                dataItemToShow = '3';
             }
+        }
+        carousal.setAttribute('data-itemToShow', dataItemToShow);
+        debugger;
+        let carousalItemCount = carousal.getElementsByClassName('item').length;
+        if(carousalItemCount <= Number(dataItemToShow) ){
+            carousal.classList.add('no-controls');
         }
         carousal.style.width = carousalWidth + 'px';
         carousal.style.opacity = '1';
-
     }
     let msgVid = document.getElementsByClassName('msg-video');
     if (videoStr) {

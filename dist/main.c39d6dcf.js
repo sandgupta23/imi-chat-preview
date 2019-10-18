@@ -289,7 +289,21 @@ function AppendMessageInChatBody(messages, botResponse) {
     });
     var humanClass = messages[0].sourceType === send_api_1.ESourceType.human ? 'msg-bubble-human' : '';
     var time = utility_1.getTimeInHHMM();
-    str = "\n            <div xmlns=\"http://www.w3.org/1999/xhtml\" data-txn=\"" + txnId + "\" data-bot_message_id=\"" + bot_message_id + "\"\n             class=\"msg-bubble " + humanClass + "\" style=\"position:relative;\">\n                <div class=\"msg-bubble-options-panel\">\n                    <i class=\"fa fa-thumbs-up feedback-like\" data-feedback-value=\"1\" title=\"Helpful\"></i>\n                    <i class=\"fa fa-thumbs-down feedback-dislike\" title=\"Not helpful\" data-feedback-value=\"0\"></i>\n                </div>\n<!--                <div class=\"msg-bubble-options\">-->\n<!--                    <i class=\"fa fa-ellipsis-h\"></i>-->\n<!--                </div>-->\n                <div class=\"msg-bot-logo\">\n                    <img \n                    src=\"" + environment_1.environment.logo + "\"\n                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\"\n                     style=\"height: 100%; width: 100%\" />\n                </div>\n                <div class=\"message-container\">\n                    " + str + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                </div>\n            </div>  \n            \n        ";
+    var feedbackSTr = "";
+    var messageWithFeedback = messages.find(function (message) {
+      return message.feedback != null;
+    });
+    var likeActive = void 0;
+    var disLikeActive = void 0;
+
+    if (messageWithFeedback) {
+      var feedback = messageWithFeedback.feedback;
+      likeActive = feedback === "1" || feedback === "POSITIVE" ? 'active' : '';
+      disLikeActive = feedback === "0" || feedback === "NEGATIVE" ? 'active' : '';
+      feedbackSTr = "data-feedback=\"" + feedback + "\"";
+    }
+
+    str = "\n            <div xmlns=\"http://www.w3.org/1999/xhtml\" data-txn=\"" + txnId + "\"  data-bot_message_id=\"" + bot_message_id + "\"\n             class=\"msg-bubble " + humanClass + "\" style=\"position:relative;\">\n                <div class=\"msg-bubble-options-panel\" " + feedbackSTr + ">\n                    <i class=\"fa fa-thumbs-up feedback-like " + likeActive + "\" data-feedback-value=\"1\" title=\"Helpful\"></i>\n                    <i class=\"fa fa-thumbs-down feedback-dislike " + disLikeActive + "\" title=\"Not helpful\" data-feedback-value=\"0\"></i>\n                </div>\n<!--                <div class=\"msg-bubble-options\">-->\n<!--                    <i class=\"fa fa-ellipsis-h\"></i>-->\n<!--                </div>-->\n                <div class=\"msg-bot-logo\">\n                    <img \n                    src=\"" + environment_1.environment.logo + "\"\n                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\"\n                     style=\"height: 100%; width: 100%\" />\n                </div>\n                <div class=\"message-container\">\n                    " + str + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                </div>\n            </div>  \n            \n        ";
   }
 
   var el = getElementsFromHtmlStr(str);
@@ -304,19 +318,28 @@ function AppendMessageInChatBody(messages, botResponse) {
 
   if (carousal) {
     var carousalWidth = exports.$chatBody.offsetWidth - 60;
+    var dataItemToShow = '1';
 
     if (carousalWidth > 0 && carousalWidth < 225) {
-      carousal.setAttribute('data-itemToShow', '1');
+      dataItemToShow = '1';
     } else {
       if (carousalWidth > 0 && carousalWidth < 450) {
-        carousal.setAttribute('data-itemToShow', '2');
+        dataItemToShow = '2';
       } else if (carousalWidth >= 450 && carousalWidth < 675) {
         carousalWidth = 450;
-        carousal.setAttribute('data-itemToShow', '2');
+        dataItemToShow = '2';
       } else if (carousalWidth >= 675) {
         carousalWidth = 675;
-        carousal.setAttribute('data-itemToShow', '3');
+        dataItemToShow = '3';
       }
+    }
+
+    carousal.setAttribute('data-itemToShow', dataItemToShow);
+    debugger;
+    var carousalItemCount = carousal.getElementsByClassName('item').length;
+
+    if (carousalItemCount <= Number(dataItemToShow)) {
+      carousal.classList.add('no-controls');
     }
 
     carousal.style.width = carousalWidth + 'px';
@@ -1544,7 +1567,8 @@ document.addEventListener('DOMContentLoaded', function () {
           imiPreview.viewInit('.test-container', fullBody, phoneCasing);
           theme = {
             brandColor: brandColor || 'green',
-            showMenu: false
+            showMenu: false,
+            feedbackEnabled: false
           };
           imiPreview.setOptions(botDetails, theme);
           return [4, send_api_1.sendMessageToBot(environment_1.environment.bot_access_token, environment_1.environment.enterprise_unique_name, 'hi', send_api_2.ESourceType.bot)];
@@ -1630,6 +1654,14 @@ var ImiPreview = function () {
   ImiPreview.prototype.setOptions = function (botDetails, theme) {
     dom_1.setOptions(botDetails);
     initEnvironment(botDetails);
+    debugger;
+
+    if (theme.feedbackEnabled) {
+      dom_1.$chatBody.classList.remove('feedbackDisabled');
+    } else {
+      dom_1.$chatBody.classList.add('feedbackDisabled');
+    }
+
     this.setTheme(theme);
   };
 
@@ -1818,7 +1850,6 @@ function humanMessageHandler(humanMessage, sourceType) {
 
         case 1:
           botResponse = _a.sent();
-          debugger;
 
           if (environment_1.environment.room && environment_1.environment.room.id && botResponse.room.id !== environment_1.environment.room.id) {
             dom_1.AppendMessageInChatBody([{
@@ -1994,7 +2025,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63092" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49944" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

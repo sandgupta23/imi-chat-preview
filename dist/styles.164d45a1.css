@@ -443,6 +443,9 @@ button:active {
   overflow: auto;
   width: 100%;
 }
+.carousal-container.no-controls .control {
+  display: none;
+}
 .carousal-container[data-itemToShow="1"] .item {
   width: 100%;
 }
@@ -877,6 +880,9 @@ ul, li {
   border-radius: 5px;
   margin-bottom: 5px;
   cursor: pointer;
+}
+.chat-body.feedbackDisabled .msg-bubble-options-panel {
+  display: none !important;
 }
 .chat-body .msg-bubble {
   display: flex;

@@ -1,5 +1,11 @@
 .carousal-container {
 
+  &.no-controls{
+    .control{
+      display: none;
+    }
+  }
+
   &[data-itemToShow='1'] {
     .item{
       width: 100%;

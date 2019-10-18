@@ -299,6 +299,12 @@ ul, li {
     }
   }
 
+  &.feedbackDisabled{
+    .msg-bubble-options-panel{
+      display: none !important;
+    }
+  }
+
   .msg-bubble {
     display: flex;
     flex-shrink: 0;

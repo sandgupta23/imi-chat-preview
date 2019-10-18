@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     // imiPreview.appendMessageInChatBody(data.generated_msg, data);
     // const botDetails = {description: "dummy description", logo: "dummy logo", title: "dummy title"};
     // const languageApi =
-    const theme = {brandColor: brandColor || 'green', showMenu: false};
+    const theme = {brandColor: brandColor || 'green', showMenu: false, feedbackEnabled: false};
     imiPreview.setOptions(botDetails, theme);
     const firstMessageData = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, 'hi', ESourceType.bot);
 
@@ -130,9 +130,15 @@ class ImiPreview {
         this._feedbackCB = cb;
     }
 
-    setOptions(botDetails: { description: string, logo: string, title: string }, theme: { brandColor: string }) {
+    setOptions(botDetails: { description: string, logo: string, title: string }, theme: { brandColor: string, feedbackEnabled: boolean }) {
         setOptions(botDetails);
         initEnvironment(botDetails);
+        debugger;
+        if(theme.feedbackEnabled){
+            $chatBody.classList.remove('feedbackDisabled');
+        }else {
+            $chatBody.classList.add('feedbackDisabled');
+        }
         this.setTheme(theme);
     }
 
@@ -322,7 +328,6 @@ async function humanMessageHandler(humanMessage: string, sourceType?) {
     }]);
 
     const botResponse = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, humanMessage);
-        debugger;
     if(environment.room && environment.room.id && botResponse.room.id !== environment.room.id){
         AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null);
         console.log(`previous room : ${environment.room}. new room ${botResponse.room.id}`);
@@ -330,7 +335,6 @@ async function humanMessageHandler(humanMessage: string, sourceType?) {
     environment.room = botResponse.room;
     botResponses.push(botResponse);
     let messageData: any = serializeGeneratedMessagesToPreviewMessages(botResponse.generated_msg);
-
     AppendMessageInChatBody(messageData, botResponse);
 
 }
