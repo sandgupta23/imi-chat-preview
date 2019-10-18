@@ -245,6 +245,7 @@ function setOptions(intro) {
 exports.setOptions = setOptions;
 
 function AppendMessageInChatBody(messages, botResponse) {
+  debugger;
   var txnId = botResponse && botResponse.transaction_id || 'human';
   var bot_message_id = botResponse && botResponse.bot_message_id || 'human';
   var str = "";
@@ -1568,7 +1569,7 @@ document.addEventListener('DOMContentLoaded', function () {
           theme = {
             brandColor: brandColor || 'green',
             showMenu: false,
-            feedbackEnabled: false
+            feedbackEnabled: botDetails.allow_feedback
           };
           imiPreview.setOptions(botDetails, theme);
           return [4, send_api_1.sendMessageToBot(environment_1.environment.bot_access_token, environment_1.environment.enterprise_unique_name, 'hi', send_api_2.ESourceType.bot)];
@@ -2025,7 +2026,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49944" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57229" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

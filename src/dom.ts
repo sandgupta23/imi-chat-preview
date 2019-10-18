@@ -59,7 +59,7 @@ export function setOptions(intro: IBotDetailsApiResp) {
 }
 
 export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload) {
-
+    debugger;
     const txnId = botResponse && botResponse.transaction_id || 'human';
     const bot_message_id = botResponse && botResponse.bot_message_id || 'human';
     let str = "";

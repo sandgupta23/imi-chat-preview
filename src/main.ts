@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     // imiPreview.appendMessageInChatBody(data.generated_msg, data);
     // const botDetails = {description: "dummy description", logo: "dummy logo", title: "dummy title"};
     // const languageApi =
-    const theme = {brandColor: brandColor || 'green', showMenu: false, feedbackEnabled: false};
+    const theme = {brandColor: brandColor || 'green', showMenu: false, feedbackEnabled: botDetails.allow_feedback};
     imiPreview.setOptions(botDetails, theme);
     const firstMessageData = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, 'hi', ESourceType.bot);
 
