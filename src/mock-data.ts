@@ -160,7 +160,7 @@ export const data = {
         "imichat_agent": {},
         "imiconnect_conversation_id": "",
         "is_anonymized": false,
-        "is_test": true,
+        "is_test": false,
         "last_message_time": "2019-10-09T08:50:15.233792",
         "last_updated_job_id": "5d9d9f465d2301cf1b307152",
         "manager_bot_room_id": 0,

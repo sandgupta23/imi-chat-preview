@@ -283,14 +283,18 @@ ul, li {
     align-items: flex-start;
     flex-wrap: wrap;
     margin-bottom: 8px;
-    margin-top: 8px;
+    //margin-top: 8px;
 
     button {
-      box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.15);
+      background: #00abd3;
+      box-shadow: 1px 1px 8px 1px rgba(0,0,0,.15);
+      color: white;
+
+      //box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.15);
       flex-shrink: 0;
       margin-right: 10px;
-      background-color: white;
-      color: black;
+      //background-color: white;
+      //color: black;
       height: 32px;
       border: 1px solid transparent;
       border-radius: 5px;

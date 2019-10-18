@@ -1301,7 +1301,7 @@ function sendMessageToBot(bot_access_token, enterprise_unique_name, humanMessage
     "type": sourceType || send_api_1.ESourceType.human,
     "msg": humanMessage,
     "platform": "web",
-    "is_test": true
+    "is_test": false
   };
   var headerData = {
     "bot-access-token": bot_access_token
