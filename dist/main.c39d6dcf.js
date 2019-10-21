@@ -210,8 +210,9 @@ var utility_1 = require("./utility");
 
 var environment_1 = require("./environment");
 
-function domInit() {
-  exports.$chatInput = document.getElementById('chat-input');
+function domInit(dom) {
+  exports.$chatContainer = document.querySelector('.imi-preview-grid-container');
+  exports.$chatInput = dom.$chatInput;
   exports.$chatInputIcon = document.getElementById('chat-input-icon');
   exports.$botIntro = document.getElementById('botIntro');
   exports.$chatBody = document.getElementById('body');
@@ -245,7 +246,6 @@ function setOptions(intro) {
 exports.setOptions = setOptions;
 
 function AppendMessageInChatBody(messages, botResponse) {
-  debugger;
   var txnId = botResponse && botResponse.transaction_id || 'human';
   var bot_message_id = botResponse && botResponse.bot_message_id || 'human';
   var str = "";
@@ -336,7 +336,6 @@ function AppendMessageInChatBody(messages, botResponse) {
     }
 
     carousal.setAttribute('data-itemToShow', dataItemToShow);
-    debugger;
     var carousalItemCount = carousal.getElementsByClassName('item').length;
 
     if (carousalItemCount <= Number(dataItemToShow)) {
@@ -1537,7 +1536,7 @@ var modes;
 var botResponses = [];
 document.addEventListener('DOMContentLoaded', function () {
   return __awaiter(this, void 0, void 0, function () {
-    var botDetails, imiPreview, fullBody, phoneCasing, brandColor, theme, firstMessageData;
+    var botDetails, imiPreview, fullBody, phoneCasing, brandColor, $chatInput, theme, firstMessageData;
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
@@ -1565,7 +1564,10 @@ document.addEventListener('DOMContentLoaded', function () {
           fullBody = true;
           phoneCasing = false;
           brandColor = utility_1.getQueryStringValue('brandcolor') || "#2b4f70";
-          imiPreview.viewInit('.test-container', fullBody, phoneCasing);
+          $chatInput = document.getElementById('chat-input');
+          imiPreview.viewInit('.test-container', fullBody, phoneCasing, {
+            $chatInput: $chatInput
+          });
           theme = {
             brandColor: brandColor || 'green',
             showMenu: false,
@@ -1629,7 +1631,7 @@ function initApp(imiPreview) {
 var ImiPreview = function () {
   function ImiPreview() {}
 
-  ImiPreview.prototype.viewInit = function (selector, fullBody, phoneCasing) {
+  ImiPreview.prototype.viewInit = function (selector, fullBody, phoneCasing, dom) {
     if (fullBody === void 0) {
       fullBody = true;
     }
@@ -1640,7 +1642,7 @@ var ImiPreview = function () {
 
     var mainParent = document.querySelector(selector);
     mainParent.innerHTML = mainBodyTemplate(fullBody, phoneCasing);
-    dom_1.domInit();
+    dom_1.domInit(dom);
     initApp(this);
   };
 
@@ -1655,7 +1657,6 @@ var ImiPreview = function () {
   ImiPreview.prototype.setOptions = function (botDetails, theme) {
     dom_1.setOptions(botDetails);
     initEnvironment(botDetails);
-    debugger;
 
     if (theme.feedbackEnabled) {
       dom_1.$chatBody.classList.remove('feedbackDisabled');
@@ -1920,12 +1921,23 @@ function initEnvironment(botDetails) {
     botDetails = {};
   }
 
-  var lang = botDetails.language || utility_1.getQueryStringValue('language') || utility_1.getQueryStringValue('lang') || 'en';
+  var lang = utility_1.getQueryStringValue('language') || utility_1.getQueryStringValue('lang') || botDetails.language || 'en';
 
   if (lang === 'ar' || lang === 'rtl') {
-    document.body.classList.add('lang-rtl');
-    dom_1.$chatInput.setAttribute("dir", "rtl");
-    dom_1.$chatInput.placeholder = "أكتب السؤال ..";
+    debugger;
+    dom_1.$chatContainer && dom_1.$chatContainer.classList.add('lang-rtl');
+
+    if (dom_1.$chatInput) {
+      dom_1.$chatInput.setAttribute("dir", "rtl");
+      dom_1.$chatInput.placeholder = "أكتب السؤال ..";
+    }
+  } else {
+    dom_1.$chatContainer && dom_1.$chatContainer.classList.remove('lang-rtl');
+
+    if (dom_1.$chatInput) {
+      dom_1.$chatInput.setAttribute("dir", "ltr");
+      dom_1.$chatInput.placeholder = "Type a message";
+    }
   }
 
   environment_1.environment.bot_access_token = botDetails.bot_access_token;
@@ -2026,7 +2038,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57229" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57544" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -1,5 +1,5 @@
 import {
-    $chatBody,
+    $chatBody, $chatContainer,
     $chatFooter,
     $chatInput,
     $chatInputIcon,
@@ -56,7 +56,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     const phoneCasing = false;//getQueryStringValue('phonecasing') === "true";
 
     const brandColor = getQueryStringValue('brandcolor') || "#2b4f70";
-    imiPreview.viewInit('.test-container', fullBody, phoneCasing);
+    const $chatInput = document.getElementById('chat-input') as HTMLInputElement;
+    imiPreview.viewInit('.test-container', fullBody, phoneCasing, {$chatInput});
     // imiPreview.appendMessageInChatBody(data.generated_msg, data);
     // const botDetails = {description: "dummy description", logo: "dummy logo", title: "dummy title"};
     // const languageApi =
@@ -114,11 +115,11 @@ class ImiPreview {
     _cb;
     _feedbackCB;
 
-    viewInit(selector, fullBody = true, phoneCasing = true) {
+    viewInit(selector, fullBody = true, phoneCasing = true, dom) {
 
         let mainParent = document.querySelector(selector) as HTMLElement;
         mainParent.innerHTML = mainBodyTemplate(fullBody, phoneCasing);
-        domInit();
+        domInit(dom);
         initApp(this);
     }
 
@@ -133,7 +134,7 @@ class ImiPreview {
     setOptions(botDetails: { description: string, logo: string, title: string }, theme: { brandColor: string, feedbackEnabled: boolean }) {
         setOptions(botDetails);
         initEnvironment(botDetails);
-        debugger;
+
         if(theme.feedbackEnabled){
             $chatBody.classList.remove('feedbackDisabled');
         }else {
@@ -364,12 +365,21 @@ async function sendFeedbackHandler(resp:{txn: string, bot_message_id: string}, f
 
 function initEnvironment(botDetails: any = {}) {
     // const lang = getQueryStringValue('lang');
-    const lang = botDetails.language || getQueryStringValue('language') || getQueryStringValue('lang') || 'en';
+    const lang = getQueryStringValue('language') || getQueryStringValue('lang')  || botDetails.language || 'en';
 
     if (lang === 'ar' || lang === 'rtl') {
-        document.body.classList.add('lang-rtl');
-        $chatInput.setAttribute("dir", "rtl");
-        $chatInput.placeholder = "أكتب السؤال ..";
+        debugger;
+        $chatContainer && $chatContainer.classList.add('lang-rtl');
+        if($chatInput){
+            $chatInput.setAttribute("dir", "rtl");
+            $chatInput.placeholder = "أكتب السؤال ..";
+        }
+    }else {
+        $chatContainer && $chatContainer.classList.remove('lang-rtl');
+        if($chatInput){
+            $chatInput.setAttribute("dir", "ltr");
+            $chatInput.placeholder = "Type a message";
+        }
     }
 
     environment.bot_access_token = botDetails.bot_access_token;

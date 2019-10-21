@@ -16,9 +16,12 @@ export let $botLogo;
 export let $phoneModel;
 export let $langSelect;
 export let $langSubmit;
+export let $chatContainer;
 
-export function domInit() {
-    $chatInput = document.getElementById('chat-input') as HTMLInputElement;
+export function domInit(dom) {
+    $chatContainer = document.querySelector('.imi-preview-grid-container');
+    // $chatInput = document.getElementById('chat-input') as HTMLInputElement;
+    $chatInput = dom.$chatInput;
     $chatInputIcon = document.getElementById('chat-input-icon') as HTMLInputElement;
     $botIntro = document.getElementById('botIntro');
     $chatBody = document.getElementById('body');
@@ -59,7 +62,7 @@ export function setOptions(intro: IBotDetailsApiResp) {
 }
 
 export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload) {
-    debugger;
+
     const txnId = botResponse && botResponse.transaction_id || 'human';
     const bot_message_id = botResponse && botResponse.bot_message_id || 'human';
     let str = "";
@@ -168,7 +171,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
             }
         }
         carousal.setAttribute('data-itemToShow', dataItemToShow);
-        debugger;
+
         let carousalItemCount = carousal.getElementsByClassName('item').length;
         if(carousalItemCount <= Number(dataItemToShow) ){
             carousal.classList.add('no-controls');
