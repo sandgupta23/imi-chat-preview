@@ -29,49 +29,50 @@ export enum modes {
 
 const botResponses: ISendApiResp[] = [];
 
-document.addEventListener('DOMContentLoaded', async function () {
-
-    initEnvironment();
-    const botDetails = await getBotDetails<IBotDetailsApiResp>();
-    initEnvironment(botDetails);
-
-
-
-    // $chatFooter.classList.add('d-none');
-    try {
-        $loader && $loader.classList.add('d-none');
-        $chatFooter && $chatFooter.classList.remove('d-none');
-    } catch (e) {
-        console.log(e);
-    }
-
-    const imiPreview = new ImiPreview();
-    imiPreview.setSendHumanMessageCallback((val) => {
-        humanMessageHandler(val);
-    });
-    imiPreview.setSendFeedback((val, feedback) => {
-        sendFeedbackHandler(val, feedback);
-    });
-    const fullBody = true;//getQueryStringValue('fullbody') === "true";
-    const phoneCasing = false;//getQueryStringValue('phonecasing') === "true";
-
-    const brandColor = getQueryStringValue('brandcolor') || "#2b4f70";
-    const $chatInput = document.getElementById('chat-input') as HTMLInputElement;
-    imiPreview.viewInit('.test-container', fullBody, phoneCasing, {$chatInput});
-    // imiPreview.appendMessageInChatBody(data.generated_msg, data);
-    // const botDetails = {description: "dummy description", logo: "dummy logo", title: "dummy title"};
-    // const languageApi =
-    const theme = {brandColor: brandColor || 'green', showMenu: false, feedbackEnabled: botDetails.allow_feedback};
-    imiPreview.setOptions(botDetails, theme);
-    const firstMessageData = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, 'hi', ESourceType.bot);
-
-    imiPreview.appendMessageInChatBody(firstMessageData.generated_msg);
-    initClientEvents();
-});
+// document.addEventListener('DOMContentLoaded', async function () {
+//
+//     initEnvironment();
+//     const botDetails = await getBotDetails<IBotDetailsApiResp>();
+//     initEnvironment(botDetails);
+//
+//
+//     // $chatFooter.classList.add('d-none');
+//     try {
+//         $loader && $loader.classList.add('d-none');
+//         $chatFooter && $chatFooter.classList.remove('d-none');
+//     } catch (e) {
+//         console.log(e);
+//     }
+//
+//     const imiPreview = new ImiPreview();
+//     imiPreview.setSendHumanMessageCallback((val) => {
+//         humanMessageHandler(val);
+//     });
+//     imiPreview.setSendFeedback((val, feedback) => {
+//         sendFeedbackHandler(val, feedback);
+//     });
+//     const fullBody = true;//getQueryStringValue('fullbody') === "true";
+//     const phoneCasing = false;//getQueryStringValue('phonecasing') === "true";
+//     const brandColor = getQueryStringValue('brandcolor') || "#2b4f70";
+//
+//     imiPreview.viewInit('.test-container', fullBody, phoneCasing);
+//     const $chatInput = document.getElementById('chat-input') as HTMLInputElement;
+//     imiPreview.initAdditionalDom({$chatInput});
+//     // imiPreview.appendMessageInChatBody(data.generated_msg, data);
+//     // const botDetails = {description: "dummy description", logo: "dummy logo", title: "dummy title"};
+//     // const languageApi =
+//     const theme = {brandColor: brandColor || 'green', showMenu: false, feedbackEnabled: botDetails.allow_feedback};
+//     imiPreview.setOptions(botDetails, theme);
+//     const firstMessageData = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, 'hi', ESourceType.bot);
+//
+//     imiPreview.appendMessageInChatBody(firstMessageData.generated_msg);
+//     initClientEvents();
+// });
 
 
 function initClientEvents() {
     try {
+
         $chatInput.addEventListener('keypress', ($event) => {
             if ($event.key === 'Enter') {
                 let humanMessage = $chatInput.value;
@@ -115,11 +116,14 @@ class ImiPreview {
     _cb;
     _feedbackCB;
 
-    viewInit(selector, fullBody = true, phoneCasing = true, dom) {
-
+    viewInit(selector, fullBody = true, phoneCasing = true) {
         let mainParent = document.querySelector(selector) as HTMLElement;
         mainParent.innerHTML = mainBodyTemplate(fullBody, phoneCasing);
+    }
+
+    initAdditionalDom(dom) {
         domInit(dom);
+        debugger;
         initApp(this);
     }
 
@@ -135,9 +139,9 @@ class ImiPreview {
         setOptions(botDetails);
         initEnvironment(botDetails);
 
-        if(theme.feedbackEnabled){
+        if (theme.feedbackEnabled) {
             $chatBody.classList.remove('feedbackDisabled');
-        }else {
+        } else {
             $chatBody.classList.add('feedbackDisabled');
         }
         this.setTheme(theme);
@@ -148,7 +152,7 @@ class ImiPreview {
         root.style.setProperty('--color-brand', theme.brandColor || 'red');
     }
 
-    appendMessageInChatBody(generated_msg, sendApiResp:ISendApiResponsePayload) {
+    appendMessageInChatBody(generated_msg, sendApiResp: ISendApiResponsePayload) {
 
         AppendMessageInChatBody(generated_msg, sendApiResp);
     }
@@ -183,7 +187,7 @@ function initEvents(imiPreview: ImiPreview) {
         if (target.classList.contains('feedback-like') || target.classList.contains('feedback-dislike')) {
             const $feedbackWrapper = findParentWithClass(target, 'msg-bubble-options-panel');
             const oldFeedback = $feedbackWrapper.getAttribute('data-feedback');
-            if(oldFeedback != null){
+            if (oldFeedback != null) {
                 return;
             }
             const $messageBubble = findParentWithClass(target, 'msg-bubble');
@@ -329,7 +333,7 @@ async function humanMessageHandler(humanMessage: string, sourceType?) {
     }]);
 
     const botResponse = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, humanMessage);
-    if(environment.room && environment.room.id && botResponse.room.id !== environment.room.id){
+    if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
         AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null);
         console.log(`previous room : ${environment.room}. new room ${botResponse.room.id}`);
     }
@@ -344,7 +348,7 @@ function getBotResponseByTxnId(txn) {
     return botResponses.find(res => res.transaction_id === txn)
 }
 
-async function sendFeedbackHandler(resp:{txn: string, bot_message_id: string}, feedback: number) {
+async function sendFeedbackHandler(resp: { txn: string, bot_message_id: string }, feedback: number) {
     let parsedFeedback;
     if (feedback === 0) {
         parsedFeedback = 'NEGATIVE'
@@ -365,18 +369,18 @@ async function sendFeedbackHandler(resp:{txn: string, bot_message_id: string}, f
 
 function initEnvironment(botDetails: any = {}) {
     // const lang = getQueryStringValue('lang');
-    const lang = getQueryStringValue('language') || getQueryStringValue('lang')  || botDetails.language || 'en';
+    const lang = getQueryStringValue('language') || getQueryStringValue('lang') || botDetails.language || 'en';
 
     if (lang === 'ar' || lang === 'rtl') {
-        debugger;
+
         $chatContainer && $chatContainer.classList.add('lang-rtl');
-        if($chatInput){
+        if ($chatInput) {
             $chatInput.setAttribute("dir", "rtl");
             $chatInput.placeholder = "أكتب السؤال ..";
         }
-    }else {
+    } else {
         $chatContainer && $chatContainer.classList.remove('lang-rtl');
-        if($chatInput){
+        if ($chatInput) {
             $chatInput.setAttribute("dir", "ltr");
             $chatInput.placeholder = "Type a message";
         }
