@@ -436,7 +436,108 @@ function getBotMessageTemplateForImage(url) {
   var htmlStr = "\n                <div class=\"message-wrapper message-wrapper-bot msg-shadow\" \n                style=\"width: 100%; padding-top: 105%; position: relative; margin-bottom: 20px; background:#80808017; border-radius: 8px; overflow: hidden\">\n                    <img \n                    style=\"position:absolute; top: 50%; left: 0; right: 0; bottom: 0;width: 100%; transform: translateY(-50%)\" \n                    class=\"msg-img click-to-zoom\" src=\"" + url + "\" alt=\"\"/>\n                </div>\n            ";
   return htmlStr;
 }
-},{"./typings/send-api":"typings/send-api.ts","./utility":"utility.ts","./environment":"environment.ts"}],"../node_modules/regenerator-runtime/runtime.js":[function(require,module,exports) {
+},{"./typings/send-api":"typings/send-api.ts","./utility":"utility.ts","./environment":"environment.ts"}],"ajax.ts":[function(require,module,exports) {
+"use strict";
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function makeGetReq(reqObj) {
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("GET", reqObj.url, true);
+  setHeaders(xmlHttp, reqObj.headerData);
+  xmlHttp.send(null);
+  return new Promise(function (resolve, reject) {
+    xmlHttp.onreadystatechange = function () {
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) resolve(JSON.parse(xmlHttp.responseText));
+    };
+  });
+}
+
+exports.makeGetReq = makeGetReq;
+
+function makePostReq(reqObj) {
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("POST", reqObj.url, true);
+  setHeaders(xmlHttp, reqObj.headerData);
+  xmlHttp.send(JSON.stringify(reqObj.body));
+  return new Promise(function (resolve, reject) {
+    xmlHttp.onreadystatechange = function () {
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) resolve(JSON.parse(xmlHttp.responseText));
+    };
+  });
+}
+
+exports.makePostReq = makePostReq;
+
+function makePutReq(reqObj) {
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("PUT", reqObj.url, true);
+  setHeaders(xmlHttp, reqObj.headerData);
+  xmlHttp.send(JSON.stringify(reqObj.body));
+  return new Promise(function (resolve, reject) {
+    xmlHttp.onreadystatechange = function () {
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) resolve(JSON.parse(xmlHttp.responseText));
+    };
+  });
+}
+
+exports.makePutReq = makePutReq;
+
+function setHeaders(xmlHttp, headerData) {
+  if (!headerData) {
+    return;
+  }
+
+  headerData = __assign(__assign({}, headerData), {
+    'content-type': 'application/json'
+  });
+  Object.keys(headerData).forEach(function (key) {
+    var val = headerData[key];
+
+    if (val) {
+      xmlHttp.setRequestHeader(key, val);
+    }
+  });
+}
+},{}],"bot-details.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var environment_1 = require("./environment");
+
+var ajax_1 = require("./ajax");
+
+function getBotDetails() {
+  var env = environment_1.environment;
+  var url = "https://" + env.root + "imibot.ai/api/v1/bot/preview/?bot_unique_name=" + env.bot_unique_name + "&enterprise_unique_name=" + env.enterprise_unique_name;
+  return ajax_1.makeGetReq({
+    url: url
+  });
+}
+
+exports.getBotDetails = getBotDetails;
+},{"./environment":"environment.ts","./ajax":"ajax.ts"}],"../node_modules/regenerator-runtime/runtime.js":[function(require,module,exports) {
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -1164,87 +1265,6 @@ try {
   Function("r", "regeneratorRuntime = r")(runtime);
 }
 
-},{}],"ajax.ts":[function(require,module,exports) {
-"use strict";
-
-var __assign = this && this.__assign || function () {
-  __assign = Object.assign || function (t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-      s = arguments[i];
-
-      for (var p in s) {
-        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-      }
-    }
-
-    return t;
-  };
-
-  return __assign.apply(this, arguments);
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function makeGetReq(reqObj) {
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("GET", reqObj.url, true);
-  setHeaders(xmlHttp, reqObj.headerData);
-  xmlHttp.send(null);
-  return new Promise(function (resolve, reject) {
-    xmlHttp.onreadystatechange = function () {
-      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) resolve(JSON.parse(xmlHttp.responseText));
-    };
-  });
-}
-
-exports.makeGetReq = makeGetReq;
-
-function makePostReq(reqObj) {
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("POST", reqObj.url, true);
-  setHeaders(xmlHttp, reqObj.headerData);
-  xmlHttp.send(JSON.stringify(reqObj.body));
-  return new Promise(function (resolve, reject) {
-    xmlHttp.onreadystatechange = function () {
-      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) resolve(JSON.parse(xmlHttp.responseText));
-    };
-  });
-}
-
-exports.makePostReq = makePostReq;
-
-function makePutReq(reqObj) {
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("PUT", reqObj.url, true);
-  setHeaders(xmlHttp, reqObj.headerData);
-  xmlHttp.send(JSON.stringify(reqObj.body));
-  return new Promise(function (resolve, reject) {
-    xmlHttp.onreadystatechange = function () {
-      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) resolve(JSON.parse(xmlHttp.responseText));
-    };
-  });
-}
-
-exports.makePutReq = makePutReq;
-
-function setHeaders(xmlHttp, headerData) {
-  if (!headerData) {
-    return;
-  }
-
-  headerData = __assign(__assign({}, headerData), {
-    'content-type': 'application/json'
-  });
-  Object.keys(headerData).forEach(function (key) {
-    var val = headerData[key];
-
-    if (val) {
-      xmlHttp.setRequestHeader(key, val);
-    }
-  });
-}
 },{}],"send-api.ts":[function(require,module,exports) {
 "use strict";
 
@@ -1493,6 +1513,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var dom_1 = require("./dom");
 
+var bot_details_1 = require("./bot-details");
+
 require("regenerator-runtime/runtime");
 
 var send_api_1 = require("./send-api");
@@ -1512,6 +1534,58 @@ var modes;
 })(modes = exports.modes || (exports.modes = {}));
 
 var botResponses = [];
+document.addEventListener('DOMContentLoaded', function () {
+  return __awaiter(this, void 0, void 0, function () {
+    var botDetails, imiPreview, fullBody, phoneCasing, brandColor, $chatInput, theme, firstMessageData;
+    return __generator(this, function (_a) {
+      switch (_a.label) {
+        case 0:
+          initEnvironment();
+          return [4, bot_details_1.getBotDetails()];
+
+        case 1:
+          botDetails = _a.sent();
+          initEnvironment(botDetails);
+
+          try {
+            dom_1.$loader && dom_1.$loader.classList.add('d-none');
+            dom_1.$chatFooter && dom_1.$chatFooter.classList.remove('d-none');
+          } catch (e) {
+            console.log(e);
+          }
+
+          imiPreview = new ImiPreview();
+          imiPreview.setSendHumanMessageCallback(function (val) {
+            humanMessageHandler(val);
+          });
+          imiPreview.setSendFeedback(function (val, feedback) {
+            sendFeedbackHandler(val, feedback);
+          });
+          fullBody = true;
+          phoneCasing = false;
+          brandColor = utility_1.getQueryStringValue('brandcolor') || "#2b4f70";
+          imiPreview.viewInit('.test-container', fullBody, phoneCasing);
+          $chatInput = document.getElementById('chat-input');
+          imiPreview.initAdditionalDom({
+            $chatInput: $chatInput
+          });
+          theme = {
+            brandColor: brandColor || 'green',
+            showMenu: false,
+            feedbackEnabled: botDetails.allow_feedback
+          };
+          imiPreview.setOptions(botDetails, theme);
+          return [4, send_api_1.sendMessageToBot(environment_1.environment.bot_access_token, environment_1.environment.enterprise_unique_name, 'hi', send_api_2.ESourceType.bot)];
+
+        case 2:
+          firstMessageData = _a.sent();
+          imiPreview.appendMessageInChatBody(firstMessageData.generated_msg);
+          initClientEvents();
+          return [2];
+      }
+    });
+  });
+});
 
 function initClientEvents() {
   try {
@@ -1940,7 +2014,7 @@ function getHeaderTemplate() {
 function getFooterTemplate() {
   return "\n    <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>";
 }
-},{"./dom":"dom.ts","regenerator-runtime/runtime":"../node_modules/regenerator-runtime/runtime.js","./send-api":"send-api.ts","./environment":"environment.ts","./typings/send-api":"typings/send-api.ts","./utility":"utility.ts"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./dom":"dom.ts","./bot-details":"bot-details.ts","regenerator-runtime/runtime":"../node_modules/regenerator-runtime/runtime.js","./send-api":"send-api.ts","./environment":"environment.ts","./typings/send-api":"typings/send-api.ts","./utility":"utility.ts"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -1968,7 +2042,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60325" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61804" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
