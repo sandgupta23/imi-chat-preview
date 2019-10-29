@@ -249,6 +249,18 @@ function setOptions(intro) {
 exports.setOptions = setOptions;
 
 function AppendMessageInChatBody(messages, botResponse) {
+  if (botResponse) {
+    if (environment_1.environment.room && environment_1.environment.room.id && botResponse.room.id !== environment_1.environment.room.id) {
+      AppendMessageInChatBody([{
+        SESSION_EXPIRY: true
+      }], null);
+      console.log("previous room : " + environment_1.environment.room + ". new room " + botResponse.room.id);
+    }
+
+    console.log(environment_1.environment.room, botResponse.room);
+    environment_1.environment.room = JSON.parse(JSON.stringify(botResponse.room));
+  }
+
   var txnId = botResponse && botResponse.transaction_id || 'human';
   var bot_message_id = botResponse && botResponse.bot_message_id || 'human';
   var str = "";
@@ -258,6 +270,10 @@ function AppendMessageInChatBody(messages, botResponse) {
   if (messages[0].SESSION_EXPIRY) {
     str = getBotMessageTemplateForSessionExpiry(messages[0]);
   } else {
+    if (messages.length === 1 && messages[0].sourceType === "session_expired") {
+      return;
+    }
+
     messages.forEach(function (message) {
       if (message.text) {
         str = str + getBotMessageTemplateForText(message.text, message.sourceType);
@@ -290,6 +306,7 @@ function AppendMessageInChatBody(messages, botResponse) {
         }
       }
     });
+    console.log(str);
     var humanClass = messages[0].sourceType === send_api_1.ESourceType.human ? 'msg-bubble-human' : '';
     var time = utility_1.getTimeInHHMM();
     var feedbackSTr = "";
@@ -306,6 +323,7 @@ function AppendMessageInChatBody(messages, botResponse) {
       feedbackSTr = "data-feedback=\"" + feedback + "\"";
     }
 
+    console.log('==>', str);
     str = "\n            <div xmlns=\"http://www.w3.org/1999/xhtml\" data-txn=\"" + txnId + "\"  data-bot_message_id=\"" + bot_message_id + "\"\n             class=\"msg-bubble " + humanClass + "\" style=\"position:relative;\">\n                <div class=\"msg-bubble-options-panel\" " + feedbackSTr + ">\n                    <i class=\"fa fa-thumbs-up feedback-like " + likeActive + "\" data-feedback-value=\"1\" title=\"Helpful\"></i>\n                    <i class=\"fa fa-thumbs-down feedback-dislike " + disLikeActive + "\" title=\"Not helpful\" data-feedback-value=\"0\"></i>\n                </div>\n<!--                <div class=\"msg-bubble-options\">-->\n<!--                    <i class=\"fa fa-ellipsis-h\"></i>-->\n<!--                </div>-->\n                <div class=\"msg-bot-logo\">\n                    <img \n                    src=\"" + environment_1.environment.logo + "\"\n                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\"\n                     style=\"height: 100%; width: 100%\" />\n                </div>\n                <div class=\"message-container\">\n                    " + str + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                </div>\n            </div>  \n            \n        ";
   }
 
@@ -394,7 +412,7 @@ function getBotMessageTemplateForText(text, source) {
 }
 
 function getBotMessageTemplateForSessionExpiry(text, source) {
-  var htmlStr = "\n                <div style=\"width: 100vw; display: flex; justify-content: center; align-items: center; margin: 10px 0\" xmlns=\"http://www.w3.org/1999/xhtml\">\n                    <div class=\"div\" style=\"width: 70%; display: flex\" >\n                        <hr style=\"border: none;background: #80808030; flex-grow: 1; ;flex-grow: 1;\"/>\n                        <div style=\"padding: 0 10px\">Session expired</div>\n                        <hr style=\"border: none;background: #80808030; flex-grow: 1; ;flex-grow: 1;\"/>\n                        \n                    </div>\n                </div>\n            ";
+  var htmlStr = "\n                <div style=\"width: 100%; display: flex; justify-content: center; align-items: center; margin: 10px 0\" xmlns=\"http://www.w3.org/1999/xhtml\">\n                    <div class=\"div\" style=\"width: 70%; display: flex; align-items: center;\" >\n                        <hr style=\"border: 1px solid #80808030; flex-grow: 1; \"/>\n                        <div style=\"padding: 0 10px\">Session expired</div>\n                        <hr style=\"border: 1px solid #80808030; flex-grow: 1;\"/>\n                        \n                    </div>\n                </div>\n            ";
   return htmlStr;
 }
 
@@ -1649,6 +1667,7 @@ function initClientEvents() {
 function initApp(imiPreview) {
   return __awaiter(this, void 0, void 0, function () {
     return __generator(this, function (_a) {
+      console.log('imi-chat-preview init');
       initEvents(imiPreview);
       return [2];
     });
@@ -1888,16 +1907,6 @@ function humanMessageHandler(humanMessage, sourceType) {
 
         case 1:
           botResponse = _a.sent();
-          debugger;
-
-          if (environment_1.environment.room && environment_1.environment.room.id && botResponse.room.id !== environment_1.environment.room.id) {
-            dom_1.AppendMessageInChatBody([{
-              SESSION_EXPIRY: true
-            }], null);
-            console.log("previous room : " + environment_1.environment.room + ". new room " + botResponse.room.id);
-          }
-
-          environment_1.environment.room = botResponse.room;
           botResponses.push(botResponse);
           messageData = send_api_1.serializeGeneratedMessagesToPreviewMessages(botResponse.generated_msg);
           dom_1.AppendMessageInChatBody(messageData, botResponse);
@@ -2074,7 +2083,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57157" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57868" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

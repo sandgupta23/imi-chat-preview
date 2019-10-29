@@ -30,7 +30,7 @@ export enum modes {
 const botResponses: ISendApiResp[] = [];
 
 document.addEventListener('DOMContentLoaded', async function () {
-
+    //
     initEnvironment();
     const botDetails = await getBotDetails<IBotDetailsApiResp>();
     initEnvironment(botDetails);
@@ -71,6 +71,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 
 function initClientEvents() {
+
     try {
         debugger;
         $knowMoreOverlay.addEventListener('click', ($event) => {
@@ -125,7 +126,7 @@ function initClientEvents() {
 }
 
 async function initApp(imiPreview: ImiPreview) {
-
+    console.log('imi-chat-preview init');
     initEvents(imiPreview);
     // environment.bot_access_token = botDetails.bot_access_token;
     // setIntroDetails({description: botDetails.description, logo: botDetails.logo, title: botDetails.name});
@@ -354,6 +355,7 @@ function initEvents(imiPreview: ImiPreview) {
 }
 
 async function humanMessageHandler(humanMessage: string, sourceType?) {
+    // alert();
     AppendMessageInChatBody([{
         sourceType: sourceType || ESourceType.human,
         text: humanMessage,
@@ -361,12 +363,12 @@ async function humanMessageHandler(humanMessage: string, sourceType?) {
     }]);
 
     const botResponse = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, humanMessage);
-    debugger;
-    if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
-        AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null);
-        console.log(`previous room : ${environment.room}. new room ${botResponse.room.id}`);
-    }
-    environment.room = botResponse.room;
+    // if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
+    //     AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null);
+    //     console.log(`previous room : ${environment.room}. new room ${botResponse.room.id}`);
+    // }
+    // console.log(environment.room, botResponse.room);
+    // environment.room = botResponse.room;
     botResponses.push(botResponse);
     let messageData: any = serializeGeneratedMessagesToPreviewMessages(botResponse.generated_msg);
     AppendMessageInChatBody(messageData, botResponse);

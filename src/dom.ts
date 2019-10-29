@@ -70,6 +70,15 @@ export function setOptions(intro: IBotDetailsApiResp) {
 
 export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload) {
 
+    if (botResponse) {
+        if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
+            AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null);
+            console.log(`previous room : ${environment.room}. new room ${botResponse.room.id}`);
+        }
+        console.log(environment.room, botResponse.room);
+        environment.room = JSON.parse(JSON.stringify(botResponse.room));
+    }
+
     const txnId = botResponse && botResponse.transaction_id || 'human';
     const bot_message_id = botResponse && botResponse.bot_message_id || 'human';
     let str = "";
@@ -78,7 +87,13 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
     if (messages[0].SESSION_EXPIRY) {
         str = getBotMessageTemplateForSessionExpiry(messages[0]);
     } else {
+        if(messages.length === 1 && (<any>messages[0]).sourceType === "session_expired"){
+            return;
+        }
         messages.forEach((message) => {
+            // if (message.SESSION_EXPIRY || (<any>message).sourceType === "session_expired") {
+            //     return;
+            // }
             if (message.text) {
                 str = str + getBotMessageTemplateForText(message.text, message.sourceType);
             }
@@ -112,6 +127,8 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
             }
         });
 
+        console.log(str);
+
         let humanClass = messages[0].sourceType === ESourceType.human ? 'msg-bubble-human' : '';
         let time = getTimeInHHMM();
 
@@ -125,6 +142,8 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
             disLikeActive = (feedback === "0" || feedback === "NEGATIVE") ? 'active' : '';
             feedbackSTr = `data-feedback="${feedback}"`;
         }
+
+        console.log('==>', str);
         str = `
             <div xmlns="http://www.w3.org/1999/xhtml" data-txn="${txnId}"  data-bot_message_id="${bot_message_id}"
              class="msg-bubble ${humanClass}" style="position:relative;">
@@ -179,7 +198,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
         carousal.setAttribute('data-itemToShow', dataItemToShow);
 
         let carousalItemCount = carousal.getElementsByClassName('item').length;
-        if(carousalItemCount <= Number(dataItemToShow) ){
+        if (carousalItemCount <= Number(dataItemToShow)) {
             carousal.classList.add('no-controls');
         }
         carousal.style.width = carousalWidth + 'px';
@@ -237,11 +256,11 @@ function getBotMessageTemplateForText(text, source?: ESourceType) {
 
 function getBotMessageTemplateForSessionExpiry(text, source?: ESourceType) {
     const htmlStr = `
-                <div style="width: 100vw; display: flex; justify-content: center; align-items: center; margin: 10px 0" xmlns="http://www.w3.org/1999/xhtml">
-                    <div class="div" style="width: 70%; display: flex" >
-                        <hr style="border: none;background: #80808030; flex-grow: 1; ;flex-grow: 1;"/>
+                <div style="width: 100%; display: flex; justify-content: center; align-items: center; margin: 10px 0" xmlns="http://www.w3.org/1999/xhtml">
+                    <div class="div" style="width: 70%; display: flex; align-items: center;" >
+                        <hr style="border: 1px solid #80808030; flex-grow: 1; "/>
                         <div style="padding: 0 10px">Session expired</div>
-                        <hr style="border: none;background: #80808030; flex-grow: 1; ;flex-grow: 1;"/>
+                        <hr style="border: 1px solid #80808030; flex-grow: 1;"/>
                         
                     </div>
                 </div>
