@@ -17,6 +17,9 @@ export let $phoneModel;
 export let $langSelect;
 export let $langSubmit;
 export let $chatContainer;
+export let $knowMoreContainer;
+export let $knowMoreClose;
+export let $knowMoreOverlay;
 
 export function domInit(dom) {
     $chatContainer = document.querySelector('.imi-preview-grid-container');
@@ -34,6 +37,10 @@ export function domInit(dom) {
     $phoneModel = document.getElementById('phone-modal');
     $langSelect = document.getElementById('lang-select') as HTMLSelectElement;
     $langSubmit = document.getElementById('lang-submit');
+
+    $knowMoreContainer = document.getElementsByClassName('chat-know-more-overlay')[0];
+    $knowMoreClose = document.getElementsByClassName('close-chat-img-overlay')[0];
+    $knowMoreOverlay = document.getElementsByClassName('chat-img-overlay')[0];
 }
 
 export function setOptions(intro: IBotDetailsApiResp) {
@@ -68,7 +75,6 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
     let str = "";
     let frag = document.createDocumentFragment();
     let videoStr = "";
-    ;
     if (messages[0].SESSION_EXPIRY) {
         str = getBotMessageTemplateForSessionExpiry(messages[0]);
     } else {

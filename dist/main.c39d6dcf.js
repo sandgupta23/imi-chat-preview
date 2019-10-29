@@ -225,6 +225,9 @@ function domInit(dom) {
   exports.$phoneModel = document.getElementById('phone-modal');
   exports.$langSelect = document.getElementById('lang-select');
   exports.$langSubmit = document.getElementById('lang-submit');
+  exports.$knowMoreContainer = document.getElementsByClassName('chat-know-more-overlay')[0];
+  exports.$knowMoreClose = document.getElementsByClassName('close-chat-img-overlay')[0];
+  exports.$knowMoreOverlay = document.getElementsByClassName('chat-img-overlay')[0];
 }
 
 exports.domInit = domInit;
@@ -251,7 +254,6 @@ function AppendMessageInChatBody(messages, botResponse) {
   var str = "";
   var frag = document.createDocumentFragment();
   var videoStr = "";
-  ;
 
   if (messages[0].SESSION_EXPIRY) {
     str = getBotMessageTemplateForSessionExpiry(messages[0]);
@@ -1572,7 +1574,8 @@ document.addEventListener('DOMContentLoaded', function () {
           theme = {
             brandColor: brandColor || 'green',
             showMenu: false,
-            feedbackEnabled: botDetails.allow_feedback
+            feedbackEnabled: botDetails.allow_feedback,
+            showOptionsEllipsis: true
           };
           imiPreview.setOptions(botDetails, theme);
           return [4, send_api_1.sendMessageToBot(environment_1.environment.bot_access_token, environment_1.environment.enterprise_unique_name, 'hi', send_api_2.ESourceType.bot)];
@@ -1589,6 +1592,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function initClientEvents() {
   try {
+    debugger;
+    dom_1.$knowMoreOverlay.addEventListener('click', function ($event) {
+      dom_1.$knowMoreOverlay.style.opacity = 0;
+      dom_1.$knowMoreClose.style.display = 'none';
+      setTimeout(function () {
+        dom_1.$knowMoreOverlay.style.display = 'none';
+      }, 500);
+    });
+    dom_1.$knowMoreClose.addEventListener('click', function ($event) {
+      dom_1.$knowMoreOverlay.style.opacity = 0;
+      dom_1.$knowMoreClose.style.display = 'none';
+      setTimeout(function () {
+        dom_1.$knowMoreOverlay.style.display = 'none';
+      }, 500);
+    });
+    dom_1.$envOptions.addEventListener('click', function ($event) {
+      dom_1.$knowMoreOverlay.style.display = 'block';
+      dom_1.$knowMoreOverlay.style.opacity = 1;
+      dom_1.$knowMoreClose.style.display = 'block';
+    });
+    dom_1.$knowMoreContainer.addEventListener('click', function ($event) {
+      $event.stopPropagation();
+    });
     dom_1.$chatInput.addEventListener('keypress', function ($event) {
       if ($event.key === 'Enter') {
         var humanMessage = dom_1.$chatInput.value;
@@ -1660,6 +1686,10 @@ var ImiPreview = function () {
   };
 
   ImiPreview.prototype.setOptions = function (botDetails, theme) {
+    if (theme.showOptionsEllipsis === true) {
+      dom_1.$envOptions.style.display = "block";
+    }
+
     dom_1.setOptions(botDetails);
     initEnvironment(botDetails);
 
@@ -1818,6 +1848,7 @@ function initEvents(imiPreview) {
 
   try {
     dom_1.$envOptions.addEventListener('click', function () {
+      return;
       var $phoneView = document.getElementsByClassName('chat-body')[0];
       var $langPanel = dom_1.$phoneModel.querySelector('.lang-panel');
 
@@ -1857,6 +1888,7 @@ function humanMessageHandler(humanMessage, sourceType) {
 
         case 1:
           botResponse = _a.sent();
+          debugger;
 
           if (environment_1.environment.room && environment_1.environment.room.id && botResponse.room.id !== environment_1.environment.room.id) {
             dom_1.AppendMessageInChatBody([{
@@ -2000,15 +2032,15 @@ function getChatBodyTemplate() {
 }
 
 function getFullBodyExceptPhoneCover() {
-  return "\n        <div class=\"imi-preview-grid-container\">\n                        <div class=\"header\" style=\"z-index: 1\">\n                            <div class=\"bot-intro\" id=\"botIntro\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\"\n                                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\" \n                                    src=\"https://whizkey.ae/wisdom/static/media/rammas.42381205.gif\"\n                                         alt=\"\">\n                                </span>\n                                <div class=\"bot-details\">\n                                    <div id=\"bot-title\" class=\"title\"></div>\n                                    <div id=\"bot-description\" class=\"title\">hello</div>\n                                </div>\n                                <div class=\"options\" id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n                            </div>\n                        </div>\n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"padding: 8px 6px; display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        <!--chat body ends-->\n                        <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>\n                    </div>\n    \n    ";
+  return "\n        <div class=\"imi-preview-grid-container\">\n                        <div class=\"header\" style=\"z-index: 1\">\n                            <div class=\"bot-intro\" id=\"botIntro\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\"\n                                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\" \n                                    src=\"https://whizkey.ae/wisdom/static/media/rammas.42381205.gif\"\n                                         alt=\"\">\n                                </span>\n                                <div class=\"bot-details\">\n                                    <div id=\"bot-title\" ></div>\n                                    <div id=\"bot-description\">hello</div>\n                                </div>\n                                <div class=\"options\" style=\"display: none\" id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n                            </div>\n                        </div>\n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"padding: 8px 6px; display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        <!--chat body ends-->\n                        <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>\n                    </div>\n      <!--know more starts-->\n        <div class=\"chat-img-overlay\" id=\"chat-img-overlay\" style=\"display: none\">\n          <span class=\"fa fa-times close-chat-img-overlay\"></span>\n          <div class=\"chat-know-more-overlay\">\n            <header class=\"chat-know-more-overlay-header\">\n              <div class=\"description-top\" style=\"text-align: center\">This bot was built using</div>\n              <div><img src=\"https://staging.imibot.ai/static/assets/img/IMI_logo.png\" alt=\"\"></div>\n              <strong class=\"description-bottom\">The enterprise bot building platform to automate conversations</strong>\n            </header>\n    \n            <div class=\"chat-know-more-overlay-item\">\n              <img src=\"https://staging.imibot.ai/static/assets/img/chat/bot.svg\" alt=\"\">\n              <div>Contextualise bot interactions with artificial intelligence</div>\n            </div>\n            <div class=\"chat-know-more-overlay-item\">\n              <img src=\"https://staging.imibot.ai/static/assets/img/chat/group-5.svg\" alt=\"\">\n              <div>Provide seamless omnichannel experience</div>\n            </div>\n            <div class=\"chat-know-more-overlay-item\">\n              <img src=\"https://staging.imibot.ai/static/assets/img/chat/browser.svg\" alt=\"\">\n              <div>Orchestrate individual bots using a controller</div>\n            </div>\n            <div class=\"chat-know-more-overlay-item\">\n              <img src=\"https://staging.imibot.ai/static/assets/img/chat/group-2.svg\" alt=\"\">\n              <div>Integrate various services within your flow to help user</div>\n            </div>\n    \n            <a href=\"https://imimobile.com/products/ai-automation\" target=\"_blank\">\n            <button  class=\"imi-button-primary\" style=\"width: 100px;background: #00abd3; border: none; color: white\" mat-flat-button color=\"primary\"> Know more</button></a>\n    \n          </div>\n        </div>\n    ";
 }
 
 function getPhoneCoverTemplate() {
-  return "\n    <div class=\"page1\">\n    <div class=\"page__content\">\n        <div class=\"phone\">\n            <div class=\"phone__body\">\n                <div class=\"phone__view\">\n                    <div id=\"phone-modal\" class=\"modal1\" style=\"\">\n                        <i class=\"fa fa-times\" id=\"close-modal1\"></i>\n                        <div class=\"lang-panel\">\n                            <h1>Select language</h1>\n                            <div>\n                                <select id=\"lang-select\">\n                                    <option value=\"en\">English</option>\n                                    <option value=\"ar\" style=\"direction: rtl;\">\u0639\u0631\u0628\u064A</option>\n                                </select>\n                            </div>\n                            <button class=\"imi-button-primary\" id=\"lang-submit\">Submit</button>\n                        </div>\n                    </div>\n                    <div class=\"imi-preview-grid-container\">\n\n                        <div class=\"header\" style=\"z-index: 1\">\n                            <div class=\"basel-bg\"></div>\n                            <div class=\"bot-intro\" id=\"botIntro\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\"\n                                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\" \n                                       alt=\"\">\n                                </span>\n                                <div class=\"bot-details\">\n                                    <div id=\"bot-title\" class=\"title\"></div>\n                                </div>\n                                <div class=\"options\" id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n                            </div>\n                        </div>\n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"padding: 8px 6px; display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        <!--chat body ends-->\n                        <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"phone__notch\">\n                    <div class=\"phone__speaker\"></div>\n                    <div class=\"phone__camera\"></div>\n                </div>\n            </div>\n            <div class=\"phone__btn\">\n                <button class=\"phone__btn--power\"></button>\n                <div class=\"phone__btn--volume\">\n                    <button class=\"phone__btn--volume-up\"></button>\n                    <button class=\"phone__btn--volume-down\"></button>\n                </div>\n                <button class=\"phone__btn--mute\"></button>\n            </div>\n        </div>\n    </div>\n</div>\n    ";
+  return "\n    <div class=\"page1\">\n    <div class=\"page__content\">\n        <div class=\"phone\">\n            <div class=\"phone__body\">\n                <div class=\"phone__view\">\n                    <div id=\"phone-modal\" class=\"modal1\" style=\"\">\n                        <i class=\"fa fa-times\" id=\"close-modal1\"></i>\n                        <div class=\"lang-panel\">\n                            <h1>Select language</h1>\n                            <div>\n                                <select id=\"lang-select\">\n                                    <option value=\"en\">English</option>\n                                    <option value=\"ar\" style=\"direction: rtl;\">\u0639\u0631\u0628\u064A</option>\n                                </select>\n                            </div>\n                            <button class=\"imi-button-primary\" id=\"lang-submit\">Submit</button>\n                        </div>\n                    </div>\n                    <div class=\"imi-preview-grid-container\">\n\n                        <div class=\"header\" style=\"z-index: 1\">\n                            <div class=\"basel-bg\"></div>\n                            <div class=\"bot-intro\" id=\"botIntro\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\"\n                                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\" \n                                       alt=\"\">\n                                </span>\n                                <div class=\"bot-details\">\n                                    <div id=\"bot-title\" ></div>\n                                </div>\n                                <div class=\"options\" id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n                            </div>\n                        </div>\n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"padding: 8px 6px; display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        <!--chat body ends-->\n                        <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"phone__notch\">\n                    <div class=\"phone__speaker\"></div>\n                    <div class=\"phone__camera\"></div>\n                </div>\n            </div>\n            <div class=\"phone__btn\">\n                <button class=\"phone__btn--power\"></button>\n                <div class=\"phone__btn--volume\">\n                    <button class=\"phone__btn--volume-up\"></button>\n                    <button class=\"phone__btn--volume-down\"></button>\n                </div>\n                <button class=\"phone__btn--mute\"></button>\n            </div>\n        </div>\n    </div>\n</div>\n    ";
 }
 
 function getHeaderTemplate() {
-  return "\n    <div class=\"header\" style=\"z-index: 1\">\n                            <div class=\"basel-bg\"></div>\n                            <div class=\"bot-intro\" id=\"botIntro\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\" src=\"https://whizkey.ae/wisdom/static/media/rammas.42381205.gif\"\n                                         alt=\"\">\n                                </span>\n                                <div class=\"bot-details\">\n                                    <div id=\"bot-title\" class=\"title\"></div>\n                                </div>\n                                <div class=\"options\" id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n                            </div>\n                        </div>\n    ";
+  return "\n    <div class=\"header\" style=\"z-index: 1\">\n                            <div class=\"basel-bg\"></div>\n                            <div class=\"bot-intro\" id=\"botIntro\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\" src=\"https://whizkey.ae/wisdom/static/media/rammas.42381205.gif\"\n                                         alt=\"\">\n                                </span>\n                                <div class=\"bot-details\">\n                                    <div id=\"bot-title\" ></div>\n                                </div>\n                                <div class=\"options\" id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n                            </div>\n                        </div>\n    ";
 }
 
 function getFooterTemplate() {
@@ -2042,7 +2074,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61804" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57157" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

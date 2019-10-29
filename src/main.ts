@@ -3,7 +3,7 @@ import {
     $chatFooter,
     $chatInput,
     $chatInputIcon,
-    $envOptions,
+    $envOptions, $knowMoreClose, $knowMoreContainer, $knowMoreOverlay,
     $langSelect,
     $langSubmit,
     $loader,
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     // imiPreview.appendMessageInChatBody(data.generated_msg, data);
     // const botDetails = {description: "dummy description", logo: "dummy logo", title: "dummy title"};
     // const languageApi =
-    const theme = {brandColor: brandColor || 'green', showMenu: false, feedbackEnabled: botDetails.allow_feedback};
+    const theme = {brandColor: brandColor || 'green', showMenu: false, feedbackEnabled: botDetails.allow_feedback, showOptionsEllipsis: true};
     imiPreview.setOptions(botDetails, theme);
     const firstMessageData = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, 'hi', ESourceType.bot);
 
@@ -72,7 +72,31 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 function initClientEvents() {
     try {
-
+        debugger;
+        $knowMoreOverlay.addEventListener('click', ($event) => {
+            // $knowMoreOverlay.style.display = 'none';
+            $knowMoreOverlay.style.opacity = 0;
+            $knowMoreClose.style.display = 'none';
+            setTimeout(() => {
+                $knowMoreOverlay.style.display = 'none';
+            }, 500);
+        });
+        $knowMoreClose.addEventListener('click', ($event) => {
+            // $knowMoreOverlay.style.display = 'none';
+            $knowMoreOverlay.style.opacity = 0;
+            $knowMoreClose.style.display = 'none';
+            setTimeout(() => {
+                $knowMoreOverlay.style.display = 'none';
+            }, 500);
+        });
+        $envOptions.addEventListener('click', ($event) => {
+            $knowMoreOverlay.style.display = 'block';
+            $knowMoreOverlay.style.opacity = 1;
+            $knowMoreClose.style.display = 'block';
+        });
+        $knowMoreContainer.addEventListener('click', ($event) => {
+            $event.stopPropagation();
+        });
         $chatInput.addEventListener('keypress', ($event) => {
             if ($event.key === 'Enter') {
                 let humanMessage = $chatInput.value;
@@ -135,7 +159,10 @@ class ImiPreview {
         this._feedbackCB = cb;
     }
 
-    setOptions(botDetails: { description: string, logo: string, title: string }, theme: { brandColor: string, feedbackEnabled: boolean }) {
+    setOptions(botDetails: { description: string, logo: string, title: string }, theme: { brandColor: string, feedbackEnabled: boolean, showOptionsEllipsis: boolean }) {
+        if (theme.showOptionsEllipsis === true) {
+            $envOptions.style.display = "block"
+        }
         setOptions(botDetails);
         initEnvironment(botDetails);
 
@@ -301,6 +328,7 @@ function initEvents(imiPreview: ImiPreview) {
 
     try {
         $envOptions.addEventListener('click', () => {
+            return;
             let $phoneView = document.getElementsByClassName('chat-body')[0];
             let $langPanel = $phoneModel.querySelector('.lang-panel') as HTMLElement;
             if (!isModelShown) {
@@ -333,6 +361,7 @@ async function humanMessageHandler(humanMessage: string, sourceType?) {
     }]);
 
     const botResponse = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, humanMessage);
+    debugger;
     if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
         AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null);
         console.log(`previous room : ${environment.room}. new room ${botResponse.room.id}`);
@@ -493,10 +522,10 @@ function getFullBodyExceptPhoneCover() {
                                          alt="">
                                 </span>
                                 <div class="bot-details">
-                                    <div id="bot-title" class="title"></div>
-                                    <div id="bot-description" class="title">hello</div>
+                                    <div id="bot-title" ></div>
+                                    <div id="bot-description">hello</div>
                                 </div>
-                                <div class="options" id="env-options">
+                                <div class="options" style="display: none" id="env-options">
                                     <i class="fa fa-ellipsis-v"></i>
                                 </div>
                             </div>
@@ -515,7 +544,38 @@ function getFullBodyExceptPhoneCover() {
                             </span>
                         </div>
                     </div>
+      <!--know more starts-->
+        <div class="chat-img-overlay" id="chat-img-overlay" style="display: none">
+          <span class="fa fa-times close-chat-img-overlay"></span>
+          <div class="chat-know-more-overlay">
+            <header class="chat-know-more-overlay-header">
+              <div class="description-top" style="text-align: center">This bot was built using</div>
+              <div><img src="https://staging.imibot.ai/static/assets/img/IMI_logo.png" alt=""></div>
+              <strong class="description-bottom">The enterprise bot building platform to automate conversations</strong>
+            </header>
     
+            <div class="chat-know-more-overlay-item">
+              <img src="https://staging.imibot.ai/static/assets/img/chat/bot.svg" alt="">
+              <div>Contextualise bot interactions with artificial intelligence</div>
+            </div>
+            <div class="chat-know-more-overlay-item">
+              <img src="https://staging.imibot.ai/static/assets/img/chat/group-5.svg" alt="">
+              <div>Provide seamless omnichannel experience</div>
+            </div>
+            <div class="chat-know-more-overlay-item">
+              <img src="https://staging.imibot.ai/static/assets/img/chat/browser.svg" alt="">
+              <div>Orchestrate individual bots using a controller</div>
+            </div>
+            <div class="chat-know-more-overlay-item">
+              <img src="https://staging.imibot.ai/static/assets/img/chat/group-2.svg" alt="">
+              <div>Integrate various services within your flow to help user</div>
+            </div>
+    
+            <a href="https://imimobile.com/products/ai-automation" target="_blank">
+            <button  class="imi-button-primary" style="width: 100px;background: #00abd3; border: none; color: white" mat-flat-button color="primary"> Know more</button></a>
+    
+          </div>
+        </div>
     `
 }
 
@@ -551,7 +611,7 @@ function getPhoneCoverTemplate() {
                                        alt="">
                                 </span>
                                 <div class="bot-details">
-                                    <div id="bot-title" class="title"></div>
+                                    <div id="bot-title" ></div>
                                 </div>
                                 <div class="options" id="env-options">
                                     <i class="fa fa-ellipsis-v"></i>
@@ -603,7 +663,7 @@ function getHeaderTemplate() {
                                          alt="">
                                 </span>
                                 <div class="bot-details">
-                                    <div id="bot-title" class="title"></div>
+                                    <div id="bot-title" ></div>
                                 </div>
                                 <div class="options" id="env-options">
                                     <i class="fa fa-ellipsis-v"></i>
