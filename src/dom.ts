@@ -88,7 +88,8 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
     let frag = document.createDocumentFragment();
     let videoStr = "";
     if (messages[0].SESSION_EXPIRY) {
-        if (botResponses.length > 0) {
+        debugger;
+        if (document.getElementsByClassName('msg-bubble').length > 0) {
             str = getBotMessageTemplateForSessionExpiry(messages[0]);
         }else {
             return;

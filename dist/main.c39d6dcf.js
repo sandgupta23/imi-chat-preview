@@ -272,7 +272,9 @@ function AppendMessageInChatBody(messages, botResponse) {
   var videoStr = "";
 
   if (messages[0].SESSION_EXPIRY) {
-    if (exports.botResponses.length > 0) {
+    debugger;
+
+    if (document.getElementsByClassName('msg-bubble').length > 0) {
       str = getBotMessageTemplateForSessionExpiry(messages[0]);
     } else {
       return;
@@ -2092,7 +2094,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60052" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55669" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
