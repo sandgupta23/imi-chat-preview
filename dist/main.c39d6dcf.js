@@ -210,6 +210,8 @@ var utility_1 = require("./utility");
 
 var environment_1 = require("./environment");
 
+exports.botResponses = [];
+
 function domInit(dom) {
   exports.$chatContainer = document.querySelector('.imi-preview-grid-container');
   exports.$chatInput = dom.$chatInput;
@@ -249,6 +251,8 @@ function setOptions(intro) {
 exports.setOptions = setOptions;
 
 function AppendMessageInChatBody(messages, botResponse) {
+  var isLast = messages[0].isLast;
+
   if (botResponse) {
     if (environment_1.environment.room && environment_1.environment.room.id && botResponse.room.id !== environment_1.environment.room.id) {
       AppendMessageInChatBody([{
@@ -268,7 +272,11 @@ function AppendMessageInChatBody(messages, botResponse) {
   var videoStr = "";
 
   if (messages[0].SESSION_EXPIRY) {
-    str = getBotMessageTemplateForSessionExpiry(messages[0]);
+    if (exports.botResponses.length > 0) {
+      str = getBotMessageTemplateForSessionExpiry(messages[0]);
+    } else {
+      return;
+    }
   } else {
     if (messages.length === 1 && messages[0].sourceType === "session_expired") {
       return;
@@ -324,7 +332,8 @@ function AppendMessageInChatBody(messages, botResponse) {
     }
 
     console.log('==>', str);
-    str = "\n            <div xmlns=\"http://www.w3.org/1999/xhtml\" data-txn=\"" + txnId + "\"  data-bot_message_id=\"" + bot_message_id + "\"\n             class=\"msg-bubble " + humanClass + "\" style=\"position:relative;\">\n                <div class=\"msg-bubble-options-panel\" " + feedbackSTr + ">\n                    <i class=\"fa fa-thumbs-up feedback-like " + likeActive + "\" data-feedback-value=\"1\" title=\"Helpful\"></i>\n                    <i class=\"fa fa-thumbs-down feedback-dislike " + disLikeActive + "\" title=\"Not helpful\" data-feedback-value=\"0\"></i>\n                </div>\n<!--                <div class=\"msg-bubble-options\">-->\n<!--                    <i class=\"fa fa-ellipsis-h\"></i>-->\n<!--                </div>-->\n                <div class=\"msg-bot-logo\">\n                    <img \n                    src=\"" + environment_1.environment.logo + "\"\n                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\"\n                     style=\"height: 100%; width: 100%\" />\n                </div>\n                <div class=\"message-container\">\n                    " + str + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                </div>\n            </div>  \n            \n        ";
+    var feedbackHtml = "\n        <div class=\"msg-bubble-options-panel\" " + feedbackSTr + ">\n                    <i class=\"fa fa-thumbs-up feedback-like " + likeActive + "\" data-feedback-value=\"1\" title=\"Helpful\"></i>\n                    <i class=\"fa fa-thumbs-down feedback-dislike " + disLikeActive + "\" title=\"Not helpful\" data-feedback-value=\"0\"></i>\n                </div>\n        ";
+    str = "\n            <div xmlns=\"http://www.w3.org/1999/xhtml\" data-txn=\"" + txnId + "\"  data-bot_message_id=\"" + bot_message_id + "\"\n             class=\"msg-bubble " + humanClass + "\" style=\"position:relative;\">\n                " + (isLast ? feedbackHtml : '') + "\n<!--                <div class=\"msg-bubble-options\">-->\n<!--                    <i class=\"fa fa-ellipsis-h\"></i>-->\n<!--                </div>-->\n                <div class=\"msg-bot-logo\">\n                    <img \n                    src=\"" + environment_1.environment.logo + "\"\n                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\"\n                     style=\"height: 100%; width: 100%\" />\n                </div>\n                <div class=\"message-container\">\n                    " + str + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                </div>\n            </div>  \n            \n        ";
   }
 
   var el = getElementsFromHtmlStr(str);
@@ -402,7 +411,8 @@ function createQuickReplyButtons(quick_reply) {
 }
 
 function getBotMessageTemplateForQuickReply(quick_replies, source) {
-  var htmlStr = "\n                <div class=\"message-wrapper-quick-reply\">\n                    " + createQuickReplyButtons(quick_replies) + "\n                </div>\n            ";
+  debugger;
+  var htmlStr = "\n                <div class=\"message-wrapper " + (source === send_api_1.ESourceType.human ? 'message-wrapper-human' : '') + "\">\n                    <div class=\"content\">" + quick_replies.text + "</div>\n                </div>\n                <div class=\"message-wrapper-quick-reply\">\n                    " + createQuickReplyButtons(quick_replies) + "\n                </div>\n            ";
   return htmlStr;
 }
 
@@ -412,7 +422,7 @@ function getBotMessageTemplateForText(text, source) {
 }
 
 function getBotMessageTemplateForSessionExpiry(text, source) {
-  var htmlStr = "\n                <div style=\"width: 100%; display: flex; justify-content: center; align-items: center; margin: 10px 0\" xmlns=\"http://www.w3.org/1999/xhtml\">\n                    <div class=\"div\" style=\"width: 70%; display: flex; align-items: center;\" >\n                        <hr style=\"border: 1px solid #80808030; flex-grow: 1; \"/>\n                        <div style=\"padding: 0 10px\">Session expired</div>\n                        <hr style=\"border: 1px solid #80808030; flex-grow: 1;\"/>\n                        \n                    </div>\n                </div>\n            ";
+  var htmlStr = "\n                <div class=\"session-expiry-message\" xmlns=\"http://www.w3.org/1999/xhtml\">\n                    <div class=\"div\" style=\"width: 70%; display: flex; align-items: center;\" >\n                        <hr style=\"border: 1px solid #80808030; flex-grow: 1; \"/>\n                        <div style=\"padding: 0 10px\">Session expired</div>\n                        <hr style=\"border: 1px solid #80808030; flex-grow: 1;\"/>\n                        \n                    </div>\n                </div>\n            ";
   return htmlStr;
 }
 
@@ -1553,7 +1563,6 @@ var modes;
   modes["full_screen"] = "full_screen";
 })(modes = exports.modes || (exports.modes = {}));
 
-var botResponses = [];
 document.addEventListener('DOMContentLoaded', function () {
   return __awaiter(this, void 0, void 0, function () {
     var botDetails, imiPreview, fullBody, phoneCasing, brandColor, $chatInput, theme, firstMessageData;
@@ -1610,7 +1619,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function initClientEvents() {
   try {
-    debugger;
     dom_1.$knowMoreOverlay.addEventListener('click', function ($event) {
       dom_1.$knowMoreOverlay.style.opacity = 0;
       dom_1.$knowMoreClose.style.display = 'none';
@@ -1692,7 +1700,6 @@ var ImiPreview = function () {
 
   ImiPreview.prototype.initAdditionalDom = function (dom) {
     dom_1.domInit(dom);
-    debugger;
     initApp(this);
   };
 
@@ -1907,9 +1914,11 @@ function humanMessageHandler(humanMessage, sourceType) {
 
         case 1:
           botResponse = _a.sent();
-          botResponses.push(botResponse);
+          dom_1.botResponses.push(botResponse);
           messageData = send_api_1.serializeGeneratedMessagesToPreviewMessages(botResponse.generated_msg);
-          dom_1.AppendMessageInChatBody(messageData, botResponse);
+          messageData.forEach(function (message) {
+            dom_1.AppendMessageInChatBody([message], botResponse);
+          });
           return [2];
       }
     });
@@ -1917,7 +1926,7 @@ function humanMessageHandler(humanMessage, sourceType) {
 }
 
 function getBotResponseByTxnId(txn) {
-  return botResponses.find(function (res) {
+  return dom_1.botResponses.find(function (res) {
     return res.transaction_id === txn;
   });
 }
@@ -2083,7 +2092,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57868" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60052" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

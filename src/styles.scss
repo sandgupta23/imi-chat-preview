@@ -286,7 +286,7 @@ ul, li {
 
     button {
       background: #00abd3;
-      box-shadow: 1px 1px 8px 1px rgba(0,0,0,.15);
+      box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, .15);
       color: white;
 
       //box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.15);
@@ -302,8 +302,8 @@ ul, li {
     }
   }
 
-  &.feedbackDisabled{
-    .msg-bubble-options-panel{
+  &.feedbackDisabled {
+    .msg-bubble-options-panel {
       display: none !important;
     }
   }
@@ -338,6 +338,7 @@ ul, li {
       &[data-feedback] {
         opacity: 1 !important;
         display: inline-block !important;
+
         *:not(.active) {
           display: none;
         }
@@ -587,7 +588,7 @@ ul, li {
       justify-content: center;
       align-items: center;
 
-      img{
+      img {
         height: 55px;
       }
 
@@ -599,11 +600,12 @@ ul, li {
       }
     }
 
-    .chat-know-more-overlay-item{
+    .chat-know-more-overlay-item {
       display: flex;
       align-items: center;
       margin-bottom: 16px;
-      img{
+
+      img {
         width: 65px;
         margin-right: 10px;
       }
@@ -627,6 +629,17 @@ ul, li {
 
 @media screen and (max-width: 786px) {
   .hide-mobile {
+    display: none;
+  }
+}
+
+.session-expiry-message {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+  &:first-child{
     display: none;
   }
 }

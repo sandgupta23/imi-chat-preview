@@ -1155,5 +1155,15 @@ ul, li {
     display: none;
   }
 }
+.session-expiry-message {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+}
+.session-expiry-message:first-child {
+  display: none;
+}
 
 /*# sourceMappingURL=/styles.164d45a1.css.map */

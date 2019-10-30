@@ -8,7 +8,7 @@ import {
     $langSubmit,
     $loader,
     $phoneModel,
-    AppendMessageInChatBody,
+    AppendMessageInChatBody, botResponses,
     domInit,
     setOptions
 } from "./dom";
@@ -27,7 +27,7 @@ export enum modes {
     full_screen = "full_screen",
 }
 
-const botResponses: ISendApiResp[] = [];
+
 
 document.addEventListener('DOMContentLoaded', async function () {
     //
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 function initClientEvents() {
 
     try {
-        debugger;
+
         $knowMoreOverlay.addEventListener('click', ($event) => {
             // $knowMoreOverlay.style.display = 'none';
             $knowMoreOverlay.style.opacity = 0;
@@ -148,7 +148,7 @@ class ImiPreview {
 
     initAdditionalDom(dom) {
         domInit(dom);
-        debugger;
+
         initApp(this);
     }
 
@@ -370,8 +370,10 @@ async function humanMessageHandler(humanMessage: string, sourceType?) {
     // console.log(environment.room, botResponse.room);
     // environment.room = botResponse.room;
     botResponses.push(botResponse);
-    let messageData: any = serializeGeneratedMessagesToPreviewMessages(botResponse.generated_msg);
-    AppendMessageInChatBody(messageData, botResponse);
+    let messageData: any[] = serializeGeneratedMessagesToPreviewMessages(botResponse.generated_msg);
+    messageData.forEach((message)=>{
+        AppendMessageInChatBody([message], botResponse);
+    });
 
 }
 

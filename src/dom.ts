@@ -1,4 +1,4 @@
-import {ESourceType, IMessageData, ISendApiResponsePayload} from "./typings/send-api";
+import {ESourceType, IMessageData, ISendApiResp, ISendApiResponsePayload} from "./typings/send-api";
 import {getTimeInHHMM} from "./utility";
 import {IBotDetailsApiResp} from "./typings/bot-detaills-api";
 import {environment} from "./environment";
@@ -20,6 +20,7 @@ export let $chatContainer;
 export let $knowMoreContainer;
 export let $knowMoreClose;
 export let $knowMoreOverlay;
+export const botResponses: ISendApiResp[] = [];
 
 export function domInit(dom) {
     $chatContainer = document.querySelector('.imi-preview-grid-container');
@@ -70,6 +71,8 @@ export function setOptions(intro: IBotDetailsApiResp) {
 
 export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload) {
 
+
+    const isLast = messages[0].isLast;
     if (botResponse) {
         if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
             AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null);
@@ -85,9 +88,13 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
     let frag = document.createDocumentFragment();
     let videoStr = "";
     if (messages[0].SESSION_EXPIRY) {
-        str = getBotMessageTemplateForSessionExpiry(messages[0]);
+        if (botResponses.length > 0) {
+            str = getBotMessageTemplateForSessionExpiry(messages[0]);
+        }else {
+            return;
+        }
     } else {
-        if(messages.length === 1 && (<any>messages[0]).sourceType === "session_expired"){
+        if (messages.length === 1 && (<any>messages[0]).sourceType === "session_expired") {
             return;
         }
         messages.forEach((message) => {
@@ -144,13 +151,19 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
         }
 
         console.log('==>', str);
-        str = `
-            <div xmlns="http://www.w3.org/1999/xhtml" data-txn="${txnId}"  data-bot_message_id="${bot_message_id}"
-             class="msg-bubble ${humanClass}" style="position:relative;">
-                <div class="msg-bubble-options-panel" ${feedbackSTr}>
+
+
+        const feedbackHtml = `
+        <div class="msg-bubble-options-panel" ${feedbackSTr}>
                     <i class="fa fa-thumbs-up feedback-like ${likeActive}" data-feedback-value="1" title="Helpful"></i>
                     <i class="fa fa-thumbs-down feedback-dislike ${disLikeActive}" title="Not helpful" data-feedback-value="0"></i>
                 </div>
+        `;
+
+        str = `
+            <div xmlns="http://www.w3.org/1999/xhtml" data-txn="${txnId}"  data-bot_message_id="${bot_message_id}"
+             class="msg-bubble ${humanClass}" style="position:relative;">
+                ${isLast ? feedbackHtml : ''}
 <!--                <div class="msg-bubble-options">-->
 <!--                    <i class="fa fa-ellipsis-h"></i>-->
 <!--                </div>-->
@@ -236,7 +249,11 @@ function createQuickReplyButtons(quick_reply) {
 }
 
 function getBotMessageTemplateForQuickReply(quick_replies, source?: ESourceType) {
+    debugger;
     const htmlStr = `
+                <div class="message-wrapper ${source === ESourceType.human ? 'message-wrapper-human' : ''}">
+                    <div class="content">${quick_replies.text}</div>
+                </div>
                 <div class="message-wrapper-quick-reply">
                     ${createQuickReplyButtons(quick_replies)}
                 </div>
@@ -256,7 +273,7 @@ function getBotMessageTemplateForText(text, source?: ESourceType) {
 
 function getBotMessageTemplateForSessionExpiry(text, source?: ESourceType) {
     const htmlStr = `
-                <div style="width: 100%; display: flex; justify-content: center; align-items: center; margin: 10px 0" xmlns="http://www.w3.org/1999/xhtml">
+                <div class="session-expiry-message" xmlns="http://www.w3.org/1999/xhtml">
                     <div class="div" style="width: 70%; display: flex; align-items: center;" >
                         <hr style="border: 1px solid #80808030; flex-grow: 1; "/>
                         <div style="padding: 0 10px">Session expired</div>
