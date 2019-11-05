@@ -17,3 +17,10 @@ export function updateQueryStringParameter(uri, key, value) {
         return uri + separator + key + "=" + value;
     }
 }
+
+export function encodeUrlForDomParser(url) {
+    url = url.split("&").join("&amp;");
+    return url;
+}
+
+

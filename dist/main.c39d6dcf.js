@@ -178,6 +178,13 @@ function updateQueryStringParameter(uri, key, value) {
 }
 
 exports.updateQueryStringParameter = updateQueryStringParameter;
+
+function encodeUrlForDomParser(url) {
+  url = url.split("&").join("&amp;");
+  return url;
+}
+
+exports.encodeUrlForDomParser = encodeUrlForDomParser;
 },{}],"environment.ts":[function(require,module,exports) {
 "use strict";
 
@@ -342,6 +349,7 @@ function AppendMessageInChatBody(messages, botResponse) {
 
         if (type === "video") {
           str = str + getBotMessageTemplateForVideo(url);
+          url = utility_1.encodeUrlForDomParser(url);
           videoStr = videoStr + ("<video muted=\"muted\"  class=\"msg-video\" controls=\"true\" playsinline=\"playsinline\">\n                <source src=\"" + url + "\"/>\n                    Your browser does not support HTML5 video.\n                </video>");
         }
 
@@ -489,7 +497,8 @@ function getBotMessageTemplateForCarousal(media, source) {
 }
 
 function getBotMessageTemplateForAudio(url) {
-  var htmlStr = "\n                <div class=\"message-wrapper  message-wrapper-bot\">\n                    <audio controls=\"controls\">\n                          <source src=\"" + url + "\"/>\n                        Your browser does not support the audio element.\n                    </audio>\n                </div>\n            ";
+  url = utility_1.encodeUrlForDomParser(url);
+  var htmlStr = "\n                <div class=\"message-wrapper  message-wrapper-bot\">\n                    <audio controls=\"controls\">\n                          <source src=\"" + utility_1.encodeUrlForDomParser(url) + "\"/>\n                        Your browser does not support the audio element.\n                    </audio>\n                </div>\n            ";
   return htmlStr;
 }
 
@@ -499,6 +508,7 @@ function getBotMessageTemplateForVideo(url) {
 }
 
 function getBotMessageTemplateForImage(url) {
+  url = utility_1.encodeUrlForDomParser(url);
   var htmlStr = "\n                <div class=\"message-wrapper message-wrapper-bot msg-shadow\" \n                style=\"min-width: 220px;width: 100%; padding-top: 105%; position: relative; margin-bottom: 20px; background:#80808017; border-radius: 8px; overflow: hidden\">\n                    <img \n                    style=\"position:absolute; top: 50%; left: 0; right: 0; bottom: 0;width: 100%;height: 100%;transform: translateY(-50%)\" \n                    class=\"msg-img click-to-zoom\" src=\"" + url + "\" alt=\"\"/>\n                </div>\n            ";
   return htmlStr;
 }
@@ -2134,7 +2144,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56534" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55401" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

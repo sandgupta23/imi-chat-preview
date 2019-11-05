@@ -1,5 +1,5 @@
 import {ESourceType, IMessageData, ISendApiResp, ISendApiResponsePayload} from "./typings/send-api";
-import {getTimeInHHMM} from "./utility";
+import {encodeUrlForDomParser, getTimeInHHMM} from "./utility";
 import {IBotDetailsApiResp} from "./typings/bot-detaills-api";
 import {environment} from "./environment";
 
@@ -148,6 +148,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
                 }
                 if (type === "video") {
                     str = str + getBotMessageTemplateForVideo(url);
+                    url  = encodeUrlForDomParser(url);
                     videoStr = videoStr + `<video muted="muted"  class="msg-video" controls="true" playsinline="playsinline">
                 <source src="${url}"/>
                     Your browser does not support HTML5 video.
@@ -360,10 +361,11 @@ function getBotMessageTemplateForCarousal(media, source?: ESourceType) {
 }
 
 function getBotMessageTemplateForAudio(url: string) {
+    url  = encodeUrlForDomParser(url);
     const htmlStr = `
                 <div class="message-wrapper  message-wrapper-bot">
                     <audio controls="controls">
-                          <source src="${url}"/>
+                          <source src="${encodeUrlForDomParser(url)}"/>
                         Your browser does not support the audio element.
                     </audio>
                 </div>
@@ -389,6 +391,7 @@ function getBotMessageTemplateForVideo(url: string) {
 }
 
 function getBotMessageTemplateForImage(url: string) {
+    url  = encodeUrlForDomParser(url);
     const htmlStr = `
                 <div class="message-wrapper message-wrapper-bot msg-shadow" 
                 style="min-width: 220px;width: 100%; padding-top: 105%; position: relative; margin-bottom: 20px; background:#80808017; border-radius: 8px; overflow: hidden">
