@@ -71,7 +71,7 @@ export function setOptions(intro: IBotDetailsApiResp) {
 
 export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload) {
 
-
+    debugger;
     const isLast = messages[0].isLast;
     if (botResponse) {
         if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
@@ -91,7 +91,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
         debugger;
         if (document.getElementsByClassName('msg-bubble').length > 0) {
             str = getBotMessageTemplateForSessionExpiry(messages[0]);
-        }else {
+        } else {
             return;
         }
     } else {
@@ -112,25 +112,49 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
 
                 str = str + getBotMessageTemplateForQuickReply(message.quick_reply, message.sourceType);
             }
-            if (message.media) {
+            if (message.media || message.image || message.audio || message.video) {
 
-                if (message.media.audio_url) {
-                    str = str + getBotMessageTemplateForAudio(message.media.audio_url);
+                let url = "";
+                let type = "";
+                if (message.media) {
+                    if (Object.keys(message.media)[0].startsWith('audio')) {
+                        type = 'audio'
+                    }
+                    if (Object.keys(message.media)[0].startsWith('video')) {
+                        type = 'audio'
+                    }
+                    if (Object.keys(message.media)[0].startsWith('image')) {
+                        type = 'audio'
+                    }
+                    url = message.media.audio_url || message.media.video_url || message.media.image_url;
+
+                    if (message.media.length) {
+                        str = str + getBotMessageTemplateForCarousal(message.media);
+                    }
+                } else {
+                    if (Object.keys(message)[0].startsWith('audio')) {
+                        type = 'audio'
+                    }
+                    if (Object.keys(message)[0].startsWith('video')) {
+                        type = 'video'
+                    }
+                    if (Object.keys(message)[0].startsWith('image')) {
+                        type = 'image'
+                    }
+                    url = message[type].url;
                 }
-                if (message.media.video_url) {
-                    str = str + getBotMessageTemplateForVideo(message.media.video_url);
-                    videoStr = videoStr + `<video autoplay="autoplay" muted="muted"  class="msg-video" controls="true" playsinline="playsinline">
-                <source src="${message.media.video_url}"/>
+                if (type === "audio") {
+                    str = str + getBotMessageTemplateForAudio(url);
+                }
+                if (type === "video") {
+                    str = str + getBotMessageTemplateForVideo(url);
+                    videoStr = videoStr + `<video muted="muted"  class="msg-video" controls="true" playsinline="playsinline">
+                <source src="${url}"/>
                     Your browser does not support HTML5 video.
                 </video>`;
                 }
-                if (message.media.image_url) {
-                    str = str + getBotMessageTemplateForImage(message.media.image_url);
-                }
-
-                if (message.media.length) {
-
-                    str = str + getBotMessageTemplateForCarousal(message.media);
+                if (type === "image") {
+                    str = str + getBotMessageTemplateForImage(url);
                 }
             }
         });
@@ -338,7 +362,10 @@ function getBotMessageTemplateForCarousal(media, source?: ESourceType) {
 function getBotMessageTemplateForAudio(url: string) {
     const htmlStr = `
                 <div class="message-wrapper  message-wrapper-bot">
-                    <audio class="msg-audio" src="${url}"></audio>
+                    <audio controls="controls">
+                          <source src="${url}"/>
+                        Your browser does not support the audio element.
+                    </audio>
                 </div>
             `;
     return htmlStr;
@@ -364,9 +391,9 @@ function getBotMessageTemplateForVideo(url: string) {
 function getBotMessageTemplateForImage(url: string) {
     const htmlStr = `
                 <div class="message-wrapper message-wrapper-bot msg-shadow" 
-                style="width: 100%; padding-top: 105%; position: relative; margin-bottom: 20px; background:#80808017; border-radius: 8px; overflow: hidden">
+                style="min-width: 220px;width: 100%; padding-top: 105%; position: relative; margin-bottom: 20px; background:#80808017; border-radius: 8px; overflow: hidden">
                     <img 
-                    style="position:absolute; top: 50%; left: 0; right: 0; bottom: 0;width: 100%; transform: translateY(-50%)" 
+                    style="position:absolute; top: 50%; left: 0; right: 0; bottom: 0;width: 100%;height: 100%;transform: translateY(-50%)" 
                     class="msg-img click-to-zoom" src="${url}" alt=""/>
                 </div>
             `;

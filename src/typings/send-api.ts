@@ -278,6 +278,9 @@ export interface IMessageData extends IGeneratedMessageItem {
     feedback?: any;
     isLast?: boolean;
     response_language?: string;
+    video: {url:string},
+    audio: {url:string},
+    image: {url:string},
     media?: {
         audio_url: string,
         image_url: string,

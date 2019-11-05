@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const theme = {brandColor: brandColor || 'green', showMenu: false, feedbackEnabled: botDetails.allow_feedback, showOptionsEllipsis: true};
     imiPreview.setOptions(botDetails, theme);
     const firstMessageData = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, 'hi', ESourceType.bot);
-
+    debugger;
     imiPreview.appendMessageInChatBody(firstMessageData.generated_msg);
     initClientEvents();
 });
@@ -370,6 +370,7 @@ async function humanMessageHandler(humanMessage: string, sourceType?) {
     // console.log(environment.room, botResponse.room);
     // environment.room = botResponse.room;
     botResponses.push(botResponse);
+    debugger;
     let messageData: any[] = serializeGeneratedMessagesToPreviewMessages(botResponse.generated_msg);
     messageData.forEach((message)=>{
         AppendMessageInChatBody([message], botResponse);

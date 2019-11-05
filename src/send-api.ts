@@ -47,24 +47,28 @@ export function serializeGeneratedMessagesToPreviewMessages(generatedMessage: IG
             response_language
         };
 
-        if (Object.keys(message)[0] === 'media') {
-            messageData = {
-                ...messageData,
-                messageMediaType: message.media[0] && message.media[0].type,
-                // text: EBotMessageMediaType.image, // this is for preview of last message in chat room list,
-            };
-        } else if (Object.keys(message)[0] === 'quick_reply') {
-            messageData = {
-                ...messageData,
-                messageMediaType: EBotMessageMediaType.quickReply, //
-                // text: (<any>message).quick_reply.text || EBotMessageMediaType.quickReply, // this is for preview of last message in chat room list
-            };
-        } else {
-            /*if message type = text*/
-            messageData = {
-                ...messageData,
-                messageMediaType: EBotMessageMediaType.text,
-            };
+        try {
+            if (Object.keys(message)[0] === 'media') {
+                messageData = {
+                    ...messageData,
+                    messageMediaType: message.media[0] && message.media[0].type,
+                    // text: EBotMessageMediaType.image, // this is for preview of last message in chat room list,
+                };
+            } else if (Object.keys(message)[0] === 'quick_reply') {
+                messageData = {
+                    ...messageData,
+                    messageMediaType: EBotMessageMediaType.quickReply, //
+                    // text: (<any>message).quick_reply.text || EBotMessageMediaType.quickReply, // this is for preview of last message in chat room list
+                };
+            } else {
+                /*if message type = text*/
+                messageData = {
+                    ...messageData,
+                    messageMediaType: EBotMessageMediaType.text,
+                };
+            }
+        }catch (e) {
+            debugger;
         }
 
         return messageData;

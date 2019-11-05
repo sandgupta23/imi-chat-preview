@@ -251,6 +251,7 @@ function setOptions(intro) {
 exports.setOptions = setOptions;
 
 function AppendMessageInChatBody(messages, botResponse) {
+  debugger;
   var isLast = messages[0].isLast;
 
   if (botResponse) {
@@ -297,22 +298,55 @@ function AppendMessageInChatBody(messages, botResponse) {
         str = str + getBotMessageTemplateForQuickReply(message.quick_reply, message.sourceType);
       }
 
-      if (message.media) {
-        if (message.media.audio_url) {
-          str = str + getBotMessageTemplateForAudio(message.media.audio_url);
+      if (message.media || message.image || message.audio || message.video) {
+        var url = "";
+        var type = "";
+
+        if (message.media) {
+          if (Object.keys(message.media)[0].startsWith('audio')) {
+            type = 'audio';
+          }
+
+          if (Object.keys(message.media)[0].startsWith('video')) {
+            type = 'audio';
+          }
+
+          if (Object.keys(message.media)[0].startsWith('image')) {
+            type = 'audio';
+          }
+
+          url = message.media.audio_url || message.media.video_url || message.media.image_url;
+
+          if (message.media.length) {
+            str = str + getBotMessageTemplateForCarousal(message.media);
+          }
+        } else {
+          if (Object.keys(message)[0].startsWith('audio')) {
+            type = 'audio';
+          }
+
+          if (Object.keys(message)[0].startsWith('video')) {
+            type = 'video';
+          }
+
+          if (Object.keys(message)[0].startsWith('image')) {
+            type = 'image';
+          }
+
+          url = message[type].url;
         }
 
-        if (message.media.video_url) {
-          str = str + getBotMessageTemplateForVideo(message.media.video_url);
-          videoStr = videoStr + ("<video autoplay=\"autoplay\" muted=\"muted\"  class=\"msg-video\" controls=\"true\" playsinline=\"playsinline\">\n                <source src=\"" + message.media.video_url + "\"/>\n                    Your browser does not support HTML5 video.\n                </video>");
+        if (type === "audio") {
+          str = str + getBotMessageTemplateForAudio(url);
         }
 
-        if (message.media.image_url) {
-          str = str + getBotMessageTemplateForImage(message.media.image_url);
+        if (type === "video") {
+          str = str + getBotMessageTemplateForVideo(url);
+          videoStr = videoStr + ("<video muted=\"muted\"  class=\"msg-video\" controls=\"true\" playsinline=\"playsinline\">\n                <source src=\"" + url + "\"/>\n                    Your browser does not support HTML5 video.\n                </video>");
         }
 
-        if (message.media.length) {
-          str = str + getBotMessageTemplateForCarousal(message.media);
+        if (type === "image") {
+          str = str + getBotMessageTemplateForImage(url);
         }
       }
     });
@@ -455,7 +489,7 @@ function getBotMessageTemplateForCarousal(media, source) {
 }
 
 function getBotMessageTemplateForAudio(url) {
-  var htmlStr = "\n                <div class=\"message-wrapper  message-wrapper-bot\">\n                    <audio class=\"msg-audio\" src=\"" + url + "\"></audio>\n                </div>\n            ";
+  var htmlStr = "\n                <div class=\"message-wrapper  message-wrapper-bot\">\n                    <audio controls=\"controls\">\n                          <source src=\"" + url + "\"/>\n                        Your browser does not support the audio element.\n                    </audio>\n                </div>\n            ";
   return htmlStr;
 }
 
@@ -465,7 +499,7 @@ function getBotMessageTemplateForVideo(url) {
 }
 
 function getBotMessageTemplateForImage(url) {
-  var htmlStr = "\n                <div class=\"message-wrapper message-wrapper-bot msg-shadow\" \n                style=\"width: 100%; padding-top: 105%; position: relative; margin-bottom: 20px; background:#80808017; border-radius: 8px; overflow: hidden\">\n                    <img \n                    style=\"position:absolute; top: 50%; left: 0; right: 0; bottom: 0;width: 100%; transform: translateY(-50%)\" \n                    class=\"msg-img click-to-zoom\" src=\"" + url + "\" alt=\"\"/>\n                </div>\n            ";
+  var htmlStr = "\n                <div class=\"message-wrapper message-wrapper-bot msg-shadow\" \n                style=\"min-width: 220px;width: 100%; padding-top: 105%; position: relative; margin-bottom: 20px; background:#80808017; border-radius: 8px; overflow: hidden\">\n                    <img \n                    style=\"position:absolute; top: 50%; left: 0; right: 0; bottom: 0;width: 100%;height: 100%;transform: translateY(-50%)\" \n                    class=\"msg-img click-to-zoom\" src=\"" + url + "\" alt=\"\"/>\n                </div>\n            ";
   return htmlStr;
 }
 },{"./typings/send-api":"typings/send-api.ts","./utility":"utility.ts","./environment":"environment.ts"}],"ajax.ts":[function(require,module,exports) {
@@ -1374,18 +1408,22 @@ function serializeGeneratedMessagesToPreviewMessages(generatedMessage, bot_messa
       response_language: response_language
     });
 
-    if (Object.keys(message)[0] === 'media') {
-      messageData = __assign(__assign({}, messageData), {
-        messageMediaType: message.media[0] && message.media[0].type
-      });
-    } else if (Object.keys(message)[0] === 'quick_reply') {
-      messageData = __assign(__assign({}, messageData), {
-        messageMediaType: send_api_1.EBotMessageMediaType.quickReply
-      });
-    } else {
-      messageData = __assign(__assign({}, messageData), {
-        messageMediaType: send_api_1.EBotMessageMediaType.text
-      });
+    try {
+      if (Object.keys(message)[0] === 'media') {
+        messageData = __assign(__assign({}, messageData), {
+          messageMediaType: message.media[0] && message.media[0].type
+        });
+      } else if (Object.keys(message)[0] === 'quick_reply') {
+        messageData = __assign(__assign({}, messageData), {
+          messageMediaType: send_api_1.EBotMessageMediaType.quickReply
+        });
+      } else {
+        messageData = __assign(__assign({}, messageData), {
+          messageMediaType: send_api_1.EBotMessageMediaType.text
+        });
+      }
+    } catch (e) {
+      debugger;
     }
 
     return messageData;
@@ -1611,6 +1649,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         case 2:
           firstMessageData = _a.sent();
+          debugger;
           imiPreview.appendMessageInChatBody(firstMessageData.generated_msg);
           initClientEvents();
           return [2];
@@ -1917,6 +1956,7 @@ function humanMessageHandler(humanMessage, sourceType) {
         case 1:
           botResponse = _a.sent();
           dom_1.botResponses.push(botResponse);
+          debugger;
           messageData = send_api_1.serializeGeneratedMessagesToPreviewMessages(botResponse.generated_msg);
           messageData.forEach(function (message) {
             dom_1.AppendMessageInChatBody([message], botResponse);
@@ -2094,7 +2134,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55669" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56534" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
