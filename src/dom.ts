@@ -76,7 +76,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
     if (botResponse) {
         if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
             AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null);
-            console.log(`previous room : ${environment.room}. new room ${botResponse.room.id}`);
+            console.log(`previous room : ${environment.room.id}. new room ${botResponse.room.id}`);
         }
         console.log(environment.room, botResponse.room);
         environment.room = JSON.parse(JSON.stringify(botResponse.room));
@@ -148,7 +148,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
                 }
                 if (type === "video") {
                     str = str + getBotMessageTemplateForVideo(url);
-                    url  = encodeUrlForDomParser(url);
+                    url = encodeUrlForDomParser(url);
                     videoStr = videoStr + `<video muted="muted"  class="msg-video" controls="true" playsinline="playsinline">
                 <source src="${url}"/>
                     Your browser does not support HTML5 video.
@@ -163,7 +163,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
         console.log(str);
 
         let humanClass = messages[0].sourceType === ESourceType.human ? 'msg-bubble-human' : '';
-        let time = getTimeInHHMM();
+        let time = getTimeInHHMM(messages[0].time);
 
         let feedbackSTr = "";
         const messageWithFeedback = (messages.find((message) => message.feedback != null));
@@ -361,7 +361,7 @@ function getBotMessageTemplateForCarousal(media, source?: ESourceType) {
 }
 
 function getBotMessageTemplateForAudio(url: string) {
-    url  = encodeUrlForDomParser(url);
+    url = encodeUrlForDomParser(url);
     const htmlStr = `
                 <div class="message-wrapper  message-wrapper-bot">
                     <audio controls="controls">
@@ -391,7 +391,7 @@ function getBotMessageTemplateForVideo(url: string) {
 }
 
 function getBotMessageTemplateForImage(url: string) {
-    url  = encodeUrlForDomParser(url);
+    url = encodeUrlForDomParser(url);
     const htmlStr = `
                 <div class="message-wrapper message-wrapper-bot msg-shadow" 
                 style="min-width: 220px;width: 100%; padding-top: 105%; position: relative; margin-bottom: 20px; background:#80808017; border-radius: 8px; overflow: hidden">

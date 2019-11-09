@@ -153,8 +153,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-function getTimeInHHMM() {
-  var time = new Date();
+function getTimeInHHMM(timeMS) {
+  var time = timeMS ? new Date(timeMS) : new Date();
   return ("0" + time.getHours()).slice(-2) + ":" + ("0" + time.getMinutes()).slice(-2);
 }
 
@@ -266,7 +266,7 @@ function AppendMessageInChatBody(messages, botResponse) {
       AppendMessageInChatBody([{
         SESSION_EXPIRY: true
       }], null);
-      console.log("previous room : " + environment_1.environment.room + ". new room " + botResponse.room.id);
+      console.log("previous room : " + environment_1.environment.room.id + ". new room " + botResponse.room.id);
     }
 
     console.log(environment_1.environment.room, botResponse.room);
@@ -360,7 +360,7 @@ function AppendMessageInChatBody(messages, botResponse) {
     });
     console.log(str);
     var humanClass = messages[0].sourceType === send_api_1.ESourceType.human ? 'msg-bubble-human' : '';
-    var time = utility_1.getTimeInHHMM();
+    var time = utility_1.getTimeInHHMM(messages[0].time);
     var feedbackSTr = "";
     var messageWithFeedback = messages.find(function (message) {
       return message.feedback != null;
@@ -2144,7 +2144,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55401" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61389" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
