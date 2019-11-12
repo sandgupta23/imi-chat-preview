@@ -380,14 +380,10 @@ function AppendMessageInChatBody(messages, botResponse) {
     str = "\n            <div xmlns=\"http://www.w3.org/1999/xhtml\" data-txn=\"" + txnId + "\"  data-bot_message_id=\"" + bot_message_id + "\"\n             class=\"msg-bubble " + humanClass + "\" style=\"position:relative;\">\n                " + (isLast ? feedbackHtml : '') + "\n<!--                <div class=\"msg-bubble-options\">-->\n<!--                    <i class=\"fa fa-ellipsis-h\"></i>-->\n<!--                </div>-->\n                <div class=\"msg-bot-logo\">\n                    <img \n                    src=\"" + environment_1.environment.logo + "\"\n                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\"\n                     style=\"height: 100%; width: 100%\" />\n                </div>\n                <div class=\"message-container\">\n                    " + str + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                </div>\n            </div>  \n            \n        ";
   }
 
-  var el = getElementsFromHtmlStr(str);
-  var carousal = el.querySelector('.carousal-container');
-  frag.appendChild(el);
-
-  if (carousal) {
-    carousal.style.opacity = '0';
-  }
-
+  var el = document.createElement('template');
+  el.innerHTML = str;
+  var carousal = el.content.querySelector('.carousal-container');
+  frag.appendChild(el.content);
   exports.$chatBody.appendChild(frag);
 
   if (carousal) {
@@ -2144,7 +2140,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61389" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56785" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

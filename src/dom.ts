@@ -208,13 +208,21 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
         `;
     }
 
-    // $chatBody.innerHTML = $chatBody.innerHTML + str;
-    const el = getElementsFromHtmlStr(str) as HTMLElement;
-    const carousal = el.querySelector('.carousal-container') as HTMLElement;
-    frag.appendChild(el);
-    if (carousal) {
-        carousal.style.opacity = '0';
-    }
+
+    // const el = getElementsFromHtmlStr(str) as HTMLElement;
+    // const carousal = el.querySelector('.carousal-container') as HTMLElement;
+    // frag.appendChild(el);
+    // if (carousal) {
+    //     carousal.style.opacity = '0';
+    // }
+    // $chatBody.appendChild(frag);
+
+    // const el = getElementsFromHtmlStr(str) as HTMLElement;
+    const el = document.createElement('template');
+    // const el = document.createElement('DIV');
+    el.innerHTML = str;
+    const carousal = el.content.querySelector('.carousal-container') as HTMLElement;
+    frag.appendChild(el.content);
     $chatBody.appendChild(frag);
 
 

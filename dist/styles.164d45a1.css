@@ -440,6 +440,7 @@ button:active {
 
 .carousal-container {
   margin-bottom: 5px;
+  animation: human-slide-right 0.5s;
   position: relative;
   overflow: auto;
   width: 100%;
@@ -867,6 +868,7 @@ ul, li {
   align-items: flex-start;
   flex-wrap: wrap;
   margin-bottom: 8px;
+  animation: human-slide-right 0.5s;
 }
 .chat-body .message-wrapper-quick-reply button {
   background: #00abd3;
@@ -970,7 +972,6 @@ ul, li {
   margin-bottom: 8px;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   justify-content: center;
 }
 .chat-body .msg-bubble .message-container .message-wrapper .content {

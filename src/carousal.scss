@@ -1,5 +1,6 @@
 .carousal-container {
   margin-bottom: 5px;
+  animation: human-slide-right 0.5s;
   &.no-controls{
     .control{
       display: none;
