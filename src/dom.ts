@@ -13,6 +13,25 @@ export const $CarosalButtons=document.getElementsByClassName("CarosalButton");
 export const $searchbar = document.getElementById("searchbar") as HTMLInputElement;
 export const $paperclip = document.getElementsByClassName("paperclip");
 export const $nohighlight =document.getElementsByClassName("nohighlight");
+export const $highlight =document.getElementsByClassName("highlight");
+export const $modal = document.getElementById("myModal");
+export const $modalBtn = document.getElementById("modalButton");
+export const $close=document.getElementsByClassName("close")[0];
+export const $modalcontent = document.getElementsByClassName("modal-content")[0];
+export const $Ename=document.getElementsByClassName("Ename")[0] as HTMLSelectElement;
+export const $Bname=document.getElementsByClassName("Bname")[0] as HTMLInputElement;
+export const $ok=document.getElementsByClassName("ok")[0] as HTMLButtonElement;
+export const $WallpaperBtn=document.getElementsByClassName("ChangeWall")[0] as HTMLButtonElement;
+export const $modal2 = document.getElementById("myModal2");
+export const $close2=document.getElementsByClassName("close2")[0];
+export const $modalcontent2 = document.getElementsByClassName("modal-content2")[0];
+export const $Wname=document.getElementsByClassName("Wname")[0] as HTMLInputElement;
+export const $Hname=document.getElementsByClassName("Hname")[0] as HTMLInputElement;
+export const $Fname=document.getElementsByClassName("Fname")[0] as HTMLInputElement;
+export const $ok2=document.getElementsByClassName("ok2")[0] as HTMLButtonElement;
+export const $header= document.getElementsByClassName("header")[0] as HTMLElement;
+export const $footer= document.getElementsByClassName("footer")[0] as HTMLElement;
+export const $DefaultBtn= document.getElementsByClassName("ok2")[1] as HTMLButtonElement;
 
 export function setIntroDetails(intro: { logo: string, title: string, description: string,lastseen?:string }) {
     $botIntro.innerHTML = `<span class="bot-logo">
@@ -94,7 +113,7 @@ function getBotMessageTemplateResp(text1,timestamp?:string,MsgObj?:IMessageData)
         $chatBody.style.paddingLeft="80px";
         var str1=`<hr style="color:transparent;border:none;"><div class="Qreplypar">`;
         for(let i=0;i<MsgObj.quick_reply.quick_replies.length;i++){
-            str1+=`<button class="Qreply">${MsgObj.quick_reply.quick_replies[i].title}</button>`;
+            str1+=`<button class="Qreply"><div class="nohighlight">${MsgObj.quick_reply.quick_replies[i].title}</div></button>`;
         }
         str1+=`</div>`;
 
@@ -102,7 +121,7 @@ function getBotMessageTemplateResp(text1,timestamp?:string,MsgObj?:IMessageData)
                     <div class="tick2"></div>           
                     <div class="message-wrapper">
                         <div class="content" style="border-radius:0 10px 10px 10px;">
-                            <div class="nohighlight">${text1}${str1}</div>
+                            <div class="nohighlight">${text1}</div>${str1}
                             <div class="timestamp">${timestamp}</div>
                         </div>
                     </div> 
@@ -115,12 +134,12 @@ function getBotMessageTemplateResp(text1,timestamp?:string,MsgObj?:IMessageData)
         var str3='';
         $chatBody.style.paddingLeft="80px";
         for(let l=0;l<MsgObj.media.length;l++){
-            str2+=`<span><div class="message-wrapper" style="padding-left:5px;"><div class="content" style="border-radius:10px 10px 10px 10px;padding-bottom:4px;padding-top:8px;padding-left:3px;padding-right:3px;"><img alt="the image cannot be displayed in html5" src=${MsgObj.media[l].url} style="height:150px;width:auto;">`;
-            str2+=`<div class="nohighlight"><div class="CarosalTitle">${MsgObj.media[l].title}</div>`;
+            str2+=`<span><div class="message-wrapper" style="padding-left:5px;"><div class="content" style="border-radius:10px 10px 10px 10px;padding-bottom:4px;padding-top:8px;padding-left:3px;padding-right:3px;"><img alt="the image cannot be displayed in html5"  onerror=this.src="data:image/svg+xml;charset=utf8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%3E%3C/svg%3E" src=${MsgObj.media[l].url} style="height:150px;width:60px;">`;
+            str2+=`<div class="CarosalTitle"><div class="nohighlight">${MsgObj.media[l].title}</div></div>`;
             for(let s=0;s<MsgObj.media[l].buttons.length;s++){
-                str2+=`<div class="CarosalButton">${MsgObj.media[l].buttons[s].title}</div></div>`;
+                str2+=`<div class="CarosalButton"><div class="nohighlight">${MsgObj.media[l].buttons[s].title}</div></div>`;
             }
-            str2+='</div></div></div></span>';
+            str2+='</div></div></span></div>';
         }
         return `<div class="message-container">${str2}</div>`;
     }
@@ -136,7 +155,7 @@ function getBotMessageTemplateResp(text1,timestamp?:string,MsgObj?:IMessageData)
                 str3+=`<div class="message-container" style="justify-content:flex-start;flex-direction:column;">         
                 <div class="message-wrapper">
                     <div class="content" style="border-radius:0 10px 10px 10px;padding-bottom:1.5px;padding-top:8px;padding-left:3px;padding-right:3px;">
-                    <div class="nohighlight">&nbsp;&nbsp;${text1}</div>${str2}
+                    <div class="nohighlight">${text1}</div>${str2}
                             <div class="timestamp" style="color:grey;bottom:6px;">${timestamp}</div>
                     </div>
                 </div> 
@@ -148,7 +167,7 @@ function getBotMessageTemplateResp(text1,timestamp?:string,MsgObj?:IMessageData)
                 str3+=`<br> <div class="message-container" style="justify-content:flex-start;flex-direction:column;">         
                 <div class="message-wrapper">
                     <div class="content" style="border-radius:0 10px 10px 10px;padding-bottom:1.5px;padding-top:8px;padding-left:3px;padding-right:3px;">
-                    <div class="nohighlight">&nbsp;&nbsp;${text1}</div>${str2}
+                    <div class="nohighlight">${text1}</div>${str2}
                             <div class="timestamp" style="color:grey;bottom:6px;right:47px;">${timestamp}</div>
                     </div>
                 </div> 
@@ -161,7 +180,7 @@ function getBotMessageTemplateResp(text1,timestamp?:string,MsgObj?:IMessageData)
                 str3+=`<br><div class="message-container" style="justify-content:flex-start;flex-direction:column;">           
                 <div class="message-wrapper">
                     <div class="content" style="border-radius:0 10px 10px 10px;padding-bottom:1.5px;padding-top:8px;padding-left:3px;padding-right:3px;">
-                    <div class="nohighlight">&nbsp;&nbsp;${text1}</div>${str2}
+                    <div class="nohighlight">${text1}</div>${str2}
                             <div class="timestamp" style="color:grey;bottom:6px;">${timestamp}</div>
                     </div>
                 </div>
@@ -173,7 +192,7 @@ function getBotMessageTemplateResp(text1,timestamp?:string,MsgObj?:IMessageData)
                 str3+=`<br> <div class="message-container" style="justify-content:flex-start;flex-direction:column;">        
                 <div class="message-wrapper">
                     <div class="content" style="border-radius:0 10px 10px 10px;padding-bottom:1.5px;padding-top:8px;padding-left:3px;padding-right:3px;">
-                    <div class="nohighlight">&nbsp;&nbsp;${text1}<br>${str2}<div>
+                    <div class="nohighlight">${text1}<br>${str2}<div>
                             <div class="timestamp">${timestamp}</div>
                     </div>
                 </div>

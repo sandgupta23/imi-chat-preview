@@ -13,8 +13,6 @@
           integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 </head>
 <body>
-<!div><!span input type="text" placeholder="find" id="searchbar">
-<!div class="fa fa-search" id="search"><!/div><!/span><!/div>
 <div class="grid-container">
     <div class="header">
         <div class="bot-intro" id="botIntro">
@@ -25,17 +23,71 @@
                 <div class="title">Sprint 20 Test Demo</div>
                 <div class="description">Test</div>
                 <div class="lastseen">Online</div> 
-            </div>
+            </div> 
         </div>
-        
         <div class="fa fa-paperclip paperclip"></div>
         <div class="dropdown">
             <button class="dropbtn fa fa-ellipsis-v"></button>
             <div class="dropdown-content">
-                <a href="#">Change Wallpaper</a>
+                <a class="ChangeWall"href="#">Change Wallpaper</a>
                 <a href="#">Settings</a>
             </div>
         </div>
+    </div>
+    
+    <button id="modalButton">Change Bot</button>
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+    
+      <!-- Modal content -->
+      <div class="modal-content">
+                <span class="close">&times;</span>
+        <h4 style="text-align: center;">Change the Bot
+        </h4>
+        <div  style="display: flex;justify-content: space-evenly;">
+        <div>
+        <label>EnterPriseName</label>
+        <select class="Ename">
+            <option value="ayeshreddy.k">ayeshreddy</option>
+            <option value="others">others</option>
+        </select>
+        <br>
+        </div>
+        <div>
+        <label>BotName</label>
+        <input type="text" placeholder="Bot" class="Bname">
+        <br>
+        </div>
+        </div>
+        <br>
+        <button class="ok" style="margin-left:600px;">OK</button>
+      </div>
+    </div>
+<div class="modal2" id="myModal2">
+      <div class="modal-content2">
+                <span class="close2">&times;</span>
+        <h4 style="text-align: center;">Change Background Settings
+        </h4>
+        <div  style="display: flex;justify-content: space-evenly;">
+        <div>
+            <label>topColor</label>
+            <input type="text" placeholder="HeaderColor" class="Hname"> 
+        </div>
+        <div>
+            <label>WallpaperURL</label>
+            <input type="text" placeholder="URL" class="Wname"> 
+        </div>
+        <div>
+            <label>FootColor</label>
+            <input type="text" placeholder="FooterColor" class="Fname"> 
+        </div>
+        </div>
+        <br>
+        <button class="ok2" style="margin-left:600px;">OK</button>
+        <br>
+        <br>
+        <button class="ok2" style="margin-left:565px;">Restore Defaults</button>
+    </div>
     </div>
     <!--chat body starts-->
     <div class="chat-body" id="body" style="padding: 8px 16px; display: flex; flex-direction: column">

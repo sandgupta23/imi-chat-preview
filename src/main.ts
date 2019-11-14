@@ -1,5 +1,5 @@
 import {makeGetReq} from "./ajax";
-import {$chatInput,$chatSend,$search,$chatBody,$contentClass,$QreplyClass,$ArrowContent,$Arrow,AppendMessageInChatBody,$CarosalButtons,$searchbar,$nohighlight,$paperclip, setIntroDetails} from "./dom";
+import {$chatInput,$chatSend,$search,$chatBody,$contentClass,$QreplyClass,$ArrowContent,$Arrow,$Ename,$WallpaperBtn,$Bname,$ok,AppendMessageInChatBody,$CarosalButtons,$highlight,$modal,$modalBtn,$close,$modalcontent,$searchbar,$nohighlight,$paperclip,$modal2,$close2,$modalcontent2,$Wname, $Hname,$Fname,$ok2,$header,$footer,$DefaultBtn setIntroDetails} from "./dom";
 import {getBotDetails} from "./bot-details";
 import {IBotDetailsApiResp} from "./typings/bot-detaills-api";
 import 'regenerator-runtime/runtime'
@@ -9,8 +9,78 @@ import {IMessageData,IGeneratedMessageItem} from "./typings/send-api";
 
 let clickcount=0;
 
-//let searchclick=0;
+async function reloader(){
+    const botDetails = await getBotDetails<IBotDetailsApiResp>();
+    environment.bot_access_token = botDetails.bot_access_token;
+    setIntroDetails({description: botDetails.description, logo: botDetails.logo, title: botDetails.name,lastseen:"online"});
+    //initApp().then(_ => console.log('app init success'));
+    }
 
+function wallpaperChange(){
+    $WallpaperBtn.addEventListener("click",function(){
+        $modal2.style.display="block";
+    });
+    $close2.addEventListener("click",function(){
+        $modal2.style.display = "none";     
+    });
+    window.addEventListener("click",function(e:MouseEvent) {
+        if (e.target == $modal2) {
+         $modal2.style.display = "none";
+        }
+    });
+        $ok2.addEventListener("click",function(){
+            if($Wname.value.length>0)
+                $chatBody.style.background="white url("+$Wname.value+") repeat";
+            if($Hname.value.length>0)
+                $header.style.backgroundColor=$Hname.value;
+            if($Fname.value.length>0)
+                $footer.style.backgroundColor=$Fname.value;
+
+            $modal2.style.display = "none";     
+        });
+        $DefaultBtn.addEventListener("click",function(){
+            $chatBody.style.background="#efe7dd url(https://cloud.githubusercontent.com/assets/398893/15136779/4e765036-1639-11e6-9201-67e728e86f39.jpg) repeat";
+            $header.style.backgroundColor="#eee";
+            $footer.style.backgroundColor="#eee";
+            $modal2.style.display = "none";     
+        });
+}
+
+function modalListen(){
+
+    $modalBtn.addEventListener("click",function(){
+        $modal.style.display = "block";
+    });
+    $close.addEventListener("click",function(){
+        $modal.style.display = "none";     
+    });
+    window.addEventListener("click",(e:MouseEvent)=> {
+        if (e.target == $modal) {
+         $modal.style.display = "none";
+        }
+    });
+    $ok.addEventListener("click",function(){
+        let change=0;
+        if($Ename.value=="ayeshreddy.k"){
+            if($Ename.value!=environment.enterprise_unique_name){
+                change=1;
+                environment.enterprise_unique_name=$Ename.value;
+            }
+        }
+        if($Bname.value!=environment.bot_unique_name && $Bname.value.length>0){
+            change=1;
+            environment.bot_unique_name=$Bname.value;
+        }
+        if(change==1){
+            $modal.style.display = "none";
+            $chatBody.innerHTML=`<div class="datee">Today</div>`;
+            reloader();
+        }
+        if(change==0){
+            $modal.style.display = "none";
+        }
+    });
+}
 
 function AttributePayload(MsgObj:IMessageData){
     if(Object.keys(MsgObj)[0]==="media" && MsgObj.messageMediatype=="image"){
@@ -23,7 +93,6 @@ function AttributePayload(MsgObj:IMessageData){
     
         for(let z=0;z<$CarosalButtons.length-finalLength;z++){
             $CarosalButtons[z].addEventListener('click',async function(){
-                
                 let humanMessage = $CarosalButtons[z].getAttribute("payload");
                     AppendMessageInChatBody([{
                         sourceType: "bot",
@@ -153,25 +222,6 @@ function AttributePayload(MsgObj:IMessageData){
     }
 }
 
-
-function Dropdown()
-    {
-        for(let a=0;a<$Arrow.length;a++){
-        $Arrow[a].addEventListener("click",function(){
-            clickcount++;
-            if(clickcount%2==1){
-            (<HTMLButtonElement>$ArrowContent[a]).style.display="block";
-            }
-            else{
-                for(let b=0;b<$Arrow.length;b++){
-                    (<HTMLButtonElement>$ArrowContent[b]).style.display="none";
-                }
-            }
-            clickcount=1;
-            })
-        }
-    }
-
 function quickreplyclick(MsgObj:IMessageData){
 
     for(let m=$QreplyClass.length-MsgObj.quick_reply.quick_replies.length;m<$QreplyClass.length;m++){
@@ -270,13 +320,15 @@ function CarosalReply(MsgObj:IMessageData){
         }
     }
 
-    async function initApp() {
+    async function initApp(){ 
         initEvents();
         const botDetails = await getBotDetails<IBotDetailsApiResp>();
         environment.bot_access_token = botDetails.bot_access_token;
         setIntroDetails({description: botDetails.description, logo: botDetails.logo, title: botDetails.name,lastseen:"online"});
-       searchcreate();
-       searchcontent();
+        searchcreate();
+        searchcontent();
+        modalListen(); 
+        wallpaperChange(); 
     }
 
 function initEvents() {
@@ -306,12 +358,6 @@ function initEvents() {
                 
                 AttributePayload(messageData[y]);
             }
-            // document.addEventListener("click",()=>{
-            //     clickcount++;
-            //     for(let b=0;b<$Arrow.length;b++){
-            //         (<HTMLButtonElement>$ArrowContent[b]).style.display="none";
-            //     }
-            // });
             setDimensions();
         }
     })
@@ -446,26 +492,125 @@ function searchcreate(){
 function searchcontent(){
     (<HTMLInputElement>$paperclip[0].children[1]).addEventListener("keyup",function(e:KeyboardEvent){
         if(e.key=="Enter"){
+            if($paperclip[0].children.length==3){
+                $paperclip[0].children[2].remove();
+            }
+            for(let i=0;i<$nohighlight.length;i++){
+                let r=0;
+                let newhtml='';
+                for(let k=0;k<$nohighlight[i].textContent.length;k++){
+                    newhtml+=$nohighlight[i].textContent[k];
+                }
+                for(let j=0;j<$nohighlight[i].children.length;j++){
+                    console.log($nohighlight[i].children[j]);
+                    r=1;
+                }
+                if(r==1){
+                    $nohighlight[i].innerHTML=newhtml;
+                }
+            }
+            if((<HTMLInputElement>$paperclip[0].children[1]).value.length>0){
         let searchQuery=(<HTMLInputElement>$paperclip[0].children[1]).value;
         for(let i=0;i<$nohighlight.length;i++){
                 if($nohighlight[i].textContent.search(searchQuery)>=0){
-                    //console.log($nohighlight[i].textContent);
-                    let str3='';
-                    console.log(typeof(searchQuery));
-                    str3+=`<span class="highlight">${searchQuery}</span>`;
-                    let d=$nohighlight[i].textContent.slice(0,$nohighlight[i].textContent.search(searchQuery))
-                    d+=$nohighlight[i].textContent.replace(searchQuery,str3);
-                    d+=$nohighlight[i].textContent.slice($nohighlight[i].textContent.search(searchQuery)+searchQuery.length,$nohighlight[i].textContent.length);
-                    console.log($nohighlight[i].textContent);
-                    console.log(d);
-                    (<HTMLDivElement>$nohighlight[i]).innerHTML=d;
+                    let d='';
+                    for(let j=0;j<$nohighlight[i].textContent.length;j++){
+                        let s=0;
+                        if($nohighlight[i].textContent.slice(j,j+searchQuery.length).search(searchQuery)>=0){
+                            let str3=`<span class="highlight">${searchQuery}</span>`;
+                            d+=$nohighlight[i].textContent.slice(j,j+searchQuery.length).replace(searchQuery,str3);
+                            j=j+searchQuery.length-1;
+                            s=1;
+                        }
+                        if(s==0){
+                        d+=$nohighlight[i].textContent[j];
+                        }
+                    }
+                    ($nohighlight[i]).innerHTML=d;
                 }
+
             }
-               
+            let box=document.createElement("div");
+            box.className="searchbox";
+            let up=document.createElement('i');
+            up.textContent="keyboard_arrow_up";
+            up.classList.add("material-icons");
+            up.classList.add("two");
+            let down=document.createElement('i');
+            down.textContent="keyboard_arrow_down";
+            down.classList.add("material-icons");
+            down.classList.add("three");
+            let cross=document.createElement('i');
+            cross.textContent="close";
+            cross.classList.add("material-icons");
+            cross.classList.add("four");
+            let count=1;
+            let total=0;
+            for(let b=0;b<$nohighlight.length;b++){
+                for(let c=0;c<$nohighlight[b].children.length;c++){
+                    total+=1;
+                }       
+            }
+            let countbox=document.createElement("div");
+            countbox.textContent=count+" / "+total;
+            countbox.className="one";
+            box.appendChild(countbox);
+            box.appendChild(up);
+            box.appendChild(down);
+            box.appendChild(cross);
+            $paperclip[0].appendChild(box);
+            $highlight[0].scrollIntoView();
+            box.children[1].addEventListener("click",()=>{
+                count-=1;
+                if(count%total!=0){
+                    count=count%total;
+                }
+                else{
+                    count=total;
+                }
+                countbox.textContent=count+" / "+total;
+                $highlight[count-1].scrollIntoView();
+            });
+            box.children[2].addEventListener("click",()=>{
+                count+=1; 
+                if(count%total!=0){
+                    count=count%total;
+                }
+                else{
+                    count=total;
+                }
+                countbox.textContent=count+" / "+total;
+                $highlight[count-1].scrollIntoView();
+            });
+            box.children[3].addEventListener("click",()=>{
+                box.remove();
+                (<HTMLInputElement>$paperclip[0].children[1]).value='';
+                for(let i=0;i<$nohighlight.length;i++){
+                    let r=0;
+                    let newhtml='';
+                    for(let k=0;k<$nohighlight[i].textContent.length;k++){
+                        newhtml+=$nohighlight[i].textContent[k];
+                    }
+                    for(let j=0;j<$nohighlight[i].children.length;j++){
+                        console.log($nohighlight[i].children[j]);
+                        r=1;
+                    }
+                    if(r==1){
+                        $nohighlight[i].innerHTML=newhtml;
+                    }
+                }
+            });
         }
     }
-    );  
+    }
+);  
 }
 
+function wallpaper(){
+    $Wallpaper.addEventListener("click",function(){
 
+    });
+}
+if(clickcount==0){
 initApp().then(_ => console.log('app init success'));
+}

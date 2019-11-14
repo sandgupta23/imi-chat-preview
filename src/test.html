@@ -1,0 +1,64 @@
+{
+    border-width: 0px 0 10px 10px;
+    border-color: transparent transparent transparent #e1ffc7;
+    top: 0;
+    right: -10px;
+
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    border-style: solid;
+}
+
+var message_container=document.createElement("div");
+        message_container.className='message-container';
+        //$chatBody.appendChild(message_container);
+
+        var tick2=document.createElement('div');
+        tick2.className='tick2';
+        message_container.appendChild(tick2);
+
+        var message_wrapper=document.createElement("div");
+        message_wrapper.className='message-wrapper';
+        message_container.appendChild(message_wrapper);
+
+        var content=document.createElement('div');
+        content.className='content';
+        message_wrapper.appendChild(content);
+
+        var arrow2=document.createElement('div');
+        arrow2.className='arrow2';
+        content.appendChild(arrow2);
+
+        // var arrow2_content=document.createElement("div");
+        // arrow2_content.className='arrow2-content';
+        // arrow2.appendChild(arrow2_content);
+
+        // var a1=document.createElement('a');
+        // a1.textContent="Reply";
+        // arrow2_content.appendChild(a1);
+        // var a2=document.createElement('a');
+        // a2.textContent="Forward";
+        // arrow2_content.appendChild(a2);
+        // var a3=document.createElement('a');
+        // a3.textContent="Star";
+        // arrow2_content.appendChild(a3);
+        // var a4=document.createElement('a');
+        // a4.textContent="Delete";
+        // arrow2_content.appendChild(a4);
+
+        var timestampdiv=document.createElement("div");
+        timestampdiv.className='timestamp');
+        content.appendChild(timestampdiv);
+
+        message_container.style.justifyContent="flex-start";
+        tick2.style.marginLeft='80px';
+        content.style.borderRadius='0 10px 10px 10px';
+
+        content.textContent=MsgObj.text;
+
+        var dummy=document.createElement("div");
+        dummy.appendChild(message_container);
+
+        return dummy.innerHTML;

@@ -38,6 +38,7 @@ body {
     padding:5px 5px 10px 5px;
     position:fixed;
     border-radius:8px;
+    z-index: 1;
   }
 
 
@@ -71,6 +72,7 @@ body {
            position: absolute;
            right: -90px;
             top: 5px;
+            z-index: 1;
         }
         
         .dishighlight{
@@ -84,7 +86,7 @@ body {
         .nohighlight{
          // background-color:transparent;
         }
-       .arrow-content a{
+       .arrow-content a,.arrow-content a:focus{
          background: #fff;
          display: block;
          outline: none;
@@ -93,10 +95,12 @@ body {
          padding:10px 40px 10px 10px;
          text-align: center;
          right: 0px;  
+         cursor: pointer;
        }
       
        .arrow-content a:hover{
          background-color: #ddd;
+         cursor: pointer;
        }
 
        .arrow-content2{
@@ -131,8 +135,9 @@ body {
         font-size: 20px;
       }
       
-      i:hover{
+      i:hover,i:focus{
       opacity:1;
+      cursor: pointer;
         }
 
         .CarosalTitle{
@@ -152,6 +157,7 @@ body {
           border:1px solid grey;
           border-top-width:0;
           word-wrap: normal;
+          cursor: pointer;
         }
 
         video{
@@ -212,6 +218,7 @@ body {
           outline:none;
           margin-left:5px;
           margin-right:10px;
+          cursor:pointer;
         }
       }
 
@@ -264,6 +271,10 @@ body {
   background-color:#eee;
   //#005e54;
 
+  
+
+
+
   .lastseen{
       display: flex;
       align-self: flex-start;
@@ -289,11 +300,10 @@ body {
     .bot-details {
       flex-grow: 1;
       color: black;
-      //font-weight:bold;
     }
   }
   
-    
+  
 
     .paperclip{
       display:flex;
@@ -307,52 +317,77 @@ body {
     margin-right:7px;
   
     color:black;
+    cursor: pointer;
 
     .searchbar{
-      // display: flex;
-      // justify-self:flex-end;
-      //padding:10px;
-      //margin-top:3px;
       position: absolute;
       font-size:15px;
       padding-left: 7px;
       width: 125px;
-      //margin-right:3px;
       border-top: none;
       border-left:none;
       border-right:none;
       left: -150px;
       padding-bottom: 5px;
-      top: 4px;
-      //border-bottom: 2px solid #00abd3;
+      top: 0px;
       border-bottom:0.5px solid grey; 
       outline:none;
       background-color: transparent;
-      //position:absolute; 
+    }
+
+    .searchbar:focus{
+      border-bottom:2px solid #00abd3;
+      
     }
     
     #search{
-    // display:flex;
-    // justify-self:flex-end;
     position: absolute;
-    //border-top:10vh;
     padding:0;
-    
-    top: -6px;
+    top: -10px;
     left: -40px;
-    // margin-left:auto;
     margin-top:10px;
     margin-right:20px;
     font-size:20px;
     color:black;
-    //border-bottom:0.5px solid grey;
-    //border-bottom:2px solid #00abd3;
-    //background:lightgreen;
-    //justify-content:flex-end;
+      }
+
+    
+
+    .searchbox{
+        position: absolute;
+        top: -11px;
+        left: -340px;
+        padding:5px;
+        //border: 1.5px solid lightblue;
+        display: flex;
+        justify-content: space-around;
+        font-size: 15px;
+        background-color: white;
+        //border:none;
+
+        .one{
+          padding: 5px;
+          margin: 5px;
+        }
+
+        .two{
+          margin-left:25px;
+          margin-right:5px;
+          margin-top:5px;
+          margin-bottom: 5px;
+        }
+
+        .three{
+          margin: 5px;
+        }
+
+        .four{
+          margin: 5px;
+          //font-size:10px;
+        }
       }
     }
 
-    //dropbtn style
     .dropbtn{
       background: transparent;
       outline:none;
@@ -362,20 +397,20 @@ body {
       margin-top:10px;
       display: flex;
       align-self: flex-end;
+      cursor: pointer;
     }
 
     .dropdown{
       position:relative;
       display:inline-block;
       margin-left: 10px;
-      //margin-right:15px;
     }
 
     .dropdown-content{
         display: none;
         position: absolute;
-        top:35px;
-        right:5px;
+        top:30px;
+        right:0px;
     };
 
     .dropdown-content a{
@@ -385,7 +420,7 @@ body {
       border:none;
       text-decoration: none;
       padding:10px 40px 10px 10px;
-      
+      cursor: pointer;
     }
 
     /*.dropdown-content:hover .dropdown a{
@@ -398,6 +433,7 @@ body {
 
     .dropdown-content a:hover{
       background-color: #ddd;
+      cursor: pointer;
     }
 
 }
@@ -416,6 +452,7 @@ body {
     margin-top: 14px;
     //margin-right:auto;
     margin-right:13px;
+    cursor: pointer;
   }
 
   #chat-input {
@@ -498,4 +535,88 @@ body {
     }
 
   }
+}
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+} 
+
+#modalButton{
+  position: fixed;
+  top: 20px;
+  left: 200px;
+  z-index: 1;
+  font-size: smaller;
+}
+
+.modal2 {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content2 {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+
+}
+
+/* The Close Button */
+.close2 {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close2:hover,
+.close2:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
 }
