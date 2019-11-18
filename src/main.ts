@@ -27,50 +27,7 @@ export enum modes {
     full_screen = "full_screen",
 }
 
-
-
-document.addEventListener('DOMContentLoaded', async function () {
-    //
-    initEnvironment();
-    const botDetails = await getBotDetails<IBotDetailsApiResp>();
-    initEnvironment(botDetails);
-
-
-    // $chatFooter.classList.add('d-none');
-    try {
-        $loader && $loader.classList.add('d-none');
-        $chatFooter && $chatFooter.classList.remove('d-none');
-    } catch (e) {
-        console.log(e);
-    }
-
-    const imiPreview = new ImiPreview();
-    imiPreview.setSendHumanMessageCallback((val) => {
-        humanMessageHandler(val);
-    });
-    imiPreview.setSendFeedback((val, feedback) => {
-        sendFeedbackHandler(val, feedback);
-    });
-    const fullBody = true;//getQueryStringValue('fullbody') === "true";
-    const phoneCasing = false;//getQueryStringValue('phonecasing') === "true";
-    const brandColor = getQueryStringValue('brandcolor') || "#2b4f70";
-
-    imiPreview.viewInit('.test-container', fullBody, phoneCasing);
-    const $chatInput = document.getElementById('chat-input') as HTMLInputElement;
-    imiPreview.initAdditionalDom({$chatInput});
-    // imiPreview.appendMessageInChatBody(data.generated_msg, data);
-    // const botDetails = {description: "dummy description", logo: "dummy logo", title: "dummy title"};
-    // const languageApi =
-    const theme = {brandColor: brandColor || 'green', showMenu: false, feedbackEnabled: botDetails.allow_feedback, showOptionsEllipsis: true};
-    imiPreview.setOptions(botDetails, theme);
-    const firstMessageData = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, 'hi', ESourceType.bot);
-    debugger;
-    imiPreview.appendMessageInChatBody(firstMessageData.generated_msg);
-    initClientEvents();
-});
-
-
-function initClientEvents() {
+export function initClientEvents() {
 
     try {
 
@@ -128,13 +85,6 @@ function initClientEvents() {
 async function initApp(imiPreview: ImiPreview) {
     console.log('imi-chat-preview init');
     initEvents(imiPreview);
-    // environment.bot_access_token = botDetails.bot_access_token;
-    // setIntroDetails({description: botDetails.description, logo: botDetails.logo, title: botDetails.name});
-    // const messageData: IMessageData[] = [{
-    //     sourceType: ESourceType.bot,
-    //     'text': botDetails.first_message
-    // }];
-    // AppendMessageInChatBody(data.generated_msg);
 }
 
 class ImiPreview {
@@ -213,7 +163,9 @@ function initEvents(imiPreview: ImiPreview) {
         const target = $event.target as HTMLElement;
 
         if (target.classList.contains('feedback-like') || target.classList.contains('feedback-dislike')) {
+            debugger;
             const $feedbackWrapper = findParentWithClass(target, 'msg-bubble-options-panel');
+            $feedbackWrapper.classList.remove('ask-feedback');
             const oldFeedback = $feedbackWrapper.getAttribute('data-feedback');
             if (oldFeedback != null) {
                 return;
@@ -223,7 +175,7 @@ function initEvents(imiPreview: ImiPreview) {
             const txn = $messageBubble.getAttribute('data-txn');
             const bot_message_id = $messageBubble.getAttribute('data-bot_message_id');
             $feedbackWrapper.setAttribute('data-feedback', feedback);
-            target.classList.add('active');
+            target.parentElement.classList.add('active');
             imiPreview._feedbackCB({txn, bot_message_id}, Number(feedback));
         }
         if (target.hasAttribute('data-payload')) {
@@ -354,7 +306,7 @@ function initEvents(imiPreview: ImiPreview) {
 
 }
 
-async function humanMessageHandler(humanMessage: string, sourceType?) {
+export async function humanMessageHandler(humanMessage: string, sourceType?) {
     // alert();
     AppendMessageInChatBody([{
         sourceType: sourceType || ESourceType.human,
@@ -370,7 +322,7 @@ async function humanMessageHandler(humanMessage: string, sourceType?) {
     // console.log(environment.room, botResponse.room);
     // environment.room = botResponse.room;
     botResponses.push(botResponse);
-    debugger;
+
     let messageData: any[] = serializeGeneratedMessagesToPreviewMessages(botResponse.generated_msg);
     messageData.forEach((message)=>{
         AppendMessageInChatBody([message], botResponse);
@@ -382,7 +334,7 @@ function getBotResponseByTxnId(txn) {
     return botResponses.find(res => res.transaction_id === txn)
 }
 
-async function sendFeedbackHandler(resp: { txn: string, bot_message_id: string }, feedback: number) {
+export async function sendFeedbackHandler(resp: { txn: string, bot_message_id: string }, feedback: number) {
     let parsedFeedback;
     if (feedback === 0) {
         parsedFeedback = 'NEGATIVE'
@@ -401,7 +353,7 @@ async function sendFeedbackHandler(resp: { txn: string, bot_message_id: string }
     }
 }
 
-function initEnvironment(botDetails: any = {}) {
+export function initEnvironment(botDetails: any = {}) {
     // const lang = getQueryStringValue('lang');
     const lang = getQueryStringValue('language') || getQueryStringValue('lang') || botDetails.language || 'en';
 

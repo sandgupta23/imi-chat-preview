@@ -443,7 +443,8 @@ button:active {
   animation: human-slide-right 0.5s;
   position: relative;
   overflow: auto;
-  width: 100%;
+  width: calc(100% - 45px);
+  min-width: 300px;
 }
 .carousal-container.no-controls .control {
   display: none;
@@ -892,36 +893,43 @@ ul, li {
   max-width: 650px;
 }
 .chat-body .msg-bubble .msg-bubble-options-panel {
-  opacity: 0;
-  position: absolute;
-  right: 0px;
-  top: 0;
-  transform: translateY(-50%);
-  background: #80808021;
-  padding: 1px 10px;
+  animation: human-slide-right 0.5s;
+  margin-bottom: 8px;
+  min-width: 100px;
   border-radius: 15px;
   z-index: 2;
   transition: opacity 0.3s;
-  display: none;
+  display: flex;
+  align-items: center;
+}
+.chat-body .msg-bubble .msg-bubble-options-panel .feedback {
+  display: none !important;
+}
+.chat-body .msg-bubble .msg-bubble-options-panel.ask-feedback .feedback {
+  display: flex !important;
+}
+.chat-body .msg-bubble .msg-bubble-options-panel.ask-feedback .feedback .fa {
+  cursor: pointer;
+}
+.chat-body .msg-bubble .msg-bubble-options-panel .feedback.active {
+  display: flex !important;
+}
+.chat-body .msg-bubble .msg-bubble-options-panel .feedback {
+  display: flex;
+  align-items: center;
+}
+.chat-body .msg-bubble .msg-bubble-options-panel .feedback:first-child {
+  margin-right: 10px;
 }
 .chat-body .msg-bubble .msg-bubble-options-panel .fa {
   cursor: pointer;
+  margin-right: 4px;
 }
 .chat-body .msg-bubble .msg-bubble-options-panel .fa-thumbs-up {
-  margin-right: 5px;
+  color: #34bc6e;
 }
-.chat-body .msg-bubble .msg-bubble-options-panel[data-feedback] {
-  opacity: 1 !important;
-  display: inline-block !important;
-}
-.chat-body .msg-bubble .msg-bubble-options-panel[data-feedback] *:not(.active) {
-  display: none;
-}
-.chat-body .msg-bubble .msg-bubble-options-panel[data-feedback] .active {
-  margin-right: 0;
-}
-.chat-body .msg-bubble:last-child:not(:first-child) .msg-bubble-options-panel {
-  display: inline-block;
+.chat-body .msg-bubble .msg-bubble-options-panel .fa-thumbs-down {
+  color: #d94254;
 }
 .chat-body .msg-bubble .msg-bubble-options {
   position: absolute;

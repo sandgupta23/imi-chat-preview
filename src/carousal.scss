@@ -25,7 +25,8 @@
 
   position: relative;
   overflow: auto;
-  width: 100%;
+  width: calc(100% - 45px);
+  min-width: 300px;
   //border: 1px solid red;
 
   &.hide-right-control {

@@ -68,7 +68,7 @@ export function serializeGeneratedMessagesToPreviewMessages(generatedMessage: IG
                 };
             }
         }catch (e) {
-            debugger;
+
         }
 
         return messageData;
