@@ -24,9 +24,283 @@
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
 <script src="/styles.164d45a1.js"></script></head>
+
+<style>html {
+        width: 100%;
+        height: 100%;
+    }
+
+    body {
+        width: 100%;
+        height: 100%;
+    }
+
+
+    /*scrollbar styles start*/
+    /* width */
+    /* width */
+    ::-webkit-scrollbar {
+        /*width: 5px;*/
+        width: 0px;
+        color: transparent;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #a8a8a8;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+
+    /*scrollbar styles end*/
+
+    .vertical-centered-box body {
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        font-family: "proxima-nova-soft", sans-serif;
+        -webkit-user-select: none;
+        overflow: scroll;
+        line-height: 0 !important;
+    }
+
+    body .vertical-centered-box {
+        position: absolute;
+        /*width: 100%;*/
+        /*height: 100%;*/
+        top: 50%;
+        left: 50%;
+        line-height: 0 !important;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    body .vertical-centered-box:after {
+        content: '';
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+        margin-right: -0.25em;
+    }
+
+    body .vertical-centered-box .content {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        display: inline-block;
+        vertical-align: middle;
+        text-align: left;
+        font-size: 0;
+    }
+
+    .vertical-centered-box * {
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        -o-transition: all 0.3s;
+        transition: all 0.3s;
+    }
+
+
+    .vertical-centered-box .loader-circle {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 80%;
+        height: 80%;
+        border-radius: 50%;
+        margin-left: -60px;
+        margin-top: -60px;
+    }
+
+    .vertical-centered-box .loader-line-mask {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 60px;
+        height: 120px;
+        margin-left: -60px;
+        margin-top: -60px;
+        overflow: hidden;
+        -webkit-transform-origin: 60px 60px;
+        -moz-transform-origin: 60px 60px;
+        -ms-transform-origin: 60px 60px;
+        -o-transform-origin: 60px 60px;
+        transform-origin: 60px 60px;
+        -webkit-mask-image: -webkit-linear-gradient(top, #ffffff, rgba(255, 255, 255, 0));
+        -webkit-animation: rotate 1.2s infinite linear;
+        -moz-animation: rotate 1.2s infinite linear;
+        -o-animation: rotate 1.2s infinite linear;
+        animation: rotate 1.2s infinite linear;
+    }
+
+    .vertical-centered-box .loader-line-mask .loader-line {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        box-shadow: inset 0 0 0 2px #02BDE8;
+    }
+
+    .vertical-centered-box lesshat-selector {
+        -lh-property: 0;
+    }
+
+    @-webkit-keyframes rotate {
+        0% {
+            -webkit-transform: rotate(0deg);
+        }
+        100% {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @-moz-keyframes rotate {
+        0% {
+            -moz-transform: rotate(0deg);
+        }
+        100% {
+            -moz-transform: rotate(360deg);
+        }
+    }
+
+    @-o-keyframes rotate {
+        0% {
+            -o-transform: rotate(0deg);
+        }
+        100% {
+            -o-transform: rotate(360deg);
+        }
+    }
+
+    @keyframes rotate {
+        0% {
+            -webkit-transform: rotate(0deg);
+            -moz-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+        100% {
+            -webkit-transform: rotate(360deg);
+            -moz-transform: rotate(360deg);
+            -ms-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+
+    [not-existing] {
+        zoom: 1;
+    }
+
+    .vertical-centered-box lesshat-selector {
+        -lh-property: 0;
+    }
+
+    @-webkit-keyframes fade {
+        0% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.25;
+        }
+    }
+
+    @-moz-keyframes fade {
+        0% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.25;
+        }
+    }
+
+    @-o-keyframes fade {
+        0% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.25;
+        }
+    }
+
+    @keyframes fade {
+        0% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.25;
+        }
+    }
+
+    [not-existing] {
+        zoom: 1;
+    }
+
+    lesshat-selector {
+        -lh-property: 0;
+    }
+
+    @-webkit-keyframes fade-in {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @-moz-keyframes fade-in {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @-o-keyframes fade-in {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes fade-in {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    [not-existing] {
+        zoom: 1;
+    }
+
+    /*body, html{*/
+    /*width: 100vw;*/
+    /*height: 100vh;*/
+    /*}*/</style>
+
 <body class="dewa-theme">
     <div class="test-container" style="width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center">
-
+        <div class="vertical-centered-box">
+            <div class="content">
+                <div class="loader-circle"></div>
+                <div class="loader-line-mask">
+                    <div class="loader-line"></div>
+                </div>
+                <img alt="Favicon" src="https://staging.imibot.ai/static/favicon.ico">
+            </div>
+        </div>
     </div>
 <!--&lt;!&ndash; The Modal &ndash;&gt;-->
 <!--<div id="myModal" class="modal2">-->

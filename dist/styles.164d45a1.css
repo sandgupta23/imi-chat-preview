@@ -953,6 +953,10 @@ ul, li {
   flex-direction: column-reverse;
   margin-left: auto;
 }
+.chat-body .msg-bubble.msg-bubble-human .message-container {
+  align-items: flex-end;
+  width: 100%;
+}
 .chat-body .msg-bubble.msg-bubble-human .msg-bot-logo {
   display: none !important;
 }

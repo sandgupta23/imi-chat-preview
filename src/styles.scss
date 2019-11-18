@@ -408,6 +408,11 @@ ul, li {
       flex-direction: column-reverse;
       margin-left: auto;
 
+      .message-container {
+        align-items: flex-end;
+        width: 100%;
+      }
+
       .msg-bot-logo {
         display: none !important;
       }
