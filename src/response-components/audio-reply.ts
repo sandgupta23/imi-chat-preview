@@ -8,7 +8,7 @@ export class AudioReply {
         url = encodeUrlForDomParser(url);
         const htmlStr = `
                 <div class="message-wrapper  message-wrapper-bot" style="width: 100%;">
-                    <audio controls="controls" style="width: 95%; max-width: 300px">
+                    <audio controls="controls" style="max-width: 233px">
                           <source src="${encodeUrlForDomParser(url)}"/>
                         Your browser does not support the audio element.
                     </audio>

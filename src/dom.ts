@@ -66,11 +66,11 @@ export function setOptions(intro: IBotDetailsApiResp) {
     }
 }
 
-export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload) {
+export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload, hideFeedback) {
 
     if (botResponse) {
         if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
-            AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null);
+            AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null, true);
             console.log(`previous room : ${environment.room.id}. new room ${botResponse.room.id}`);
         }
         console.log(environment.room, botResponse.room);
@@ -213,7 +213,8 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
             disLikeActive,
             time,
             str,
-            randomNumber
+            randomNumber,
+            hideFeedback
         })[0];
     }
 

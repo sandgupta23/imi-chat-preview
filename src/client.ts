@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     imiPreview.setSendFeedback((val, feedback) => {
         sendFeedbackHandler(val, feedback);
     });
-    debugger;
+
     const fullBody = true;//getQueryStringValue('fullbody') === "true";
     const phoneCasing = getQueryStringValue('phonecasing') === "true";
     const brandColor = getQueryStringValue('brandcolor') || "#2b4f70";
@@ -45,11 +45,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         brandColor: brandColor || 'green',
         showMenu: false,
         feedbackEnabled: botDetails.allow_feedback,
-        showOptionsEllipsis: true
+        showOptionsEllipsis: false
     };
     imiPreview.setOptions(botDetails, theme);
     const firstMessageData = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, 'hi', ESourceType.bot);
 
-    imiPreview.appendMessageInChatBody(firstMessageData.generated_msg);
+    imiPreview.appendMessageInChatBody(firstMessageData.generated_msg, null, true);
     initClientEvents();
 });

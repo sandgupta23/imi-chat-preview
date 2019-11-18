@@ -34,7 +34,8 @@
 
   position: relative;
   overflow: auto;
-  width: calc(100% - 45px);
+  //width: calc(100% - 45px);
+  width: calc(100%);
   min-width: 300px;
   //border: 1px solid red;
 
@@ -62,7 +63,7 @@
     height: 25px;
     transform: translateY(-50%);
     font-size: 16px;
-    color: rgba(0, 0, 0, .125);
+    color: var(--color-brand);//rgba(0, 0, 0, .125);
     border-radius: 50%;
     cursor: pointer;
 

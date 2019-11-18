@@ -75,6 +75,7 @@ export function initClientEvents() {
             if (!humanMessage || !humanMessage.trim()) {
                 return;
             }
+            $chatInput.value = "";
             humanMessageHandler(humanMessage);
         });
     } catch (e) {
@@ -113,6 +114,8 @@ class ImiPreview {
     setOptions(botDetails: { description: string, logo: string, title: string }, theme: { brandColor: string, feedbackEnabled: boolean, showOptionsEllipsis: boolean }) {
         if (theme.showOptionsEllipsis === true) {
             $envOptions.style.display = "block"
+        }else {
+            $envOptions.style.display = "none"
         }
         setOptions(botDetails);
         initEnvironment(botDetails);
@@ -130,9 +133,9 @@ class ImiPreview {
         root.style.setProperty('--color-brand', theme.brandColor || 'red');
     }
 
-    appendMessageInChatBody(generated_msg, sendApiResp: ISendApiResponsePayload) {
+    appendMessageInChatBody(generated_msg, sendApiResp: ISendApiResponsePayload, hideFeedback) {
 
-        AppendMessageInChatBody(generated_msg, sendApiResp);
+        AppendMessageInChatBody(generated_msg, sendApiResp, hideFeedback);
     }
 
     removeAllChatMessages() {
@@ -163,7 +166,7 @@ function initEvents(imiPreview: ImiPreview) {
         const target = $event.target as HTMLElement;
 
         if (target.classList.contains('feedback-like') || target.classList.contains('feedback-dislike')) {
-            debugger;
+
             const $feedbackWrapper = findParentWithClass(target, 'msg-bubble-options-panel');
             $feedbackWrapper.classList.remove('ask-feedback');
             const oldFeedback = $feedbackWrapper.getAttribute('data-feedback');
@@ -428,7 +431,7 @@ function mainBodyTemplate(fullBody, phoneCasing) {
                        
                         <!--chat body starts-->
                         <div class="chat-body" id="body"
-                             style="padding: 8px 6px; display: flex; flex-direction: column; z-index: 0">
+                             style="padding: 8px 12px; display: flex; flex-direction: column; z-index: 0">
 
                         </div>
                         
@@ -450,24 +453,6 @@ function getModelTemplate() {
             </div>
     `;
 }
-
-
-function getChatBodyTemplate() {
-    return `
-    <div class="imi-preview-grid-container">
-
-                       
-                        <!--chat body starts-->
-                        <div class="chat-body" id="body"
-                             style="padding: 8px 6px; display: flex; flex-direction: column; z-index: 0">
-
-                        </div>
-                        
-                    </div>
-`
-}
-
-
 function getFullBodyExceptPhoneCover() {
     return `
         <div class="imi-preview-grid-container">
@@ -490,7 +475,7 @@ function getFullBodyExceptPhoneCover() {
                         </div>
                         <!--chat body starts-->
                         <div class="chat-body" id="body"
-                             style="padding: 8px 6px; display: flex; flex-direction: column; z-index: 0">
+                             style="padding: 8px 22px; display: flex; flex-direction: column; z-index: 0">
 
                         </div>
                         <!--chat body ends-->
@@ -569,16 +554,18 @@ function getPhoneCoverTemplate() {
                                        alt="">
                                 </span>
                                 <div class="bot-details">
-                                    <div id="bot-title" ></div>
+                                    <div id="bot-title" style="text-align: center" ></div>
                                 </div>
+                                <div style="width: 50px">
                                 <div class="options" id="env-options">
                                     <i class="fa fa-ellipsis-v"></i>
                                 </div>
+</div>
                             </div>
                         </div>
                         <!--chat body starts-->
                         <div class="chat-body" id="body"
-                             style="padding: 8px 6px; display: flex; flex-direction: column; z-index: 0">
+                             style="padding: 8px 12px; display: flex; flex-direction: column; z-index: 0">
 
                         </div>
                         <!--chat body ends-->

@@ -447,7 +447,7 @@ button:active {
   animation: human-slide-right 0.5s;
   position: relative;
   overflow: auto;
-  width: calc(100% - 45px);
+  width: calc(100%);
   min-width: 300px;
 }
 .carousal-container.no-controls .control {
@@ -480,7 +480,7 @@ button:active {
   height: 25px;
   transform: translateY(-50%);
   font-size: 16px;
-  color: rgba(0, 0, 0, 0.125);
+  color: var(--color-brand);
   border-radius: 50%;
   cursor: pointer;
 }
@@ -859,6 +859,7 @@ ul, li {
 }
 
 .chat-body {
+  color: var(--color-brand);
   flex-grow: 1;
   overflow-y: auto;
   overflow-x: hidden;
@@ -876,7 +877,7 @@ ul, li {
   animation: human-slide-right 0.5s;
 }
 .chat-body .message-wrapper-quick-reply button {
-  background: #00abd3;
+  background: var(--color-brand);
   box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.15);
   color: white;
   flex-shrink: 0;
@@ -983,7 +984,7 @@ ul, li {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: calc(100% - 45px);
+  width: calc(100%);
 }
 .chat-body .msg-bubble .message-container .message-wrapper {
   flex-shrink: 0;
@@ -995,7 +996,6 @@ ul, li {
 .chat-body .msg-bubble .message-container .message-wrapper .content {
   padding: 8px;
   border-radius: 8px;
-  color: #191919;
   box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.15);
   text-align: left;
   word-break: break-word;

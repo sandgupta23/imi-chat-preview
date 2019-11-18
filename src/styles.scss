@@ -267,6 +267,7 @@ ul, li {
 }
 
 .chat-body {
+  color: var(--color-brand);;
   flex-grow: 1;
   overflow-y: auto;
   overflow-x: hidden;
@@ -286,7 +287,8 @@ ul, li {
     //margin-top: 8px;
 
     button {
-      background: #00abd3;
+      //background: #00abd3;
+      background: var(--color-brand);;
       box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, .15);
       color: white;
 
@@ -446,7 +448,8 @@ ul, li {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      width: calc(100% - 45px);
+      //width: calc(100% - 45px);
+      width: calc(100%);
 
       .message-wrapper {
         flex-shrink: 0;
@@ -461,7 +464,7 @@ ul, li {
         .content {
           padding: 8px;
           border-radius: 8px;
-          color: #191919;
+          //color: var(--color-brand);;
           @include msg-shadow();
           text-align: left;
           word-break: break-word;
