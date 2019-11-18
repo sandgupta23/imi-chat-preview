@@ -313,6 +313,7 @@ ul, li {
     display: flex;
     flex-shrink: 0;
     align-items: flex-start;
+    width: 100%;
     max-width: 650px;
 
     .msg-bubble-options-panel {
@@ -333,7 +334,8 @@ ul, li {
       &.ask-feedback {
         .feedback {
           display: flex !important;
-          .fa{
+
+          .fa {
             cursor: pointer;
           }
         }
@@ -439,6 +441,7 @@ ul, li {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      width: calc(100% - 45px);
 
       .message-wrapper {
         flex-shrink: 0;

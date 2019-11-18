@@ -45,7 +45,7 @@ export class CarouselReply {
             <div class="bot-carousal-item shadow-theme">
                 <div class="banner" style="background-image: url(${url})"></div>
                 <ul style="list-style: none">
-                    <li class="title">
+                    <li class="title" style="text-align: center">
                         ${mediaItem.title}
                     </li>
                     ${this.createCarousalButtons(mediaItem.buttons)}

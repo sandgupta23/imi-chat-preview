@@ -29,9 +29,11 @@ document.addEventListener('DOMContentLoaded', async function () {
     imiPreview.setSendFeedback((val, feedback) => {
         sendFeedbackHandler(val, feedback);
     });
+    debugger;
     const fullBody = true;//getQueryStringValue('fullbody') === "true";
-    const phoneCasing = false;//getQueryStringValue('phonecasing') === "true";
+    const phoneCasing = getQueryStringValue('phonecasing') === "true";
     const brandColor = getQueryStringValue('brandcolor') || "#2b4f70";
+    brandColor = brandColor.replace('_', '#');
 
     imiPreview.viewInit('.test-container', fullBody, phoneCasing);
     const $chatInput = document.getElementById('chat-input') as HTMLInputElement;
@@ -39,7 +41,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     // imiPreview.appendMessageInChatBody(data.generated_msg, data);
     // const botDetails = {description: "dummy description", logo: "dummy logo", title: "dummy title"};
     // const languageApi =
-    const theme = {brandColor: brandColor || 'green', showMenu: false, feedbackEnabled: botDetails.allow_feedback, showOptionsEllipsis: true};
+    const theme = {
+        brandColor: brandColor || 'green',
+        showMenu: false,
+        feedbackEnabled: botDetails.allow_feedback,
+        showOptionsEllipsis: true
+    };
     imiPreview.setOptions(botDetails, theme);
     const firstMessageData = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, 'hi', ESourceType.bot);
 

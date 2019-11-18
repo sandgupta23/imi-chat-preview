@@ -1,24 +1,33 @@
+.phone__body {
+  .carousal-container {
+    min-width: 200px !important;
+  }
+}
+
 .carousal-container {
   margin-bottom: 5px;
   animation: human-slide-right 0.5s;
-  &.no-controls{
-    .control{
+
+  &.no-controls {
+    .control {
       display: none;
     }
   }
 
   &[data-itemToShow='1'] {
-    .item{
+    .item {
       width: 100%;
     }
   }
+
   &[data-itemToShow='2'] {
-    .item{
+    .item {
       width: 50%;
     }
   }
+
   &[data-itemToShow='3'] {
-    .item{
+    .item {
       width: 33.3333333%;
     }
   }
@@ -110,7 +119,7 @@
     border-top: 1px solid rgba(0, 0, 0, .125);
   }
 
-  .action{
+  .action {
     cursor: pointer;
   }
 

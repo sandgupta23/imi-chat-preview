@@ -31,7 +31,7 @@ export function initClientEvents() {
 
     try {
 
-        $knowMoreOverlay.addEventListener('click', ($event) => {
+        $knowMoreOverlay && $knowMoreOverlay.addEventListener('click', ($event) => {
             // $knowMoreOverlay.style.display = 'none';
             $knowMoreOverlay.style.opacity = 0;
             $knowMoreClose.style.display = 'none';
@@ -39,7 +39,7 @@ export function initClientEvents() {
                 $knowMoreOverlay.style.display = 'none';
             }, 500);
         });
-        $knowMoreClose.addEventListener('click', ($event) => {
+        $knowMoreClose && $knowMoreClose.addEventListener('click', ($event) => {
             // $knowMoreOverlay.style.display = 'none';
             $knowMoreOverlay.style.opacity = 0;
             $knowMoreClose.style.display = 'none';
@@ -52,7 +52,7 @@ export function initClientEvents() {
             $knowMoreOverlay.style.opacity = 1;
             $knowMoreClose.style.display = 'block';
         });
-        $knowMoreContainer.addEventListener('click', ($event) => {
+        $knowMoreContainer && $knowMoreContainer.addEventListener('click', ($event) => {
             $event.stopPropagation();
         });
         $chatInput.addEventListener('keypress', ($event) => {
@@ -412,6 +412,7 @@ function findParentWithClass($child, className) {
 function mainBodyTemplate(fullBody, phoneCasing) {
     let str = "";
     if (fullBody) {
+        // phoneCasing = false;
         str = phoneCasing ? getPhoneCoverTemplate() : getFullBodyExceptPhoneCover();
     } else {
         str = `

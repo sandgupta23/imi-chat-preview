@@ -470,7 +470,7 @@ var CarouselReply = function () {
 
   CarouselReply.prototype.createCarousalItems = function (mediaItem) {
     var url = mediaItem.url.split("&").join("&amp;");
-    return "\n    <div class=\"item\">\n            <div class=\"bot-carousal-item shadow-theme\">\n                <div class=\"banner\" style=\"background-image: url(" + url + ")\"></div>\n                <ul style=\"list-style: none\">\n                    <li class=\"title\">\n                        " + mediaItem.title + "\n                    </li>\n                    " + this.createCarousalButtons(mediaItem.buttons) + "\n                </ul>\n            </div>\n        </div>\n    ";
+    return "\n    <div class=\"item\">\n            <div class=\"bot-carousal-item shadow-theme\">\n                <div class=\"banner\" style=\"background-image: url(" + url + ")\"></div>\n                <ul style=\"list-style: none\">\n                    <li class=\"title\" style=\"text-align: center\">\n                        " + mediaItem.title + "\n                    </li>\n                    " + this.createCarousalButtons(mediaItem.buttons) + "\n                </ul>\n            </div>\n        </div>\n    ";
   };
 
   CarouselReply.prototype.createCarousalButtons = function (buttons) {
@@ -499,7 +499,7 @@ var AudioReply = function () {
 
   AudioReply.prototype.getTemplate = function (url, source) {
     url = utility_1.encodeUrlForDomParser(url);
-    var htmlStr = "\n                <div class=\"message-wrapper  message-wrapper-bot\">\n                    <audio controls=\"controls\">\n                          <source src=\"" + utility_1.encodeUrlForDomParser(url) + "\"/>\n                        Your browser does not support the audio element.\n                    </audio>\n                </div>\n            ";
+    var htmlStr = "\n                <div class=\"message-wrapper  message-wrapper-bot\" style=\"width: 100%;\">\n                    <audio controls=\"controls\" style=\"width: 95%; max-width: 300px\">\n                          <source src=\"" + utility_1.encodeUrlForDomParser(url) + "\"/>\n                        Your browser does not support the audio element.\n                    </audio>\n                </div>\n            ";
     return htmlStr;
   };
 
@@ -1864,14 +1864,14 @@ var modes;
 
 function initClientEvents() {
   try {
-    dom_1.$knowMoreOverlay.addEventListener('click', function ($event) {
+    dom_1.$knowMoreOverlay && dom_1.$knowMoreOverlay.addEventListener('click', function ($event) {
       dom_1.$knowMoreOverlay.style.opacity = 0;
       dom_1.$knowMoreClose.style.display = 'none';
       setTimeout(function () {
         dom_1.$knowMoreOverlay.style.display = 'none';
       }, 500);
     });
-    dom_1.$knowMoreClose.addEventListener('click', function ($event) {
+    dom_1.$knowMoreClose && dom_1.$knowMoreClose.addEventListener('click', function ($event) {
       dom_1.$knowMoreOverlay.style.opacity = 0;
       dom_1.$knowMoreClose.style.display = 'none';
       setTimeout(function () {
@@ -1883,7 +1883,7 @@ function initClientEvents() {
       dom_1.$knowMoreOverlay.style.opacity = 1;
       dom_1.$knowMoreClose.style.display = 'block';
     });
-    dom_1.$knowMoreContainer.addEventListener('click', function ($event) {
+    dom_1.$knowMoreContainer && dom_1.$knowMoreContainer.addEventListener('click', function ($event) {
       $event.stopPropagation();
     });
     dom_1.$chatInput.addEventListener('keypress', function ($event) {
@@ -2510,9 +2510,11 @@ document.addEventListener('DOMContentLoaded', function () {
           imiPreview.setSendFeedback(function (val, feedback) {
             main_1.sendFeedbackHandler(val, feedback);
           });
+          debugger;
           fullBody = true;
-          phoneCasing = false;
+          phoneCasing = utility_1.getQueryStringValue('phonecasing') === "true";
           brandColor = utility_1.getQueryStringValue('brandcolor') || "#2b4f70";
+          brandColor = brandColor.replace('_', '#');
           imiPreview.viewInit('.test-container', fullBody, phoneCasing);
           $chatInput = document.getElementById('chat-input');
           imiPreview.initAdditionalDom({
