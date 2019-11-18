@@ -112,10 +112,12 @@ class ImiPreview {
     }
 
     setOptions(botDetails: { description: string, logo: string, title: string }, theme: { brandColor: string, feedbackEnabled: boolean, showOptionsEllipsis: boolean }) {
-        if (theme.showOptionsEllipsis === true) {
-            $envOptions.style.display = "block"
-        }else {
-            $envOptions.style.display = "none"
+        if ($envOptions) {
+            if (theme.showOptionsEllipsis === true) {
+                $envOptions.style.display = "block"
+            } else {
+                $envOptions.style.display = "none"
+            }
         }
         setOptions(botDetails);
         initEnvironment(botDetails);
@@ -327,7 +329,7 @@ export async function humanMessageHandler(humanMessage: string, sourceType?) {
     botResponses.push(botResponse);
 
     let messageData: any[] = serializeGeneratedMessagesToPreviewMessages(botResponse.generated_msg);
-    messageData.forEach((message)=>{
+    messageData.forEach((message) => {
         AppendMessageInChatBody([message], botResponse);
     });
 
@@ -453,6 +455,7 @@ function getModelTemplate() {
             </div>
     `;
 }
+
 function getFullBodyExceptPhoneCover() {
     return `
         <div class="imi-preview-grid-container">
