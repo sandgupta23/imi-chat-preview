@@ -880,9 +880,10 @@ ul, li {
   background: var(--color-brand);
   box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.15);
   color: white;
+  max-width: 100%;
   flex-shrink: 0;
   margin-right: 10px;
-  height: 32px;
+  min-height: 32px;
   border: 1px solid transparent;
   border-radius: 5px;
   margin-bottom: 5px;
@@ -959,6 +960,25 @@ ul, li {
 .chat-body .msg-bubble:hover .msg-bubble-options-panel {
   opacity: 1;
 }
+.chat-body .msg-bubble .message-wrapper .content {
+  position: relative;
+  border-top-left-radius: 0 !important;
+  background: white;
+  filter: drop-shadow(-1px 0px 2px rgba(0, 0, 0, 0.02));
+}
+.chat-body .msg-bubble .message-wrapper .content::after {
+  background: white;
+  content: "";
+  width: 9px;
+  height: 15px;
+  position: absolute;
+  top: 0px;
+  left: -6px;
+  clip-path: polygon(0 0, 100% 100%, 100% 0);
+  z-index: -14;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 0;
+}
 .chat-body .msg-bubble.msg-bubble-human {
   flex-direction: column-reverse;
   margin-left: auto;
@@ -976,6 +996,23 @@ ul, li {
 .chat-body .msg-bubble.msg-bubble-human .message-wrapper .content {
   background: var(--color-brand);
   color: white;
+  position: relative;
+  border-top-right-radius: 0 !important;
+  border-top-left-radius: 4px !important;
+}
+.chat-body .msg-bubble.msg-bubble-human .message-wrapper .content::after {
+  content: "";
+  background: var(--color-brand);
+  width: 9px;
+  height: 15px;
+  position: absolute;
+  top: 0px;
+  left: unset;
+  right: -6px;
+  clip-path: polygon(0 0, 0% 100%, 100% 0) !important;
+  z-index: -14;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 0;
 }
 .chat-body .msg-bubble.msg-bubble-human .message-wrapper, .chat-body .msg-bubble.msg-bubble-human .time {
   animation: human-slide-left 0.5s;
