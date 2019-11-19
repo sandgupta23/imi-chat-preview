@@ -9,13 +9,23 @@ import {humanMessageHandler, initClientEvents, initEnvironment, sendFeedbackHand
 
 let socket;
 let imiPreviewTemp;
+
+function changeFavicon(img) {
+    (function () {
+        var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+        link.type = 'image/x-icon';
+        link.rel = 'shortcut icon';
+        link.href = img;
+        document.getElementsByTagName('head')[0].appendChild(link);
+    })();
+}
 document.addEventListener('DOMContentLoaded', async function () {
     //
     initEnvironment();
     const botDetails = await getBotDetails<IBotDetailsApiResp>();
     initEnvironment(botDetails);
-
-
+    document.title = botDetails.name || 'IMIBot.ai';
+    changeFavicon(botDetails.logo);
     // $chatFooter.classList.add('d-none');
     try {
         $loader && $loader.classList.add('d-none');
@@ -49,7 +59,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         brandColor: brandColor || 'green',
         showMenu: false,
         feedbackEnabled: botDetails.allow_feedback,
-        showOptionsEllipsis: false
+        showOptionsEllipsis: false,
+        time24HrFormat: false
     };
     imiPreview.setOptions(botDetails, theme);
     const firstMessageData = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, 'hi', ESourceType.bot);

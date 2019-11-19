@@ -9,7 +9,7 @@ import {
     $loader,
     $phoneModel,
     AppendMessageInChatBody, botResponses,
-    domInit,
+    domInit, themeOptions,
     setOptions
 } from "./dom";
 import {getBotDetails} from "./bot-details";
@@ -111,7 +111,8 @@ class ImiPreview {
         this._feedbackCB = cb;
     }
 
-    setOptions(botDetails: { description: string, logo: string, title: string }, theme: { brandColor: string, feedbackEnabled: boolean, showOptionsEllipsis: boolean }) {
+    setOptions(botDetails: { description: string, logo: string, title: string }, theme: { brandColor: string, feedbackEnabled: boolean, showOptionsEllipsis: boolean, time24HrFormat: boolean
+    }) {
         if ($envOptions) {
             if (theme.showOptionsEllipsis === true) {
                 $envOptions.style.display = "block"
@@ -119,6 +120,7 @@ class ImiPreview {
                 $envOptions.style.display = "none"
             }
         }
+        themeOptions = theme;
         setOptions(botDetails);
         initEnvironment(botDetails);
 

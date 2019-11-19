@@ -331,6 +331,7 @@ ul, li {
 
       .feedback {
         display: none !important;
+
       }
 
       &.ask-feedback {
@@ -341,10 +342,22 @@ ul, li {
             cursor: pointer;
           }
         }
+
+        .ask-label {
+          cursor: pointer;
+        }
+
+        .final-label {
+          display: none;
+        }
       }
 
       .feedback.active {
         display: flex !important;
+
+        .ask-label {
+          display: none;
+        }
       }
 
       .feedback {
@@ -421,6 +434,13 @@ ul, li {
 
       .msg-bubble-options-panel {
         display: none;
+      }
+
+      .message-wrapper {
+        .content {
+          background: var(--color-brand);
+          color: white;
+        }
       }
 
       .message-wrapper, .time {

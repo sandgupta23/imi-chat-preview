@@ -20,11 +20,13 @@ export class Feedback {
         <div class="msg-bubble-options-panel ${askFeedbackClass}" ${feedbackSTr}>
                     <div class="feedback  ${likeActive}" data-feedback-value="1" title="Helpful">
                          <i class="fa fa-thumbs-up feedback-like"></i>
-                         <span>Upvote</span>
+                         <span class="feedback-like ask-label">Upvote</span>
+                         <span class="feedback-like final-label">Upvoted</span>
                     </div>
                     <div class="feedback ${disLikeActive}" title="Not helpful" data-feedback-value="0">
                         <i class="fa fa-thumbs-down feedback-dislike"></i>
-                        <span>Downvote</span>
+                        <span class="feedback-like ask-label">Downvote</span>
+                        <span class="feedback-dislike final-label">Downvoted</span>
                     </div>
                 </div>
         `;

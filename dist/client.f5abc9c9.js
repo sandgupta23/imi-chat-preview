@@ -277,10 +277,24 @@ var dom_1 = require("./dom");
 
 function getTimeInHHMM(timeMS) {
   var time = timeMS ? new Date(timeMS) : new Date();
-  return ("0" + time.getHours()).slice(-2) + ":" + ("0" + time.getMinutes()).slice(-2);
+  var hours = time.getHours();
+  var minutes = time.getMinutes();
+  var ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  minutes = minutes < 10 ? '0' + minutes : minutes;
+  var strTime = hours + ':' + minutes + ' ' + ampm;
+  return strTime;
 }
 
 exports.getTimeInHHMM = getTimeInHHMM;
+
+function getTimeIn24HrFormat(timeMS) {
+  var time = timeMS ? new Date(timeMS) : new Date();
+  return time.getHours() + ":" + time.getMinutes();
+}
+
+exports.getTimeIn24HrFormat = getTimeIn24HrFormat;
 
 function getQueryStringValue(key) {
   return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
@@ -570,7 +584,7 @@ var Feedback = function () {
         hideFeedback = _a.hideFeedback;
     debugger;
     var askFeedbackClass = likeActive || disLikeActive ? '' : 'ask-feedback';
-    var feedbackHtml = "\n        <div class=\"msg-bubble-options-panel " + askFeedbackClass + "\" " + feedbackSTr + ">\n                    <div class=\"feedback  " + likeActive + "\" data-feedback-value=\"1\" title=\"Helpful\">\n                         <i class=\"fa fa-thumbs-up feedback-like\"></i>\n                         <span>Upvote</span>\n                    </div>\n                    <div class=\"feedback " + disLikeActive + "\" title=\"Not helpful\" data-feedback-value=\"0\">\n                        <i class=\"fa fa-thumbs-down feedback-dislike\"></i>\n                        <span>Downvote</span>\n                    </div>\n                </div>\n        ";
+    var feedbackHtml = "\n        <div class=\"msg-bubble-options-panel " + askFeedbackClass + "\" " + feedbackSTr + ">\n                    <div class=\"feedback  " + likeActive + "\" data-feedback-value=\"1\" title=\"Helpful\">\n                         <i class=\"fa fa-thumbs-up feedback-like\"></i>\n                         <span class=\"feedback-like ask-label\">Upvote</span>\n                         <span class=\"feedback-like final-label\">Upvoted</span>\n                    </div>\n                    <div class=\"feedback " + disLikeActive + "\" title=\"Not helpful\" data-feedback-value=\"0\">\n                        <i class=\"fa fa-thumbs-down feedback-dislike\"></i>\n                        <span class=\"feedback-like ask-label\">Downvote</span>\n                        <span class=\"feedback-dislike final-label\">Downvoted</span>\n                    </div>\n                </div>\n        ";
 
     if (hideFeedback) {
       feedbackHtml = "";
@@ -778,7 +792,7 @@ function AppendMessageInChatBody(messages, botResponse, hideFeedback) {
       }
     });
     var humanClass = messages[0].sourceType === send_api_1.ESourceType.human ? 'msg-bubble-human' : '';
-    var time = utility_1.getTimeInHHMM(messages[0].time);
+    var time = exports.themeOptions.time24HrFormat ? utility_1.getTimeIn24HrFormat(messages[0].time) : utility_1.getTimeInHHMM(messages[0].time);
     var feedbackSTr = "";
     var messageWithFeedback = messages.find(function (message) {
       return message.feedback != null;
@@ -1981,6 +1995,7 @@ var ImiPreview = function () {
       }
     }
 
+    dom_1.themeOptions = theme;
     dom_1.setOptions(botDetails);
     initEnvironment(botDetails);
 
@@ -2498,6 +2513,17 @@ var main_1 = require("./main");
 
 var socket;
 var imiPreviewTemp;
+
+function changeFavicon(img) {
+  (function () {
+    var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+    link.type = 'image/x-icon';
+    link.rel = 'shortcut icon';
+    link.href = img;
+    document.getElementsByTagName('head')[0].appendChild(link);
+  })();
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   return __awaiter(this, void 0, void 0, function () {
     var botDetails, imiPreview, fullBody, phoneCasing, brandColor, $chatInput, theme, firstMessageData, data;
@@ -2510,6 +2536,8 @@ document.addEventListener('DOMContentLoaded', function () {
         case 1:
           botDetails = _a.sent();
           main_1.initEnvironment(botDetails);
+          document.title = botDetails.name || 'IMIBot.ai';
+          changeFavicon(botDetails.logo);
 
           try {
             dom_1.$loader && dom_1.$loader.classList.add('d-none');
@@ -2539,7 +2567,8 @@ document.addEventListener('DOMContentLoaded', function () {
             brandColor: brandColor || 'green',
             showMenu: false,
             feedbackEnabled: botDetails.allow_feedback,
-            showOptionsEllipsis: false
+            showOptionsEllipsis: false,
+            time24HrFormat: false
           };
           imiPreview.setOptions(botDetails, theme);
           return [4, send_api_1.sendMessageToBot(environment_1.environment.bot_access_token, environment_1.environment.enterprise_unique_name, 'hi', send_api_2.ESourceType.bot)];
@@ -2608,7 +2637,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63691" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54570" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

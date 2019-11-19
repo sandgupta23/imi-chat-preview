@@ -1,5 +1,11 @@
 import {ESourceType, IMessageData, ISendApiResp, ISendApiResponsePayload} from "./typings/send-api";
-import {encodeUrlForDomParser, getTimeInHHMM, removeInActiveFeedbackPanel, scrollBodyToBottom} from "./utility";
+import {
+    encodeUrlForDomParser,
+    getTimeIn24HrFormat,
+    getTimeInHHMM,
+    removeInActiveFeedbackPanel,
+    scrollBodyToBottom
+} from "./utility";
 import {IBotDetailsApiResp} from "./typings/bot-detaills-api";
 import {environment} from "./environment";
 import {TextReply} from "./response-components/text-reply";
@@ -29,6 +35,8 @@ export let $knowMoreContainer;
 export let $knowMoreClose;
 export let $knowMoreOverlay;
 export const botResponses: ISendApiResp[] = [];
+
+export const themeOptions;
 
 export function domInit(dom) {
     $chatContainer = document.querySelector('.imi-preview-grid-container');
@@ -186,7 +194,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
         });
 
         let humanClass = messages[0].sourceType === ESourceType.human ? 'msg-bubble-human' : '';
-        let time = getTimeInHHMM(messages[0].time);
+        let time = themeOptions.time24HrFormat? getTimeIn24HrFormat(messages[0].time): getTimeInHHMM(messages[0].time);
 
         let feedbackSTr = "";
         const messageWithFeedback = (messages.find((message) => message.feedback != null));

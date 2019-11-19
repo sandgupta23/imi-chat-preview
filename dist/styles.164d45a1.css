@@ -917,8 +917,17 @@ ul, li {
 .chat-body .msg-bubble .msg-bubble-options-panel.ask-feedback .feedback .fa {
   cursor: pointer;
 }
+.chat-body .msg-bubble .msg-bubble-options-panel.ask-feedback .ask-label {
+  cursor: pointer;
+}
+.chat-body .msg-bubble .msg-bubble-options-panel.ask-feedback .final-label {
+  display: none;
+}
 .chat-body .msg-bubble .msg-bubble-options-panel .feedback.active {
   display: flex !important;
+}
+.chat-body .msg-bubble .msg-bubble-options-panel .feedback.active .ask-label {
+  display: none;
 }
 .chat-body .msg-bubble .msg-bubble-options-panel .feedback {
   display: flex;
@@ -963,6 +972,10 @@ ul, li {
 }
 .chat-body .msg-bubble.msg-bubble-human .msg-bubble-options-panel {
   display: none;
+}
+.chat-body .msg-bubble.msg-bubble-human .message-wrapper .content {
+  background: var(--color-brand);
+  color: white;
 }
 .chat-body .msg-bubble.msg-bubble-human .message-wrapper, .chat-body .msg-bubble.msg-bubble-human .time {
   animation: human-slide-left 0.5s;
