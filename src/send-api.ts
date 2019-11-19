@@ -3,10 +3,17 @@ import {environment} from "./environment";
 import {IHeaderData} from "./typings/http";
 import {EBotMessageMediaType, ESourceType, IGeneratedMessageItem, IMessageData, ISendApiResp} from "./typings/send-api";
 
+export const socketKey = createRandomString(15);
+
 export function sendMessageToBot(bot_access_token: string, enterprise_unique_name: string, humanMessage: string, sourceType: ESourceType): Promise<ISendApiResp> {
     const url = `https://${environment.root}imibot.ai/api/v1/webhook/web/`;
     const body = {
-        "consumer": environment.consumer,
+        "consumer": {
+            ...(environment.consumer || {}),
+            "extra_params": {
+                "socket_key": socketKey
+            }
+        },
         "type": sourceType || ESourceType.human,
         "msg": humanMessage,
         "platform": "web",
@@ -67,7 +74,7 @@ export function serializeGeneratedMessagesToPreviewMessages(generatedMessage: IG
                     messageMediaType: EBotMessageMediaType.text,
                 };
             }
-        }catch (e) {
+        } catch (e) {
 
         }
 
@@ -76,4 +83,15 @@ export function serializeGeneratedMessagesToPreviewMessages(generatedMessage: IG
 
     });
 }
+
+function createRandomString(length: number = 10) {
+    let text = '';
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    for (let i = 0; i < length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+
+    return text;
+
 

@@ -68,14 +68,14 @@ export function setOptions(intro: IBotDetailsApiResp) {
 
 export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload, hideFeedback) {
 
-    if (botResponse) {
-        if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
-            AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null, true);
-            console.log(`previous room : ${environment.room.id}. new room ${botResponse.room.id}`);
-        }
-        console.log(environment.room, botResponse.room);
-        environment.room = JSON.parse(JSON.stringify(botResponse.room));
-    }
+    // if (botResponse) {
+    //     if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
+    //         AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null, true);
+    //         console.log(`previous room : ${environment.room.id}. new room ${botResponse.room.id}`);
+    //     }
+    //     console.log(environment.room, botResponse.room);
+    //     environment.room = JSON.parse(JSON.stringify(botResponse.room));
+    // }
 
     const txnId = botResponse && botResponse.transaction_id || 'human';
     const bot_message_id = botResponse && botResponse.bot_message_id || 'human';

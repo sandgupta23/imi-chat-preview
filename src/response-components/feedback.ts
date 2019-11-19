@@ -4,6 +4,7 @@ import {convertStringToDom} from "../utility";
 
 export class Feedback {
     constructor() {
+        console.log('feedback');
     }
 
     getElement(obj, source?: ESourceType) {

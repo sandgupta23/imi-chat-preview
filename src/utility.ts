@@ -35,7 +35,6 @@ export function convertStringToDom(str: string) {
     // const el = document.createElement('DIV');
     el.innerHTML = str;
     let x = el.content.children;
-    console.log(x);
     return x;
 }
 
