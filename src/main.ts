@@ -457,8 +457,9 @@ function getModelTemplate() {
             </div>
     `;
 }
-
+//
 function getFullBodyExceptPhoneCover() {
+    debugger;
     return `
         <div class="imi-preview-grid-container">
                         <div class="header" style="z-index: 1">
@@ -473,7 +474,7 @@ function getFullBodyExceptPhoneCover() {
                                     <div id="bot-title" ></div>
                                     <div id="bot-description">hello</div>
                                 </div>
-                                <div class="options" style="display: none" id="env-options">
+                                <div class="options"  id="env-options">
                                     <i class="fa fa-ellipsis-v"></i>
                                 </div>
                             </div>

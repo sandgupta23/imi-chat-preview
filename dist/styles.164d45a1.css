@@ -570,10 +570,12 @@ button:active {
   background-color: rgba(0, 0, 0, 0.9);
   /* Black w/ opacity */
   z-index: 3;
+  /* Modal Content (image) */
+  /* Caption of Modal Image */
+  /* Add Animation */
+  /* The Close Button */
 }
-
-/* Modal Content (image) */
-.modal-content {
+.modal2 .modal-content {
   margin: auto;
   display: block;
   width: 80%;
@@ -584,9 +586,7 @@ button:active {
   max-width: 500px;
   max-height: 100%;
 }
-
-/* Caption of Modal Image */
-#caption {
+.modal2 #caption {
   margin: auto;
   display: block;
   width: 80%;
@@ -596,9 +596,7 @@ button:active {
   padding: 10px 0;
   height: 150px;
 }
-
-/* Add Animation */
-.modal-content, #caption {
+.modal2 .modal-content, .modal2 #caption {
   -webkit-animation-name: zoom;
   -webkit-animation-duration: 0.6s;
   animation-name: zoom;
@@ -606,7 +604,6 @@ button:active {
   animation-fill-mode: forwards;
   transform-origin: 0;
 }
-
 @-webkit-keyframes zoom {
   from {
     -webkit-transform: scale(0) translate(-50%, -50%);
@@ -623,8 +620,7 @@ button:active {
     transform: scale(1) translate(-50%, -50%);
   }
 }
-/* The Close Button */
-.close {
+.modal2 .close {
   position: absolute;
   top: 15px;
   right: 35px;
@@ -633,9 +629,8 @@ button:active {
   font-weight: bold;
   transition: 0.3s;
 }
-
-.close:hover,
-.close:focus {
+.modal2 .close:hover,
+.modal2 .close:focus {
   color: #bbb;
   text-decoration: none;
   cursor: pointer;

@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         brandColor: brandColor || 'green',
         showMenu: false,
         feedbackEnabled: botDetails.allow_feedback,
-        showOptionsEllipsis: false,
+        showOptionsEllipsis: !phoneCasing,
         time24HrFormat: false
     };
     imiPreview.setOptions(botDetails, theme);

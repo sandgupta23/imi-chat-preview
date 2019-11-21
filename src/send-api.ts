@@ -93,5 +93,4 @@ function createRandomString(length: number = 10) {
     }
 
     return text;
-
-
+}
