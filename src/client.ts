@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         showOptionsEllipsis: !phoneCasing,
         time24HrFormat: false
     };
+
     imiPreview.setOptions(botDetails, theme);
     const firstMessageData = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, 'hi', ESourceType.bot);
 
