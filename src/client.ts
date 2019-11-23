@@ -20,7 +20,6 @@ function changeFavicon(img) {
     })();
 }
 document.addEventListener('DOMContentLoaded', async function () {
-    //
     initEnvironment();
     const botDetails = await getBotDetails<IBotDetailsApiResp>();
     initEnvironment(botDetails);
@@ -76,18 +75,26 @@ document.addEventListener('DOMContentLoaded', async function () {
         },
         'imi_bot_middleware_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiVGhpcyBpcyBJTUkgQk9UIG1pZGRsZXdhcmUiLCJpYXQiOjE1Njc4ODc5MTAsImV4cCI6NDE1OTg4NzkxMH0.dYbMaf8HYMD5K532p7DpHN0cmru-JKMjst-WS9zi7u8'
     };
+    debugger;
     initializeSocketConnection(data);
 });
 
+let eventInit = false;
 function initializeSocketConnection(socketData) {
-
+    debugger;
     const url = 'https://imi-bot-middleware.herokuapp.com';
     // const url = 'http://localhost:3000';
 
     socket = window.io(url, {query: `data=${JSON.stringify(socketData)}`});
     socket.on('connect', () => {
-        console.log('Client has connected to the server!');
-        initAllEvents();
+        console.log('Client has CONNECTED to the server!');
+        if(eventInit === false){
+            initAllEvents();
+            eventInit = true;
+        }
+    });
+    socket.on('disconnect', () => {
+        console.log('Client has DISCONNECTED to the server!');
     });
 }
 
