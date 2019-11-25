@@ -19,14 +19,14 @@ export class Feedback {
         let feedbackHtml = `
         <div class="msg-bubble-options-panel ${askFeedbackClass}" ${feedbackSTr}>
                     <div class="feedback  ${likeActive}" data-feedback-value="1" title="Helpful">
-                         <i class="fa fa-thumbs-up feedback-like"></i>
-                         <span class="feedback-like ask-label">Upvote</span>
-                         <span class="feedback-like final-label">Upvoted</span>
+                         <i class="fa fa-thumbs-up feedback-like" data-feedback-value="1"></i>
+                         <span class="feedback-like ask-label" data-feedback-value="1">Upvote</span>
+                         <span class="feedback-like final-label" data-feedback-value="1">Upvoted</span>
                     </div>
                     <div class="feedback ${disLikeActive}" title="Not helpful" data-feedback-value="0">
-                        <i class="fa fa-thumbs-down feedback-dislike"></i>
-                        <span class="feedback-like ask-label">Downvote</span>
-                        <span class="feedback-dislike final-label">Downvoted</span>
+                        <i class="fa fa-thumbs-down feedback-dislike" data-feedback-value="0"></i>
+                        <span class="feedback-like ask-label" data-feedback-value="0">Downvote</span>
+                        <span class="feedback-dislike final-label" data-feedback-value="0">Downvoted</span>
                     </div>
                 </div>
         `;

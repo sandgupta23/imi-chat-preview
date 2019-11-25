@@ -584,7 +584,7 @@ var Feedback = function () {
         hideFeedback = _a.hideFeedback;
     debugger;
     var askFeedbackClass = likeActive || disLikeActive ? '' : 'ask-feedback';
-    var feedbackHtml = "\n        <div class=\"msg-bubble-options-panel " + askFeedbackClass + "\" " + feedbackSTr + ">\n                    <div class=\"feedback  " + likeActive + "\" data-feedback-value=\"1\" title=\"Helpful\">\n                         <i class=\"fa fa-thumbs-up feedback-like\"></i>\n                         <span class=\"feedback-like ask-label\">Upvote</span>\n                         <span class=\"feedback-like final-label\">Upvoted</span>\n                    </div>\n                    <div class=\"feedback " + disLikeActive + "\" title=\"Not helpful\" data-feedback-value=\"0\">\n                        <i class=\"fa fa-thumbs-down feedback-dislike\"></i>\n                        <span class=\"feedback-like ask-label\">Downvote</span>\n                        <span class=\"feedback-dislike final-label\">Downvoted</span>\n                    </div>\n                </div>\n        ";
+    var feedbackHtml = "\n        <div class=\"msg-bubble-options-panel " + askFeedbackClass + "\" " + feedbackSTr + ">\n                    <div class=\"feedback  " + likeActive + "\" data-feedback-value=\"1\" title=\"Helpful\">\n                         <i class=\"fa fa-thumbs-up feedback-like\" data-feedback-value=\"1\"></i>\n                         <span class=\"feedback-like ask-label\" data-feedback-value=\"1\">Upvote</span>\n                         <span class=\"feedback-like final-label\" data-feedback-value=\"1\">Upvoted</span>\n                    </div>\n                    <div class=\"feedback " + disLikeActive + "\" title=\"Not helpful\" data-feedback-value=\"0\">\n                        <i class=\"fa fa-thumbs-down feedback-dislike\" data-feedback-value=\"0\"></i>\n                        <span class=\"feedback-like ask-label\" data-feedback-value=\"0\">Downvote</span>\n                        <span class=\"feedback-dislike final-label\" data-feedback-value=\"0\">Downvoted</span>\n                    </div>\n                </div>\n        ";
 
     if (hideFeedback) {
       feedbackHtml = "";
@@ -2648,7 +2648,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52058" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51878" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
