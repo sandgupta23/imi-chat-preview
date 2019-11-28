@@ -691,6 +691,7 @@ function setOptions(intro) {
 exports.setOptions = setOptions;
 
 function AppendMessageInChatBody(messages, botResponse, hideFeedback) {
+  debugger;
   var txnId = botResponse && botResponse.transaction_id || 'human';
   var bot_message_id = botResponse && botResponse.bot_message_id || 'human';
   var str = "";
@@ -716,7 +717,7 @@ function AppendMessageInChatBody(messages, botResponse, hideFeedback) {
     messages.forEach(function (message) {
       if (message.text) {
         var reply = new text_reply_1.TextReply(message);
-        var el_2 = reply.getElement(messages[0]);
+        var el_2 = reply.getElement(message);
         replies.push(el_2);
       }
 
@@ -753,7 +754,7 @@ function AppendMessageInChatBody(messages, botResponse, hideFeedback) {
 
           if (message.media.length) {
             var reply = new carousel_reply_1.CarouselReply(message.media);
-            var el_5 = reply.getElement(messages[0]);
+            var el_5 = reply.getElement(message);
             replies.push(el_5);
           }
         } else {
@@ -773,7 +774,7 @@ function AppendMessageInChatBody(messages, botResponse, hideFeedback) {
         }
 
         if (type === "audio") {
-          var reply = new audio_reply_1.AudioReply(messages[0]);
+          var reply = new audio_reply_1.AudioReply(message);
           var el_6 = reply.getElement(url);
           replies.push(el_6);
         }
@@ -785,7 +786,7 @@ function AppendMessageInChatBody(messages, botResponse, hideFeedback) {
         }
 
         if (type === "image") {
-          var reply = new image_reply_1.ImageReply(messages[0]);
+          var reply = new image_reply_1.ImageReply(message);
           var el_8 = reply.getElement(url);
           replies.push(el_8);
         }
@@ -2648,7 +2649,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51878" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50094" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

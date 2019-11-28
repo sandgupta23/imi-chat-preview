@@ -75,7 +75,7 @@ export function setOptions(intro: IBotDetailsApiResp) {
 }
 
 export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload, hideFeedback) {
-
+    debugger;
     // if (botResponse) {
     //     if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
     //         AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null, true);
@@ -112,7 +112,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
                 // str = str + getBotMessageTemplateForText(message.text, message.sourceType);
                 const reply = new TextReply(message);
                 // str = str + textReply.getTemplate(message.text, message.sourceType);
-                const el = reply.getElement(messages[0]);
+                const el = reply.getElement(message);
                 replies.push(el);
             }
             if (message.SESSION_EXPIRY) {
@@ -150,7 +150,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
                         // str = str + getBotMessageTemplateForCarousal(message.media);
                         const reply = new CarouselReply(message.media);
                         // str = str + reply.getTemplate(message.quick_reply, message.sourceType);
-                        const el = reply.getElement(messages[0]);
+                        const el = reply.getElement(message);
                         replies.push(el);
                     }
                 } else {
@@ -167,7 +167,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
                 }
                 if (type === "audio") {
                     // str = str + getBotMessageTemplateForAudio(url);
-                    const reply = new AudioReply(messages[0]);
+                    const reply = new AudioReply(message);
                     // str = str + reply.getTemplate(url);
                     const el = reply.getElement(url);
                     replies.push(el);
@@ -185,7 +185,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
                 }
                 if (type === "image") {
                     // str = str + getBotMessageTemplateForImage(url);
-                    const reply = new ImageReply(messages[0]);
+                    const reply = new ImageReply(message);
                     // str = str + reply.getTemplate(url);
                     const el = reply.getElement(url);
                     replies.push(el);
