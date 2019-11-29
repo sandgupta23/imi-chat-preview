@@ -82,7 +82,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 let eventInit = false;
 function initializeSocketConnection(socketData) {
     debugger;
-    const url = 'https://imi-bot-middleware.herokuapp.com';
+    const url = 'https://rtm.imibot.ai';
+    // const url = 'https://imi-bot-middleware.herokuapp.com';
     // const url = 'http://localhost:3000';
 
     socket = window.io(url, {query: `data=${JSON.stringify(socketData)}`});
