@@ -15,7 +15,6 @@ $color-brand: #34b233;
 body {
   margin: 0;
   padding: 0;
-  font-family: 'IBM Plex Sans', sans-serif;
   font-size: 13px;
 }
 
@@ -276,8 +275,8 @@ ul, li {
   align-items: flex-start;
 
   .message-wrapper, .time {
-    animation: human-slide-right 0.5s;
-    animation-fill-mode: forwards;
+    //animation: human-slide-right 0.5s;
+    //animation-fill-mode: forwards;
   }
 
   .message-wrapper-quick-reply {
@@ -285,7 +284,7 @@ ul, li {
     align-items: flex-start;
     flex-wrap: wrap;
     margin-bottom: 8px;
-    animation: human-slide-right 0.5s;
+    //animation: human-slide-right 0.5s;
     //margin-top: 8px;
 
     button {
@@ -322,7 +321,7 @@ ul, li {
 
     .msg-bubble-options-panel {
       //background: #80808021;
-      animation: human-slide-right 0.5s;
+      //animation: human-slide-right 0.5s;
       margin-bottom: 8px;
       min-width: 100px;
       border-radius: 15px;
@@ -424,7 +423,7 @@ ul, li {
     .message-wrapper {
       .content {
         position: relative;
-        border-top-left-radius: 0 !important;
+        border-top-left-radius: 0;
         background: white;
         filter: drop-shadow(-1px 0px 2px rgba(0, 0, 0, 0.02));
         &::after {
@@ -467,7 +466,7 @@ ul, li {
           color: white;
           position: relative;
           border-top-right-radius: 0 !important;
-          border-top-left-radius: 4px !important;
+          border-top-left-radius: 4px;
 
           &::after {
             content: "";
@@ -488,8 +487,8 @@ ul, li {
       }
 
       .message-wrapper, .time {
-        animation: human-slide-left 0.5s;
-        animation-fill-mode: forwards;
+        //animation: human-slide-left 0.5s;
+        //animation-fill-mode: forwards;
       }
 
       .time {

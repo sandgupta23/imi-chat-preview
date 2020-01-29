@@ -1,1 +1,45 @@
-{"name":"imi-chat-preview","version":"0.0.9","description":"A very simple and basic Typescript Starter boilerplate template based on npm","author":"Sandeep Gupta","license":"MIT","repository":{"type":"git","url":"https://github.com/nea/Typescript-Starter"},"bugs":"https://github.com/nea/Typescript-Starter/issues","keywords":["npm","scripts","watch","typescript","tsc","onchange"],"scripts":{"start":"parcel src/index.html","build":"parcel build --no-content-hash src/styles.scss src/main.ts src/index.html  --no-source-maps","git":"git add . && git commit && git push","dev":"parcel index.html","release":"npm run build && node change-lib-name.js && npm publish --access=public","release-local":"npm run build && node copy-to-imi.js"},"devDependencies":{"browser-sync":"^2.18.0","copyfiles":"^1.2.0","cssnano":"^4.1.10","node-sass":"^4.5.0","npm-run-all":"^4.0.0","onchange":"^3.2.0","parcel":"^1.12.3","sass":"^1.23.0","typescript":"^3.6.2"},"dependencies":{"regenerator-runtime":"^0.13.3"}}
+{
+  "name": "imi-chat-preview",
+  "version": "0.0.9",
+  "description": "A very simple and basic Typescript Starter boilerplate template based on npm",
+  "author": "Sandeep Gupta",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nea/Typescript-Starter"
+  },
+  "bugs": "https://github.com/nea/Typescript-Starter/issues",
+  "keywords": [
+    "npm",
+    "scripts",
+    "watch",
+    "typescript",
+    "tsc",
+    "onchange"
+  ],
+  "scripts": {
+    "start": "parcel src/index.html",
+    "build": "parcel build --no-content-hash src/styles.scss src/main.ts src/index.html  --no-source-maps",
+    "git": "git add . && git commit && git push",
+    "dev": "parcel index.html",
+    "release": "npm run build && node change-lib-name.js && npm publish --access=public",
+    "release-local": "npm run build && node copy-to-imi.js"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.0",
+    "copyfiles": "^1.2.0",
+    "cssnano": "^4.1.10",
+    "node-sass": "^4.5.0",
+    "npm-run-all": "^4.0.0",
+    "onchange": "^3.2.0",
+    "parcel": "^1.12.3",
+    "sass": "^1.23.0",
+    "typescript": "^3.6.2"
+  },
+  "dependencies": {
+    "color": "^3.1.2",
+    "jss": "^10.0.4",
+    "jss-preset-default": "^10.0.4",
+    "regenerator-runtime": "^0.13.3"
+  }
+}

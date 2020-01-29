@@ -14,7 +14,7 @@ export class Feedback {
     }
 
     getTemplate({txnId, bot_message_id, humanClass, isLast, feedbackSTr, likeActive, disLikeActive, time, str, randomNumber, hideFeedback}) {
-        debugger;
+
         const askFeedbackClass = (likeActive || disLikeActive) ? '' : 'ask-feedback';
         let feedbackHtml = `
         <div class="msg-bubble-options-panel ${askFeedbackClass}" ${feedbackSTr}>

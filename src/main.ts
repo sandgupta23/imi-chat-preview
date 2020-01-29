@@ -375,7 +375,7 @@ export function initEnvironment(botDetails: any = {}) {
         $chatContainer && $chatContainer.classList.remove('lang-rtl');
         if ($chatInput) {
             $chatInput.setAttribute("dir", "ltr");
-            $chatInput.placeholder = "Type a message";
+            $chatInput.placeholder = "Ask Rammas";
         }
     }
 
@@ -459,7 +459,7 @@ function getModelTemplate() {
 }
 //
 function getFullBodyExceptPhoneCover() {
-    debugger;
+
     return `
         <div class="imi-preview-grid-container">
                         <div class="header" style="z-index: 1">

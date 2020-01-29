@@ -649,7 +649,6 @@ button:active {
 body {
   margin: 0;
   padding: 0;
-  font-family: "IBM Plex Sans", sans-serif;
   font-size: 13px;
 }
 
@@ -860,16 +859,11 @@ ul, li {
   overflow-x: hidden;
   align-items: flex-start;
 }
-.chat-body .message-wrapper, .chat-body .time {
-  animation: human-slide-right 0.5s;
-  animation-fill-mode: forwards;
-}
 .chat-body .message-wrapper-quick-reply {
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
   margin-bottom: 8px;
-  animation: human-slide-right 0.5s;
 }
 .chat-body .message-wrapper-quick-reply button {
   background: var(--color-brand);
@@ -895,7 +889,6 @@ ul, li {
   max-width: 650px;
 }
 .chat-body .msg-bubble .msg-bubble-options-panel {
-  animation: human-slide-right 0.5s;
   margin-bottom: 8px;
   min-width: 100px;
   border-radius: 15px;
@@ -957,7 +950,7 @@ ul, li {
 }
 .chat-body .msg-bubble .message-wrapper .content {
   position: relative;
-  border-top-left-radius: 0 !important;
+  border-top-left-radius: 0;
   background: white;
   filter: drop-shadow(-1px 0px 2px rgba(0, 0, 0, 0.02));
 }
@@ -993,7 +986,7 @@ ul, li {
   color: white;
   position: relative;
   border-top-right-radius: 0 !important;
-  border-top-left-radius: 4px !important;
+  border-top-left-radius: 4px;
 }
 .chat-body .msg-bubble.msg-bubble-human .message-wrapper .content::after {
   content: "";
@@ -1008,10 +1001,6 @@ ul, li {
   z-index: -14;
   border-top-right-radius: 4px;
   border-top-left-radius: 0;
-}
-.chat-body .msg-bubble.msg-bubble-human .message-wrapper, .chat-body .msg-bubble.msg-bubble-human .time {
-  animation: human-slide-left 0.5s;
-  animation-fill-mode: forwards;
 }
 .chat-body .msg-bubble.msg-bubble-human .time {
   margin-left: auto;
