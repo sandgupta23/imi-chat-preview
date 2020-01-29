@@ -1,151 +1,300 @@
-import {ESourceType, IMessageData} from "./typings/send-api";
-import {getTimeInHHMM} from "./utility";
+import {ESourceType, IMessageData, ISendApiResp, ISendApiResponsePayload} from "./typings/send-api";
+import {
+    encodeUrlForDomParser,
+    getTimeIn24HrFormat,
+    getTimeInHHMM,
+    removeInActiveFeedbackPanel,
+    scrollBodyToBottom
+} from "./utility";
+import {IBotDetailsApiResp} from "./typings/bot-detaills-api";
+import {environment} from "./environment";
+import {TextReply} from "./response-components/text-reply";
+import {SessionExpiry} from "./response-components/session-expiry";
+import {QuickReply} from "./response-components/quick-reply";
+import {CarouselReply} from "./response-components/carousel-reply";
+import {AudioReply} from "./response-components/audio-reply";
+import {ImageReply} from "./response-components/image-reply";
+import {Feedback} from "./response-components/feedback";
+import {VideoReply} from "./response-components/video-reply";
 
-export const $chatInput = document.getElementById('chat-input') as HTMLInputElement;
-export const $chatInputIcon = document.getElementById('chat-input-icon') as HTMLInputElement;
-export const $botIntro = document.getElementById('botIntro');
-export const $chatBody = document.getElementById('body');
-export const $chatFooter = document.getElementsByClassName('footer')[0];
-export const $loader = document.getElementsByClassName('loader')[0];
-export const $envOptions = document.getElementById('env-options');
-export const $botTitle = document.getElementById('bot-title');
-export const $botLogo = document.getElementById('bot-logo') as HTMLImageElement;
-export const $phoneModel = document.getElementById('phone-modal');
-export const $langSelect = document.getElementById('lang-select') as HTMLSelectElement;
-export const $langSubmit = document.getElementById('lang-submit');
+export let $chatInput;
+export let $chatInputIcon;
+export let $botIntro;
+export let $chatBody;
+export let $chatFooter;
+export let $loader;
+export let $envOptions;
+export let $botTitle;
+export let $botDescription;
+export let $botLogo;
+export let $phoneModel;
+export let $langSelect;
+export let $langSubmit;
+export let $chatContainer;
+export let $knowMoreContainer;
+export let $knowMoreClose;
+export let $knowMoreOverlay;
+export const botResponses: ISendApiResp[] = [];
 
-export function setIntroDetails(intro: { logo: string, title: string, description: string }) {
-    $botLogo.src = 'https://whizkey.ae/wisdom/static/media/rammas.42381205.gif';//intro.logo;
-    $botTitle.textContent = intro.title;
-    // $botIntro.innerHTML = `<span class="bot-logo">
-    //                 <img src="${'https://whizkey.ae/wisdom/static/media/rammas.42381205.gif'}" alt="">
-    //             </span>
-    //             <div class="bot-details">
-    //                 <div class="title">${intro.title}</div>
-    //             </div>
-    //             <div class="options">
-    //                 <i class="fa fa-ellipsis-v"></i>
-    //             </div>
+export const themeOptions;
 
-// `;
+export function domInit(dom) {
+    $chatContainer = document.querySelector('.imi-preview-grid-container');
+    // $chatInput = document.getElementById('chat-input') as HTMLInputElement;
+    $chatInput = dom.$chatInput;
+    $chatInputIcon = document.getElementById('chat-input-icon') as HTMLInputElement;
+    $botIntro = document.getElementById('botIntro');
+    $chatBody = document.getElementById('body');
+    $chatFooter = document.getElementsByClassName('footer')[0];
+    $loader = document.getElementsByClassName('loader')[0];
+    $envOptions = document.getElementById('env-options');
+    $botTitle = document.getElementById('bot-title');
+    $botDescription = document.getElementById('bot-description');
+    $botLogo = document.getElementById('bot-logo') as HTMLImageElement;
+    $phoneModel = document.getElementById('phone-modal');
+    $langSelect = document.getElementById('lang-select') as HTMLSelectElement;
+    $langSubmit = document.getElementById('lang-submit');
+
+    $knowMoreContainer = document.getElementsByClassName('chat-know-more-overlay')[0];
+    $knowMoreClose = document.getElementsByClassName('close-chat-img-overlay')[0];
+    $knowMoreOverlay = document.getElementsByClassName('chat-img-overlay')[0];
 }
 
-export function AppendMessageInChatBody(messages: IMessageData[]) {
+export function setOptions(intro: IBotDetailsApiResp) {
+
+    if ($botLogo) {
+        $botLogo.src = intro.logo;//intro.logo;
+    }
+    if ($botTitle) {
+        $botTitle.textContent = intro.name;
+    }
+
+    if ($botDescription) {
+        $botDescription.textContent = intro.description;
+    }
+}
+
+export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload, hideFeedback) {
+
+    // if (botResponse) {
+    //     if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
+    //         AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null, true);
+    //         console.log(`previous room : ${environment.room.id}. new room ${botResponse.room.id}`);
+    //     }
+    //     console.log(environment.room, botResponse.room);
+    //     environment.room = JSON.parse(JSON.stringify(botResponse.room));
+    // }
+
+    const txnId = botResponse && botResponse.transaction_id || 'human';
+    const bot_message_id = botResponse && botResponse.bot_message_id || 'human';
     let str = "";
+    let wrapper;
+    const replies = [];
+    let randomNumber;
     let frag = document.createDocumentFragment();
     let videoStr = "";
-    messages.forEach((message) => {
-        if (message.text) {
-            str = str + getBotMessageTemplateForText(message.text, message.sourceType);
-        }
-        if (message.media) {
-            if (message.media.audio_url) {
-                str = str + getBotMessageTemplateForAudio(message.media.audio_url);
-            }
-            if (message.media.video_url) {
-                str = str + getBotMessageTemplateForVideo(message.media.video_url);
-                videoStr = videoStr + `<video autoplay="autoplay" muted="muted"  class="msg-video" controls="true" playsinline="playsinline">
-                <source src="${message.media.video_url}"/>
-                    Your browser does not support HTML5 video.
-                </video>`;
-            }
-            if (message.media.image_url) {
-                str = str + getBotMessageTemplateForImage(message.media.image_url);
-            }
-        }
-    });
+    if (messages[0].SESSION_EXPIRY) {
 
-    let humanClass = messages[0].sourceType === ESourceType.human ? 'msg-bubble-human' : '';
-    let time = getTimeInHHMM();
-    str = `
-            <div xmlns="http://www.w3.org/1999/xhtml" class="msg-bubble ${humanClass}">
-                <div class="msg-bot-logo">
-                    <img style="height: 100%; width: 100%" src="https://whizkey.ae/wisdom/static/media/rammas.42381205.gif" alt=""/>
-                </div>
-                <div class="message-container">
-                    ${str}
-                    <div class="time" style="font-size: 9px">${time}</div>
-                </div>
-            </div>  
-            
-        `;
+        if (document.getElementsByClassName('msg-bubble').length > 0) {
+            const reply = new SessionExpiry(messages[0]);
+            // str = str + reply.getTemplate(messages[0]);
+            const el = reply.getElement(messages[0]);
+            replies.push(el);
+        } else {
+            return;
+        }
+    } else {
+        if (messages.length === 1 && (<any>messages[0]).sourceType === "session_expired") {
+            return;
+        }
+        messages.forEach((message) => {
+            if (message.text) {
+                // str = str + getBotMessageTemplateForText(message.text, message.sourceType);
+                const reply = new TextReply(message);
+                // str = str + textReply.getTemplate(message.text, message.sourceType);
+                const el = reply.getElement(message);
+                replies.push(el);
+            }
+            if (message.SESSION_EXPIRY) {
+                const reply = new SessionExpiry(messages[0]);
+                // str = str + reply.getTemplate(messages[0]);
+                const el = reply.getElement(messages[0]);
+                replies.push(el);
+                // str = str + getBotMessageTemplateForSessionExpiry(message.text, message.sourceType);
+            }
+            if (message.quick_reply) {
+                const reply = new QuickReply(messages[0]);
 
-    // $chatBody.innerHTML = $chatBody.innerHTML + str;
-    const el = getElementsFromHtmlStr(str);
-    frag.appendChild(el);
-    $chatBody.appendChild(frag);
-    let msgVid = document.getElementsByClassName('msg-video');
-    if (videoStr) {
-        const lastMsgVid = msgVid[msgVid.length - 1];
-        lastMsgVid.innerHTML = videoStr;
+                // str = str + reply.getTemplate(message.quick_reply, message.sourceType);
+                const el = reply.getElement(message.quick_reply, message.sourceType);
+                replies.push(el);
+                // str = str + getBotMessageTemplateForQuickReply(message.quick_reply, message.sourceType);
+            }
+            if (message.media || message.image || message.audio || message.video) {
+
+                let url = "";
+                let type = "";
+                if (message.media) {
+                    if (Object.keys(message.media)[0].startsWith('audio')) {
+                        type = 'audio'
+                    }
+                    if (Object.keys(message.media)[0].startsWith('video')) {
+                        type = 'audio'
+                    }
+                    if (Object.keys(message.media)[0].startsWith('image')) {
+                        type = 'image'
+                    }
+                    url = message.media.audio_url || message.media.video_url || message.media.image_url;
+
+                    if (message.media.length) {
+                        // str = str + getBotMessageTemplateForCarousal(message.media);
+                        const reply = new CarouselReply(message.media);
+                        // str = str + reply.getTemplate(message.quick_reply, message.sourceType);
+                        const el = reply.getElement(message);
+                        replies.push(el);
+                    }
+                } else {
+                    if (Object.keys(message)[0].startsWith('audio')) {
+                        type = 'audio'
+                    }
+                    if (Object.keys(message)[0].startsWith('video')) {
+                        type = 'video'
+                    }
+                    if (Object.keys(message)[0].startsWith('image')) {
+                        type = 'image'
+                    }
+                    url = message[type].url;
+                }
+                if (type === "audio") {
+                    // str = str + getBotMessageTemplateForAudio(url);
+                    const reply = new AudioReply(message);
+                    // str = str + reply.getTemplate(url);
+                    const el = reply.getElement(url);
+                    replies.push(el);
+                }
+                if (type === "video") {
+                    const reply = new VideoReply();
+                    const el = reply.getElement(url);
+                    replies.push(el);
+                    // str = str + getBotMessageTemplateForVideo(url);
+                    // url = encodeUrlForDomParser(url);
+                    //     videoStr = videoStr + `<video muted="muted"  class="msg-video" controls="true" playsinline="playsinline">
+                    // <source src="${url}"/>
+                    //     Your browser does not support HTML5 video.
+                    // </video>`;
+                }
+                if (type === "image") {
+                    // str = str + getBotMessageTemplateForImage(url);
+                    const reply = new ImageReply(message);
+                    // str = str + reply.getTemplate(url);
+                    const el = reply.getElement(url);
+                    replies.push(el);
+                }
+            }
+        });
+
+        let humanClass = messages[0].sourceType === ESourceType.human ? 'msg-bubble-human' : '';
+        let time = themeOptions.time24HrFormat? getTimeIn24HrFormat(messages[0].time): getTimeInHHMM(messages[0].time);
+
+        let feedbackSTr = "";
+        const messageWithFeedback = (messages.find((message) => message.feedback != null));
+        let likeActive;
+        let disLikeActive;
+        if (messageWithFeedback) {
+            const feedback = messageWithFeedback.feedback
+            likeActive = (feedback === "1" || feedback === "POSITIVE") ? 'active' : '';
+            disLikeActive = (feedback === "0" || feedback === "NEGATIVE") ? 'active' : '';
+            feedbackSTr = `data-feedback="${feedback}"`;
+        }
+
+        const feedback = new Feedback();
+        randomNumber = Date.now() + Math.floor(Math.random() * 100000000);
+        const isLast = true;
+        // str =  feedback.getTemplate({txnId, bot_message_id, humanClass, isLast, feedbackSTr, likeActive, disLikeActive, time, str, randomNumber });
+        wrapper = feedback.getElement({
+            txnId,
+            bot_message_id,
+            humanClass,
+            isLast,
+            feedbackSTr,
+            likeActive,
+            disLikeActive,
+            time,
+            str,
+            randomNumber,
+            hideFeedback
+        })[0];
     }
-    resetChatInput();
+
+
+    // const el = getElementsFromHtmlStr(str) as HTMLElement;
+    const el = document.createElement('template');
+    // const el = document.createElement('DIV');
+    el.innerHTML = str;
+    const carousal = el.content.querySelector('.carousal-container') as HTMLElement;
+
+    replies.forEach((children: HTMLElement[]) => {
+        Array.from(children).forEach((child) => {
+            frag.appendChild(child);
+        })
+    });
+    let location;
+    location = wrapper.querySelector(`[data-id="${randomNumber}"]`) as HTMLElement;
+    // location.appendChild(frag);
+    location.insertBefore(frag, location.firstElementChild);
+    // frag.appendChild(el.content);
+    // const askFeedback = $chatBody.querySelector('.msg-bubble-options-panel');
+    // const isActive = askFeedback && askFeedback.querySelector('.feedback.active');
+    // if (!isActive) {
+    //     askFeedback && askFeedback.parentElement.removeChild(askFeedback);
+    // }
+    removeInActiveFeedbackPanel($chatBody);
+    $chatBody.appendChild(wrapper);
+
+
+    if (carousal) {
+        let carousalWidth = $chatBody.offsetWidth as any - 60;
+        let dataItemToShow = '1';
+        if (carousalWidth > 0 && carousalWidth < 225) {
+            dataItemToShow = '1';
+        } else {
+            if (carousalWidth > 0 && carousalWidth < 450) {
+                dataItemToShow = '2';
+            } else if (carousalWidth >= 450 && carousalWidth < 675) {
+                carousalWidth = 450;
+                dataItemToShow = '2';
+            } else if (carousalWidth >= 675) {
+                carousalWidth = 675;
+                dataItemToShow = '3';
+            }
+        }
+        carousal.setAttribute('data-itemToShow', dataItemToShow);
+
+        let carousalItemCount = carousal.getElementsByClassName('item').length;
+        if (carousalItemCount <= Number(dataItemToShow)) {
+            carousal.classList.add('no-controls');
+        }
+        carousal.style.width = carousalWidth + 'px';
+        carousal.style.opacity = '1';
+    }
+    // let msgVid = document.getElementsByClassName('msg-video');
+    // if (videoStr) {
+    //     const lastMsgVid = msgVid[msgVid.length - 1];
+    //     lastMsgVid.innerHTML = videoStr;
+    // }
+    // resetChatInput();
     scrollBodyToBottom();
 }
 
-function scrollBodyToBottom() {
-    $chatBody.scrollTop = $chatBody.scrollHeight
-}
 
-export function resetChatInput() {
-    $chatInput.value = ""
-}
-
-function getElementsFromHtmlStr(htmlStr: string) {
-    const doc = new DOMParser().parseFromString(htmlStr, "text/xml");
-    return doc.firstChild;
-}
-
-
-function getBotMessageTemplateForText(text, source?: ESourceType) {
-    const fragment = document.createDocumentFragment();
-    let botLogoStr = `<!--<div class="msg-bot-logo">-->
-<!--                        <img style="height: 100%; width: 100%" src="https://whizkey.ae/wisdom/static/media/rammas.42381205.gif" alt=""/>-->
-<!--                    </div>-->`;
-    // if(source === ESourceType.human){
-    //     botLogoStr = "";
-    // }
-    const htmlStr = `
-                <div class="message-wrapper ${source === ESourceType.human ? 'message-wrapper-human' : ''}">
-                    <div class="content">${text}</div>
-                </div>
-            `;
-    return htmlStr;
-}
-
-function getBotMessageTemplateForAudio(url: string) {
-    const htmlStr = `
-                <div class="message-wrapper  message-wrapper-bot">
-                    <audio class="msg-audio" src="${url}"></audio>
-                </div>
-            `;
-    return htmlStr;
-}
-
-function getBotMessageTemplateForVideo(url: string) {
-    // const htmlStr = `
-    //             <div class="message-wrapper  message-wrapper-bot">
-    //                 <video autoplay="autoplay" muted="muted"  class="msg-video" controls="true" playsinline="playsinline">
-    //                     <source src="${url}"/>
-    //                     Your browser does not support HTML5 video.
-    //                 </video>
-    //             </div>
-    //         `;
-    const htmlStr = `
-                <div class="message-wrapper  message-wrapper-bot msg-video">
-                    
-                </div>
-            `;
-    return htmlStr;
-}
-
-function getBotMessageTemplateForImage(url: string) {
-    const htmlStr = `
-                <div class="message-wrapper message-wrapper-bot msg-shadow" 
-                style="width: 100%; padding-top: 105%; position: relative; margin-bottom: 20px; background:#80808017; border-radius: 8px; overflow: hidden">
-                    <img style="position:absolute; top: 50%; left: 0; right: 0; bottom: 0;width: 100%; transform: translateY(-50%)" class="msg-img click-to-zoom" src="${url}" alt=""/>
-                </div>
-            `;
-    return htmlStr;
-}
-
+// function getBotMessageTemplateForVideo(url: string) {
+//     const htmlStr = `
+//                 <div class="message-wrapper  message-wrapper-bot msg-video">
+//                      <video muted="muted"  class="msg-video" controls="true" playsinline="playsinline">
+//                             <source src="${url}"/>
+//                                 Your browser does not support HTML5 video.
+//                        </video>
+//                 </div>
+//             `;
+//     return htmlStr;
+// }

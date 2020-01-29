@@ -1,8 +1,8 @@
 {
-  "name": "typescript-starter-npm",
-  "version": "1.0.0",
+  "name": "imi-chat-preview",
+  "version": "0.0.9",
   "description": "A very simple and basic Typescript Starter boilerplate template based on npm",
-  "author": "Savas Ziplies",
+  "author": "Sandeep Gupta",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -19,8 +19,11 @@
   ],
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "parcel build src/index.html",
-    "git": "git add . && git commit && git push"
+    "build": "parcel build --no-content-hash src/styles.scss src/main.ts src/index.html  --no-source-maps",
+    "git": "git add . && git commit && git push",
+    "dev": "parcel index.html",
+    "release": "npm run build && node change-lib-name.js && npm publish --access=public",
+    "release-local": "npm run build && node copy-to-imi.js"
   },
   "devDependencies": {
     "browser-sync": "^2.18.0",
@@ -30,10 +33,13 @@
     "npm-run-all": "^4.0.0",
     "onchange": "^3.2.0",
     "parcel": "^1.12.3",
-    "sass": "^1.22.12",
+    "sass": "^1.23.0",
     "typescript": "^3.6.2"
   },
   "dependencies": {
+    "color": "^3.1.2",
+    "jss": "^10.0.4",
+    "jss-preset-default": "^10.0.4",
     "regenerator-runtime": "^0.13.3"
   }
 }

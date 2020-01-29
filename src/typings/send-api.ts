@@ -182,6 +182,7 @@ export interface IGeneratedMessageItem {
 export interface ISendApiResponsePayload {
     'TimeStamp': 1533902788.0;
     'bot_msg': string;
+    isLast: boolean,
     bot_message_id: number;
     'generated_msg': IGeneratedMessageItem[];
     'messageStore': { 'endflow': true, 'templateKey': 'A1', response_language: string };
@@ -269,6 +270,7 @@ export enum ESourceType {
 
 export interface IMessageData extends IGeneratedMessageItem {
     /*custom fields*/
+    SESSION_EXPIRY: true
     sourceType?: ESourceType; // TODO: "timePeriod" ||"human", gives error, see why
     time?: number;
     messageMediaType?: EBotMessageMediaType;
@@ -276,9 +278,13 @@ export interface IMessageData extends IGeneratedMessageItem {
     feedback?: any;
     isLast?: boolean;
     response_language?: string;
+    video: {url:string},
+    audio: {url:string},
+    image: {url:string},
     media?: {
         audio_url: string,
         image_url: string,
         video_url: string,
+        length: null
     }
 }

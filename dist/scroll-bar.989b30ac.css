@@ -1,0 +1,19 @@
+/* width */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0;
+}
+
+/* Track */
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 0;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: transparent;
+}
+
+/*# sourceMappingURL=/scroll-bar.989b30ac.css.map */
