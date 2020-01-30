@@ -78,11 +78,42 @@ const style = {
                     "color": "#717173"
                 }
             },
+        },
+
+        "& .lang-rtl": {
+            "& #chat-input-icon": {}
+        },
+
+
+        "& .footer": {
+            "justify-content": "center",
+            "background": "#eee",
+            "border-top": "1px solid #aaa !important",
+            "box-shadow": "0 1px 5px 0 #9b9b9b !important",
+            "& input": {
+                "cursor": "auto",
+                "border-radius": "30px",
+                "height": "45px",
+                "background": "#fff",
+                "padding": "5px 15px !important",
+                "padding-right": "45px !important",
+
+                '@media (min-width: 500px)': {
+                    "max-width": "70% !important",
+                    "min-width": "300px !important",
+                }
+            }
+        },
+
+        "& .phone": {
+            "& .msg-bot-logo":{
+              "display": "none"
+            },
             "& .footer": {
                 "justify-content": "center",
-                "background": "#eee",
+                "background": "none",
                 "border-top": "1px solid #aaa !important",
-                "box-shadow": "0 1px 5px 0 #9b9b9b !important",
+                "box-shadow": "none !important",
                 "& input": {
                     "cursor": "auto",
                     "border-radius": "30px",
@@ -92,11 +123,12 @@ const style = {
                     "padding-right": "45px !important",
 
                     '@media (min-width: 500px)': {
-                        "max-width": "70% !important",
-                        "min-width": "300px !important",
+                        "max-width": "100% !important",
+                        "min-width": "00px !important",
                     }
                 }
             }
+
         }
 
     },

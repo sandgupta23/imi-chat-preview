@@ -2269,14 +2269,14 @@ function initEnvironment(botDetails) {
 
     if (dom_1.$chatInput) {
       dom_1.$chatInput.setAttribute("dir", "rtl");
-      dom_1.$chatInput.placeholder = "أكتب السؤال ..";
+      dom_1.$chatInput.placeholder = "كيف حالك";
     }
   } else {
     dom_1.$chatContainer && dom_1.$chatContainer.classList.remove('lang-rtl');
 
     if (dom_1.$chatInput) {
       dom_1.$chatInput.setAttribute("dir", "ltr");
-      dom_1.$chatInput.placeholder = "Ask Rammas";
+      dom_1.$chatInput.placeholder = "Ask Wisdom";
     }
   }
 
@@ -7279,12 +7279,38 @@ var style = {
           "font-size": "25px",
           "color": "#717173"
         }
+      }
+    },
+    "& .lang-rtl": {
+      "& #chat-input-icon": {}
+    },
+    "& .footer": {
+      "justify-content": "center",
+      "background": "#eee",
+      "border-top": "1px solid #aaa !important",
+      "box-shadow": "0 1px 5px 0 #9b9b9b !important",
+      "& input": {
+        "cursor": "auto",
+        "border-radius": "30px",
+        "height": "45px",
+        "background": "#fff",
+        "padding": "5px 15px !important",
+        "padding-right": "45px !important",
+        '@media (min-width: 500px)': {
+          "max-width": "70% !important",
+          "min-width": "300px !important"
+        }
+      }
+    },
+    "& .phone": {
+      "& .msg-bot-logo": {
+        "display": "none"
       },
       "& .footer": {
         "justify-content": "center",
-        "background": "#eee",
+        "background": "none",
         "border-top": "1px solid #aaa !important",
-        "box-shadow": "0 1px 5px 0 #9b9b9b !important",
+        "box-shadow": "none !important",
         "& input": {
           "cursor": "auto",
           "border-radius": "30px",
@@ -7293,8 +7319,8 @@ var style = {
           "padding": "5px 15px !important",
           "padding-right": "45px !important",
           '@media (min-width: 500px)': {
-            "max-width": "70% !important",
-            "min-width": "300px !important"
+            "max-width": "100% !important",
+            "min-width": "00px !important"
           }
         }
       }
@@ -7452,7 +7478,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63207" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51805" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

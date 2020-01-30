@@ -369,13 +369,13 @@ export function initEnvironment(botDetails: any = {}) {
         $chatContainer && $chatContainer.classList.add('lang-rtl');
         if ($chatInput) {
             $chatInput.setAttribute("dir", "rtl");
-            $chatInput.placeholder = "أكتب السؤال ..";
+            $chatInput.placeholder = "كيف حالك";
         }
     } else {
         $chatContainer && $chatContainer.classList.remove('lang-rtl');
         if ($chatInput) {
             $chatInput.setAttribute("dir", "ltr");
-            $chatInput.placeholder = "Ask Rammas";
+            $chatInput.placeholder = "Ask Wisdom";
         }
     }
 
