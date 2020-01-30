@@ -6,7 +6,7 @@
 body {
   min-height: 100vh;
   overflow-x: hidden;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: "DUBAI-REGULAR", "IBM Plex Sans", sans-serif;
   color: #495057;
 }
 
@@ -203,7 +203,6 @@ button:active {
 
 .content {
   text-align: center;
-  font-weight: 500;
   line-height: 1.4;
   padding: 0 30px;
 }
@@ -968,7 +967,6 @@ ul, li {
   border-top-right-radius: 0;
 }
 .chat-body .msg-bubble.msg-bubble-human {
-  flex-direction: column-reverse;
   margin-left: auto;
 }
 .chat-body .msg-bubble.msg-bubble-human .message-container {
@@ -976,7 +974,8 @@ ul, li {
   width: 100%;
 }
 .chat-body .msg-bubble.msg-bubble-human .msg-bot-logo {
-  display: none !important;
+  order: 1;
+  margin-left: 2px;
 }
 .chat-body .msg-bubble.msg-bubble-human .msg-bubble-options-panel {
   display: none;
@@ -1037,7 +1036,6 @@ ul, li {
 .chat-body .msg-bubble .message-container .message-wrapper .msg-img, .chat-body .msg-bubble .message-container .message-wrapper .msg-audio, .chat-body .msg-bubble .message-container .message-wrapper .msg-video {
   background: #eaeaea;
   box-sizing: content-box;
-  box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.15);
 }
 .chat-body .msg-bubble .message-container .message-wrapper .msg-audio, .chat-body .msg-bubble .message-container .message-wrapper .msg-video {
   max-width: 90%;

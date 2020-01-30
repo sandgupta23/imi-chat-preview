@@ -17,6 +17,7 @@
     <link rel="icon" type="image/x-icon" href="https://dev.imibot.ai/static/favicon.ico">
     <link rel="stylesheet" href="/styles.164d45a1.css">
     <link rel="stylesheet" href="/rammas.d513520c.css">
+    <link rel="stylesheet" href="/rammas.d513520c.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.slim.js"></script>
 <!--    <link rel="stylesheet" href="iphone.scss">-->
 <!--    <link rel="stylesheet" href="scroll-bar.scss">-->
@@ -28,7 +29,22 @@
     <script src="https://unpkg.com/jss@10.0.4/dist/jss.js"></script>
 <script src="/styles.164d45a1.js"></script><script src="/rammas.d513520c.js"></script></head>
 
-<style>html {
+<style>@font-face {
+        font-family: 'DUBAI-REGULAR';
+        src: url('/DubaiW23-Regular.091811d9.eot'); /* IE9 Compat Modes */
+        src: url('/DubaiW23-Regular.091811d9.eot?#iefix') format('embedded-opentype'), 
+        url('/DubaiW23-Regular.7f1431a3.woff2') format('woff2'), 
+        url('/DubaiW23-Regular.5ef58938.woff') format('woff'), 
+        url('/DubaiW23-Regular.7aadd19e.ttf')  format('truetype'), 
+        url('/DubaiW23-Regular.7aadd19e.ttf') format('svg'); /* Legacy iOS */
+    }
+
+    body {
+        font-family: 'DUBAI-REGULAR', 'IBM Plex Sans', sans-serif;
+        font-weight: 300;
+    }
+
+    html {
         width: 100%;
         height: 100%;
     }
@@ -68,7 +84,7 @@
     .vertical-centered-box body {
         -webkit-font-smoothing: antialiased;
         text-rendering: optimizeLegibility;
-        font-family: "proxima-nova-soft", sans-serif;
+        font-family: 'DUBAI-REGULAR', 'IBM Plex Sans', sans-serif;
         -webkit-user-select: none;
         overflow: scroll;
         line-height: 0 !important;

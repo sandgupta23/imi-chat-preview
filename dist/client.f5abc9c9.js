@@ -558,6 +558,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var environment_1 = require("../environment");
+
 var utility_1 = require("../utility");
 
 var Feedback = function () {
@@ -589,14 +591,14 @@ var Feedback = function () {
       feedbackHtml = "";
     }
 
-    return "<div xmlns=\"http://www.w3.org/1999/xhtml\" data-txn=\"" + txnId + "\"  data-bot_message_id=\"" + bot_message_id + "\"\n             class=\"msg-bubble " + humanClass + "\" style=\"position:relative;\">\n                \n                <div class=\"message-container\" data-id=\"" + randomNumber + "\">\n                  \n                    <div \">\n                    " + (isLast ? feedbackHtml : '') + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                    </div>\n                </div>\n            </div>";
+    return "<div xmlns=\"http://www.w3.org/1999/xhtml\" data-txn=\"" + txnId + "\"  data-bot_message_id=\"" + bot_message_id + "\"\n             class=\"msg-bubble " + humanClass + "\" style=\"position:relative;\">\n            \n             <div class=\"msg-bot-logo\">\n                    <img \n                    src=\"" + (humanClass ? 'https://www.dewa.gov.ae/images/user.png' : environment_1.environment.logo) + "\"\n                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\"\n                     style=\"height: 100%; width: 100%\" />\n                </div>       \n                <div class=\"message-container\" data-id=\"" + randomNumber + "\">\n                    <div \">\n                    " + (isLast ? feedbackHtml : '') + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                    </div>\n                </div>\n                \n            </div>";
   };
 
   return Feedback;
 }();
 
 exports.Feedback = Feedback;
-},{"../utility":"utility.ts"}],"response-components/video-reply.ts":[function(require,module,exports) {
+},{"../environment":"environment.ts","../utility":"utility.ts"}],"response-components/video-reply.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7215,7 +7217,7 @@ var socket;
 var imiPreviewTemp;
 var style = {
   themeClass: {
-    'font-family': "'IBM Plex Sans', sans-serif",
+    'font-family': "'DUBAI-REGULAR', 'IBM Plex Sans', sans-serif",
     "message-wrapper": {},
     "& .msg-bubble-human": {
       "& .content": {
@@ -7260,7 +7262,7 @@ var style = {
       "& .header": {
         "background-image": "-webkit-linear-gradient(left,#065726,#07682d,#087b36) !important",
         "& .options": {
-          "display": "none"
+          "display": "none !important"
         },
         "& .bot-intro": {
           "background": "none",
@@ -7447,7 +7449,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51372" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63207" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

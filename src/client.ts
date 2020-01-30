@@ -13,7 +13,7 @@ let imiPreviewTemp;
 
 const style = {
     themeClass: {
-        'font-family': "'IBM Plex Sans', sans-serif",
+        'font-family': "'DUBAI-REGULAR', 'IBM Plex Sans', sans-serif",
         "message-wrapper": {},
         "& .msg-bubble-human": {
             "& .content": {
@@ -60,7 +60,7 @@ const style = {
             "& .header": {/*header*/
                 "background-image": "-webkit-linear-gradient(left,#065726,#07682d,#087b36) !important",
                 "& .options": {
-                    "display": "none"
+                    "display": "none !important"
                 },
                 "& .bot-intro": {
                     "background": "none",

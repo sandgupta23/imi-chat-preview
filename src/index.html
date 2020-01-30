@@ -19,6 +19,7 @@
     <link rel="icon" type="image/x-icon" href="https://dev.imibot.ai/static/favicon.ico">
     <link rel="stylesheet" href="styles.scss">
     <link rel="stylesheet" href="rammas.scss">
+    <link rel="stylesheet" href="rammas.scss">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.slim.js"></script>
 <!--    <link rel="stylesheet" href="iphone.scss">-->
 <!--    <link rel="stylesheet" href="scroll-bar.scss">-->
@@ -32,6 +33,20 @@
 </head>
 
 <style>
+    @font-face {
+        font-family: 'DUBAI-REGULAR';
+        src: url('/assets/Dubai_Font_Web_Font/DubaiW23-Regular.eot'); /* IE9 Compat Modes */
+        src: url('/assets/Dubai_Font_Web_Font/DubaiW23-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('/assets/Dubai_Font_Web_Font/DubaiW23-Regular.woff2') format('woff2'), /* Super Modern Browsers */
+        url('/assets/Dubai_Font_Web_Font/DubaiW23-Regular.woff') format('woff'), /* Pretty Modern Browsers */
+        url('/assets/Dubai_Font_Web_Font/DubaiW23-Regular.ttf')  format('truetype'), /* Safari, Android, iOS */
+        url('/assets/Dubai_Font_Web_Font/DubaiW23-Regular.ttf') format('svg'); /* Legacy iOS */
+    }
+
+    body {
+        font-family: 'DUBAI-REGULAR', 'IBM Plex Sans', sans-serif;
+        font-weight: 300;
+    }
 
     html {
         width: 100%;
@@ -73,7 +88,7 @@
     .vertical-centered-box body {
         -webkit-font-smoothing: antialiased;
         text-rendering: optimizeLegibility;
-        font-family: "proxima-nova-soft", sans-serif;
+        font-family: 'DUBAI-REGULAR', 'IBM Plex Sans', sans-serif;
         -webkit-user-select: none;
         overflow: scroll;
         line-height: 0 !important;

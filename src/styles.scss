@@ -444,7 +444,7 @@ ul, li {
 
 
     &.msg-bubble-human {
-      flex-direction: column-reverse;
+      //flex-direction: column-reverse;
       margin-left: auto;
 
       .message-container {
@@ -453,7 +453,9 @@ ul, li {
       }
 
       .msg-bot-logo {
-        display: none !important;
+        //display: none !important;
+        order: 1;
+        margin-left: 2px;
       }
 
       .msg-bubble-options-panel {

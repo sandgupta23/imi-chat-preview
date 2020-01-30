@@ -37,14 +37,20 @@ export class Feedback {
 
         return `<div xmlns="http://www.w3.org/1999/xhtml" data-txn="${txnId}"  data-bot_message_id="${bot_message_id}"
              class="msg-bubble ${humanClass}" style="position:relative;">
-                
+            
+             <div class="msg-bot-logo">
+                    <img 
+                    src="${humanClass ? 'https://www.dewa.gov.ae/images/user.png' : environment.logo}"
+                    onerror="this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'"
+                     style="height: 100%; width: 100%" />
+                </div>       
                 <div class="message-container" data-id="${randomNumber}">
-                  
                     <div ">
                     ${isLast ? feedbackHtml : ''}
                     <div class="time" style="font-size: 9px">${time}</div>
                     </div>
                 </div>
+                
             </div>`;
     }
 }
