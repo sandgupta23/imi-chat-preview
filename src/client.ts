@@ -89,8 +89,12 @@ const style = {
                     "height": "45px",
                     "background": "#fff",
                     "padding": "5px 15px !important",
-                    "max-width": "70% !important",
-                    "min-width": "300px !important"
+                    "padding-right": "45px !important",
+
+                    '@media (min-width: 500px)': {
+                        "max-width": "70% !important",
+                        "min-width": "300px !important",
+                    }
                 }
             }
         }
@@ -198,7 +202,7 @@ function initAllEvents() {
     });
 
     socket.on('previewStyle', (data) => {
-        if(location.search.includes('test')){
+        if (location.search.includes('test')) {
             console.log('chatStyle event preview :-)', data);
             const $style = document.querySelector("[data-jss]");
             $style.parentElement.removeChild($style);

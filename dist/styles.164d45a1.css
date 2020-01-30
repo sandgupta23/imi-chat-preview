@@ -776,6 +776,7 @@ ul, li {
   font-weight: bold;
 }
 .imi-preview-grid-container .header .bot-intro .bot-logo {
+  display: flex;
   margin-right: 10px;
   flex-grow: 0;
 }
@@ -796,6 +797,9 @@ ul, li {
   display: flex;
   justify-content: center;
   flex-direction: column;
+}
+.imi-preview-grid-container .header .bot-intro .bot-details #bot-description {
+  margin-top: -6px !important;
 }
 .imi-preview-grid-container .footer {
   height: 60px;
@@ -857,6 +861,16 @@ ul, li {
   overflow-y: auto;
   overflow-x: hidden;
   align-items: flex-start;
+}
+@media only screen and (max-width: 600px) {
+  .chat-body {
+    padding: 8px 8px 8px 18px;
+  }
+}
+@media only screen and (min-width: 600px) {
+  .chat-body {
+    padding: 8px 50px;
+  }
 }
 .chat-body .message-wrapper-quick-reply {
   display: flex;

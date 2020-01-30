@@ -481,7 +481,7 @@ function getFullBodyExceptPhoneCover() {
                         </div>
                         <!--chat body starts-->
                         <div class="chat-body" id="body"
-                             style="padding: 8px 22px; display: flex; flex-direction: column; z-index: 0">
+                             style="display: flex; flex-direction: column; z-index: 0">
 
                         </div>
                         <!--chat body ends-->

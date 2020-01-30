@@ -10,8 +10,6 @@ $color-brand: #34b233;
 }
 
 
-
-
 body {
   margin: 0;
   padding: 0;
@@ -174,6 +172,7 @@ ul, li {
       }
 
       .bot-logo {
+        display: flex;
         margin-right: 10px;
         flex-grow: 0;
 
@@ -198,6 +197,10 @@ ul, li {
         justify-content: center;
         //align-items: center;
         flex-direction: column;
+
+        #bot-description {
+          margin-top: -6px !important;
+        }
       }
     }
   }
@@ -273,6 +276,13 @@ ul, li {
   overflow-y: auto;
   overflow-x: hidden;
   align-items: flex-start;
+
+  @media only screen and (max-width: 600px) {
+    padding: 8px 8px 8px 18px;
+  }
+  @media only screen and (min-width: 600px) {
+    padding: 8px 50px;
+  }
 
   .message-wrapper, .time {
     //animation: human-slide-right 0.5s;
@@ -426,6 +436,7 @@ ul, li {
         border-top-left-radius: 0;
         background: white;
         filter: drop-shadow(-1px 0px 2px rgba(0, 0, 0, 0.02));
+
         &::after {
           background: white;
           content: "";
