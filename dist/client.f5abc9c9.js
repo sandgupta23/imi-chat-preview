@@ -7370,7 +7370,7 @@ document.addEventListener('DOMContentLoaded', function () {
           });
           fullBody = true;
           phoneCasing = utility_1.getQueryStringValue('phonecasing') === "true";
-          brandColor = utility_1.getQueryStringValue('brandcolor') || "#2b4f70";
+          brandColor = utility_1.getQueryStringValue('brandcolor') || "#087b36";
           brandColor = brandColor.replace('_', '#');
           imiPreview.viewInit('.test-container', fullBody, phoneCasing);
           $chatInput = document.getElementById('chat-input');

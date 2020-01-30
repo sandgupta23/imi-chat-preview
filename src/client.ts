@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const fullBody = true;//getQueryStringValue('fullbody') === "true";
     const phoneCasing = getQueryStringValue('phonecasing') === "true";
-    const brandColor = getQueryStringValue('brandcolor') || "#2b4f70";
+    const brandColor = getQueryStringValue('brandcolor') || "#087b36";
     brandColor = brandColor.replace('_', '#');
 
     imiPreview.viewInit('.test-container', fullBody, phoneCasing);
