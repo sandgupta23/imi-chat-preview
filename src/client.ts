@@ -106,8 +106,8 @@ const style = {
         },
 
         "& .phone": {
-            "& .msg-bot-logo":{
-              "display": "none"
+            "& .msg-bot-logo": {
+                "display": "none"
             },
             "& .footer": {
                 "justify-content": "center",
@@ -225,29 +225,27 @@ function initializeSocketConnection(socketData) {
     });
 }
 
-}
-
 function initAllEvents() {
-    socket.on('preview', (data) => {
-        console.log('preview event preview :-)', data);
-        imiPreviewTemp.appendMessageInChatBody(data.generated_msg, null, false);
-    });
-
-    socket.on('previewStyle', (data) => {
-        if (location.search.includes('test')) {
-            console.log('chatStyle event preview :-)', data);
-            const $style = document.querySelector("[data-jss]");
-            $style.parentElement.removeChild($style);
-            let style;
-            try {
-                style = JSON.parse(data.style);
-            } catch (e) {
-                console.log('invalid style, resetting to default');
-                style = null;
-            }
-            createAndAppendStyles(style);
-        }
-    });
+    // socket.on('preview', (data) => {
+    //     console.log('preview event preview :-)', data);
+    //     imiPreviewTemp.appendMessageInChatBody(data.generated_msg, null, false);
+    // });
+    //
+    // socket.on('previewStyle', (data) => {
+    //     if (location.search.includes('test')) {
+    //         console.log('chatStyle event preview :-)', data);
+    //         const $style = document.querySelector("[data-jss]");
+    //         $style.parentElement.removeChild($style);
+    //         let style;
+    //         try {
+    //             style = JSON.parse(data.style);
+    //         } catch (e) {
+    //             console.log('invalid style, resetting to default');
+    //             style = null;
+    //         }
+    //         createAndAppendStyles(style);
+    //     }
+    // });
 }
 
 createAndAppendStyles(style);

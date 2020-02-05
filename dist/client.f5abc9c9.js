@@ -7425,29 +7425,7 @@ function initializeSocketConnection(socketData) {
   });
 }
 
-function initAllEvents() {
-  socket.on('preview', function (data) {
-    console.log('preview event preview :-)', data);
-    imiPreviewTemp.appendMessageInChatBody(data.generated_msg, null, false);
-  });
-  socket.on('previewStyle', function (data) {
-    if (location.search.includes('test')) {
-      console.log('chatStyle event preview :-)', data);
-      var $style = document.querySelector("[data-jss]");
-      $style.parentElement.removeChild($style);
-      var style_1;
-
-      try {
-        style_1 = JSON.parse(data.style);
-      } catch (e) {
-        console.log('invalid style, resetting to default');
-        style_1 = null;
-      }
-
-      rammas_style_1.createAndAppendStyles(style_1);
-    }
-  });
-}
+function initAllEvents() {}
 
 rammas_style_1.createAndAppendStyles(style);
 },{"./bot-details":"bot-details.ts","./dom":"dom.ts","./utility":"utility.ts","./send-api":"send-api.ts","./environment":"environment.ts","./typings/send-api":"typings/send-api.ts","./main":"main.ts","./rammas.style":"rammas.style.js"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
@@ -7478,7 +7456,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56115" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57534" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
