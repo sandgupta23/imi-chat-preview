@@ -60,7 +60,6 @@ const style = {
             "& .header": {/*header*/
                 "background-image": "-webkit-linear-gradient(left,#065726,#07682d,#087b36) !important",
                 "& .options": {
-                    "display": "none !important"
                 },
                 "& .bot-intro": {
                     "background": "none",

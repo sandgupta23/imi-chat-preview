@@ -115,11 +115,12 @@ class ImiPreview {
         brandColor: string, feedbackEnabled: boolean, showOptionsEllipsis: boolean, time24HrFormat: boolean
     }) {
         if ($envOptions) {
-            if (theme.showOptionsEllipsis === true) {
-                $envOptions.style.display = "block"
-            } else {
-                $envOptions.style.display = "none"
-            }
+                // $envOptions.style.display = "block"
+            // if (theme.showOptionsEllipsis === true) {
+            //     $envOptions.style.display = "block"
+            // } else {
+            //     $envOptions.style.display = "none"
+            // }
         }
         themeOptions = theme;
         setOptions(botDetails);
@@ -161,9 +162,13 @@ function removeModal() {
 
 function initEvents(imiPreview: ImiPreview) {
 
-    // document.getElementById('close-modal1').addEventListener('click', ($event) => {
-    //     removeModal();
-    // });
+    try{
+        document.getElementById('close-modal1').addEventListener('click', ($event) => {
+            removeModal();
+        });
+    }catch (e) {
+        console.log(e);
+    }
 
 
     console.log($chatBody);
@@ -273,11 +278,10 @@ function initEvents(imiPreview: ImiPreview) {
         $langSubmit.addEventListener('click', ($event) => {
             const lang = $langSelect.value;
             if (lang) {
-
                 let splits = environment.bot_unique_name.split("_");
                 splits.pop();
                 environment.bot_unique_name = splits.join("_") + '_' + lang;
-                let newUrl = updateQueryStringParameter(location.href, "bot_unique_name", environment.bot_unique_name);
+                let newUrl = updateQueryStringParameter(location.href, "lang", lang);
                 newUrl = updateQueryStringParameter(newUrl, "lang", lang);
                 location.href = newUrl;
                 initEnvironment();
@@ -308,7 +312,6 @@ function initEvents(imiPreview: ImiPreview) {
 
     try {
         $envOptions.addEventListener('click', () => {
-            return;
             let $phoneView = document.getElementsByClassName('chat-body')[0];
             let $langPanel = $phoneModel.querySelector('.lang-panel') as HTMLElement;
             if (!isModelShown) {
@@ -499,9 +502,9 @@ function getFullBodyExceptPhoneCover(isRtl) {
                                     <a class="lang-option-ar underline-animate">اتصل بنا </a>
                                     <a class="lang-option-en underline-animate">English</a>
                                  </div>
-                                <div class="options"  id="env-options">
-                                    <i class="fa fa-ellipsis-v"></i>
-                                </div>
+<!--                                <div class="options"  id="env-options">-->
+<!--                                    <i class="fa fa-ellipsis-v"></i>-->
+<!--                                </div>-->
                             </div>
                         </div>
                         <!--chat body starts-->
@@ -576,7 +579,7 @@ function getPhoneCoverTemplate(isRtl) {
                     </div>
                     <div class="imi-preview-grid-container">
 
-                        <div class="header" style="z-index: 1">
+                        <div class="header" dir="${isRtl?'rtl':'ltr'}" style="z-index: 1">
                             <div class="basel-bg"></div>
                             <div class="bot-intro" id="botIntro">
                                 <span class="bot-logo">
@@ -584,14 +587,14 @@ function getPhoneCoverTemplate(isRtl) {
                                     onerror="this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'" 
                                        alt="">
                                 </span>
-                                <div class="bot-details">
+                                <div class="bot-details" style="margin-left: ${isRtl?'42px':'-42px'}">
                                     <div id="bot-title" style="text-align: center" ></div>
                                 </div>
-                                <div style="width: 50px">
+                               
                                 <div class="options" id="env-options">
                                     <i class="fa fa-ellipsis-v"></i>
                                 </div>
-</div>
+
                             </div>
                         </div>
                         <!--chat body starts-->
