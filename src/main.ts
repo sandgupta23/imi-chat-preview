@@ -47,7 +47,7 @@ export function initClientEvents() {
                 $knowMoreOverlay.style.display = 'none';
             }, 500);
         });
-        $envOptions.addEventListener('click', ($event) => {
+        $envOptions && $envOptions.addEventListener('click', ($event) => {
             $knowMoreOverlay.style.display = 'block';
             $knowMoreOverlay.style.opacity = 1;
             $knowMoreClose.style.display = 'block';
@@ -56,6 +56,7 @@ export function initClientEvents() {
             $event.stopPropagation();
         });
         $chatInput.addEventListener('keypress', ($event) => {
+            debugger;
             if ($event.key === 'Enter') {
                 let humanMessage = $chatInput.value;
                 if (!humanMessage || !humanMessage.trim()) {
@@ -571,7 +572,7 @@ function getPhoneCoverTemplate(isRtl) {
                             <div>
                                 <select id="lang-select">
                                     <option value="en">English</option>
-                                    <option value="ar" style="direction: rtl;">عربي</option>
+                                    <option value="ar" style="direction: rtl;">اتصل بنا</option>
                                 </select>
                             </div>
                             <button class="imi-button-primary" id="lang-submit">Submit</button>
