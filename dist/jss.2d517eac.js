@@ -1,5 +1,2659 @@
-parcelRequire=function(e,r,t,n){var i,o="function"==typeof parcelRequire&&parcelRequire,u="function"==typeof require&&require;function f(t,n){if(!r[t]){if(!e[t]){var i="function"==typeof parcelRequire&&parcelRequire;if(!n&&i)return i(t,!0);if(o)return o(t,!0);if(u&&"string"==typeof t)return u(t);var c=new Error("Cannot find module '"+t+"'");throw c.code="MODULE_NOT_FOUND",c}p.resolve=function(r){return e[t][1][r]||r},p.cache={};var l=r[t]=new f.Module(t);e[t][0].call(l.exports,p,l,l.exports,this)}return r[t].exports;function p(e){return f(p.resolve(e))}}f.isParcelRequire=!0,f.Module=function(e){this.id=e,this.bundle=f,this.exports={}},f.modules=e,f.cache=r,f.parent=o,f.register=function(r,t){e[r]=[function(e,r){r.exports=t},{}]};for(var c=0;c<t.length;c++)try{f(t[c])}catch(e){i||(i=e)}if(t.length){var l=f(t[t.length-1]);"object"==typeof exports&&"undefined"!=typeof module?module.exports=l:"function"==typeof define&&define.amd?define(function(){return l}):n&&(this[n]=l)}if(parcelRequire=f,i)throw i;return f}({"SCpa":[function(require,module,exports) {
+// modules are defined as an array
+// [ module function, map of requires ]
+//
+// map of requires is short require name -> numeric require
+//
+// anything defined in a previous bundle is accessed via the
+// orig method which is the require for previous bundles
+parcelRequire = (function (modules, cache, entry, globalName) {
+  // Save the require from previous bundle to this closure if any
+  var previousRequire = typeof parcelRequire === 'function' && parcelRequire;
+  var nodeRequire = typeof require === 'function' && require;
+
+  function newRequire(name, jumped) {
+    if (!cache[name]) {
+      if (!modules[name]) {
+        // if we cannot find the module within our internal map or
+        // cache jump to the current global require ie. the last bundle
+        // that was added to the page.
+        var currentRequire = typeof parcelRequire === 'function' && parcelRequire;
+        if (!jumped && currentRequire) {
+          return currentRequire(name, true);
+        }
+
+        // If there are other bundles on this page the require from the
+        // previous one is saved to 'previousRequire'. Repeat this as
+        // many times as there are bundles until the module is found or
+        // we exhaust the require chain.
+        if (previousRequire) {
+          return previousRequire(name, true);
+        }
+
+        // Try the node require function if it exists.
+        if (nodeRequire && typeof name === 'string') {
+          return nodeRequire(name);
+        }
+
+        var err = new Error('Cannot find module \'' + name + '\'');
+        err.code = 'MODULE_NOT_FOUND';
+        throw err;
+      }
+
+      localRequire.resolve = resolve;
+      localRequire.cache = {};
+
+      var module = cache[name] = new newRequire.Module(name);
+
+      modules[name][0].call(module.exports, localRequire, module, module.exports, this);
+    }
+
+    return cache[name].exports;
+
+    function localRequire(x){
+      return newRequire(localRequire.resolve(x));
+    }
+
+    function resolve(x){
+      return modules[name][1][x] || x;
+    }
+  }
+
+  function Module(moduleName) {
+    this.id = moduleName;
+    this.bundle = newRequire;
+    this.exports = {};
+  }
+
+  newRequire.isParcelRequire = true;
+  newRequire.Module = Module;
+  newRequire.modules = modules;
+  newRequire.cache = cache;
+  newRequire.parent = previousRequire;
+  newRequire.register = function (id, exports) {
+    modules[id] = [function (require, module) {
+      module.exports = exports;
+    }, {}];
+  };
+
+  var error;
+  for (var i = 0; i < entry.length; i++) {
+    try {
+      newRequire(entry[i]);
+    } catch (e) {
+      // Save first error but execute all entries
+      if (!error) {
+        error = e;
+      }
+    }
+  }
+
+  if (entry.length) {
+    // Expose entry point to Node, AMD or browser globals
+    // Based on https://github.com/ForbesLindesay/umd/blob/master/template.js
+    var mainExports = newRequire(entry[entry.length - 1]);
+
+    // CommonJS
+    if (typeof exports === "object" && typeof module !== "undefined") {
+      module.exports = mainExports;
+
+    // RequireJS
+    } else if (typeof define === "function" && define.amd) {
+     define(function () {
+       return mainExports;
+     });
+
+    // <script>
+    } else if (globalName) {
+      this[globalName] = mainExports;
+    }
+  }
+
+  // Override the current require with this new one
+  parcelRequire = newRequire;
+
+  if (error) {
+    // throw error from earlier, _after updating parcelRequire_
+    throw error;
+  }
+
+  return newRequire;
+})({"assets/js/jss.js":[function(require,module,exports) {
 var define;
 var global = arguments[3];
-var e,t=arguments[3];function n(e){return(n="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}!function(t,r){"object"===("undefined"==typeof exports?"undefined":n(exports))&&"undefined"!=typeof module?r(exports):"function"==typeof e&&e.amd?e(["exports"],r):r((t=t||self).jss={})}(this,function(e){"use strict";function t(){return(t=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(e[r]=n[r])}return e}).apply(this,arguments)}var r="function"==typeof Symbol&&"symbol"===n(Symbol.iterator)?function(e){return n(e)}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":n(e)},i="object"===("undefined"==typeof window?"undefined":r(window))&&"object"===("undefined"==typeof document?"undefined":r(document))&&9===document.nodeType;function s(e,t){if(!e){var n="Warning: "+t;"undefined"!=typeof console&&console.warn(n);try{throw Error(n)}catch(r){}}}var o={}.constructor;function a(e){if(null==e||"object"!==n(e))return e;if(Array.isArray(e))return e.map(a);if(e.constructor!==o)return e;var t={};for(var r in e)t[r]=a(e[r]);return t}function u(e,t,n){void 0===e&&(e="unnamed");var r=n.jss,i=a(t),o=r.plugins.onCreateRule(e,i,n);return o||("@"===e[0]&&s(!1,"[JSS] Unknown rule "+e),null)}function h(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}function l(e,t,n){return t&&h(e.prototype,t),n&&h(e,n),e}function d(e,t){e.prototype=Object.create(t.prototype),e.prototype.constructor=e,e.__proto__=t}function c(e){if(void 0===e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return e}var f=function(e,t){for(var n="",r=0;r<e.length&&"!important"!==e[r];r++)n&&(n+=t),n+=e[r];return n};function p(e,t){if(void 0===t&&(t=!1),!Array.isArray(e))return e;var n="";if(Array.isArray(e[0]))for(var r=0;r<e.length&&"!important"!==e[r];r++)n&&(n+=", "),n+=f(e[r]," ");else n=f(e,", ");return t||"!important"!==e[e.length-1]||(n+=" !important"),n}function y(e,t){for(var n="",r=0;r<t;r++)n+="  ";return n+e}function v(e,t,n){void 0===n&&(n={});var r="";if(!t)return r;var i=n.indent,s=void 0===i?0:i,o=t.fallbacks;if(e&&s++,o)if(Array.isArray(o))for(var a=0;a<o.length;a++){var u=o[a];for(var h in u){var l=u[h];null!=l&&(r&&(r+="\n"),r+=""+y(h+": "+p(l)+";",s))}}else for(var d in o){var c=o[d];null!=c&&(r&&(r+="\n"),r+=""+y(d+": "+p(c)+";",s))}for(var f in t){var v=t[f];null!=v&&"fallbacks"!==f&&(r&&(r+="\n"),r+=""+y(f+": "+p(v)+";",s))}return(r||n.allowEmpty)&&e?(r&&(r="\n"+r+"\n"),y(e+" {"+r,--s)+y("}",s)):r}var g=/([[\].#*$><+~=|^:(),"'`\s])/g,m="undefined"!=typeof CSS&&CSS.escape,S=function(e){return m?m(e):e.replace(g,"\\$1")},R=function(){function e(e,t,n){this.type="style",this.key=void 0,this.isProcessed=!1,this.style=void 0,this.renderer=void 0,this.renderable=void 0,this.options=void 0;var r=n.sheet,i=n.Renderer;this.key=e,this.options=n,this.style=t,r?this.renderer=r.renderer:i&&(this.renderer=new i)}return e.prototype.prop=function(e,t,n){if(void 0===t)return this.style[e];var r=!!n&&n.force;if(!r&&this.style[e]===t)return this;var i=t;n&&!1===n.process||(i=this.options.jss.plugins.onChangeValue(t,e,this));var o=null==i||!1===i,a=e in this.style;if(o&&!a&&!r)return this;var u=o&&a;if(u?delete this.style[e]:this.style[e]=i,this.renderable&&this.renderer)return u?this.renderer.removeProperty(this.renderable,e):this.renderer.setProperty(this.renderable,e,i),this;var h=this.options.sheet;return h&&h.attached&&s(!1,'[JSS] Rule is not linked. Missing sheet option "link: true".'),this},e}(),b=function(e){function r(t,n,r){var i;(i=e.call(this,t,n,r)||this).selectorText=void 0,i.id=void 0,i.renderable=void 0;var s=r.selector,o=r.scoped,a=r.sheet,u=r.generateId;return s?i.selectorText=s:!1!==o&&(i.id=u(c(c(i)),a),i.selectorText="."+S(i.id)),i}d(r,e);var i=r.prototype;return i.applyTo=function(e){var t=this.renderer;if(t){var n=this.toJSON();for(var r in n)t.setProperty(e,r,n[r])}return this},i.toJSON=function(){var e={};for(var t in this.style){var r=this.style[t];"object"!==n(r)?e[t]=r:Array.isArray(r)&&(e[t]=p(r))}return e},i.toString=function(e){var n=this.options.sheet,r=!!n&&n.options.link?t({},e,{allowEmpty:!0}):e;return v(this.selectorText,this.style,r)},l(r,[{key:"selector",set:function(e){if(e!==this.selectorText){this.selectorText=e;var t=this.renderer,n=this.renderable;if(n&&t)t.setSelector(n,e)||t.replaceRule(n,this)}},get:function(){return this.selectorText}}]),r}(R),k={onCreateRule:function(e,t,n){return"@"===e[0]||n.parent&&"keyframes"===n.parent.type?null:new b(e,t,n)}},x={indent:1,children:!0},w=/@([\w-]+)/,P=function(){function e(e,n,r){this.type="conditional",this.at=void 0,this.key=void 0,this.query=void 0,this.rules=void 0,this.options=void 0,this.isProcessed=!1,this.renderable=void 0,this.key=e,this.query=r.name;var i=e.match(w);for(var s in this.at=i?i[1]:"unknown",this.options=r,this.rules=new L(t({},r,{parent:this})),n)this.rules.add(s,n[s]);this.rules.process()}var n=e.prototype;return n.getRule=function(e){return this.rules.get(e)},n.indexOf=function(e){return this.rules.indexOf(e)},n.addRule=function(e,t,n){var r=this.rules.add(e,t,n);return r?(this.options.jss.plugins.onProcessRule(r),r):null},n.toString=function(e){if(void 0===e&&(e=x),null==e.indent&&(e.indent=x.indent),null==e.children&&(e.children=x.children),!1===e.children)return this.query+" {}";var t=this.rules.toString(e);return t?this.query+" {\n"+t+"\n}":""},e}(),O=/@media|@supports\s+/,C={onCreateRule:function(e,t,n){return O.test(e)?new P(e,t,n):null}},j={indent:1,children:!0},A=/@keyframes\s+([\w-]+)/,I=function(){function e(e,n,r){this.type="keyframes",this.at="@keyframes",this.key=void 0,this.name=void 0,this.id=void 0,this.rules=void 0,this.options=void 0,this.isProcessed=!1,this.renderable=void 0;var i=e.match(A);i&&i[1]?this.name=i[1]:(this.name="noname",s(!1,"[JSS] Bad keyframes name "+e)),this.key=this.type+"-"+this.name,this.options=r;var o=r.scoped,a=r.sheet,u=r.generateId;for(var h in this.id=!1===o?this.name:S(u(this,a)),this.rules=new L(t({},r,{parent:this})),n)this.rules.add(h,n[h],t({},r,{parent:this}));this.rules.process()}return e.prototype.toString=function(e){if(void 0===e&&(e=j),null==e.indent&&(e.indent=j.indent),null==e.children&&(e.children=j.children),!1===e.children)return this.at+" "+this.id+" {}";var t=this.rules.toString(e);return t&&(t="\n"+t+"\n"),this.at+" "+this.id+" {"+t+"}"},e}(),M=/@keyframes\s+/,q=/\$([\w-]+)/g,T=function(e,t){return"string"==typeof e?e.replace(q,function(e,n){return n in t?t[n]:(s(!1,'[JSS] Referenced keyframes rule "'+n+'" is not defined.'),e)}):e},J=function(e,t,n){var r=e[t],i=T(r,n);i!==r&&(e[t]=i)},N={onCreateRule:function(e,t,n){return"string"==typeof e&&M.test(e)?new I(e,t,n):null},onProcessStyle:function(e,t,n){return"style"===t.type&&n?("animation-name"in e&&J(e,"animation-name",n.keyframes),"animation"in e&&J(e,"animation",n.keyframes),e):e},onChangeValue:function(e,t,n){var r=n.options.sheet;if(!r)return e;switch(t){case"animation":case"animation-name":return T(e,r.keyframes);default:return e}}},E=function(e){function n(){for(var t,n=arguments.length,r=new Array(n),i=0;i<n;i++)r[i]=arguments[i];return(t=e.call.apply(e,[this].concat(r))||this).renderable=void 0,t}return d(n,e),n.prototype.toString=function(e){var n=this.options.sheet,r=!!n&&n.options.link?t({},e,{allowEmpty:!0}):e;return v(this.key,this.style,r)},n}(R),V={onCreateRule:function(e,t,n){return n.parent&&"keyframes"===n.parent.type?new E(e,t,n):null}},G=function(){function e(e,t,n){this.type="font-face",this.at="@font-face",this.key=void 0,this.style=void 0,this.options=void 0,this.isProcessed=!1,this.renderable=void 0,this.key=e,this.style=t,this.options=n}return e.prototype.toString=function(e){if(Array.isArray(this.style)){for(var t="",n=0;n<this.style.length;n++)t+=v(this.key,this.style[n]),this.style[n+1]&&(t+="\n");return t}return v(this.key,this.style,e)},e}(),U={onCreateRule:function(e,t,n){return"@font-face"===e?new G(e,t,n):null}},_=function(){function e(e,t,n){this.type="viewport",this.at="@viewport",this.key=void 0,this.style=void 0,this.options=void 0,this.isProcessed=!1,this.renderable=void 0,this.key=e,this.style=t,this.options=n}return e.prototype.toString=function(e){return v(this.key,this.style,e)},e}(),B={onCreateRule:function(e,t,n){return"@viewport"===e||"@-ms-viewport"===e?new _(e,t,n):null}},D=function(){function e(e,t,n){this.type="simple",this.key=void 0,this.value=void 0,this.options=void 0,this.isProcessed=!1,this.renderable=void 0,this.key=e,this.value=t,this.options=n}return e.prototype.toString=function(e){if(Array.isArray(this.value)){for(var t="",n=0;n<this.value.length;n++)t+=this.key+" "+this.value[n]+";",this.value[n+1]&&(t+="\n");return t}return this.key+" "+this.value+";"},e}(),$={"@charset":!0,"@import":!0,"@namespace":!0},W=[k,C,N,V,U,B,{onCreateRule:function(e,t,n){return e in $?new D(e,t,n):null}}],z={process:!0},F={force:!0,process:!0},L=function(){function e(e){this.map={},this.raw={},this.index=[],this.counter=0,this.options=void 0,this.classes=void 0,this.keyframes=void 0,this.options=e,this.classes=e.classes,this.keyframes=e.keyframes}var n=e.prototype;return n.add=function(e,n,r){var i=this.options,s=i.parent,o=i.sheet,a=i.jss,h=i.Renderer,l=i.generateId,d=i.scoped,c=t({classes:this.classes,parent:s,sheet:o,jss:a,Renderer:h,generateId:l,scoped:d,name:e},r),f=e;e in this.raw&&(f=e+"-d"+this.counter++),this.raw[f]=n,f in this.classes&&(c.selector="."+S(this.classes[f]));var p=u(f,n,c);if(!p)return null;this.register(p);var y=void 0===c.index?this.index.length:c.index;return this.index.splice(y,0,p),p},n.get=function(e){return this.map[e]},n.remove=function(e){this.unregister(e),delete this.raw[e.key],this.index.splice(this.index.indexOf(e),1)},n.indexOf=function(e){return this.index.indexOf(e)},n.process=function(){var e=this.options.jss.plugins;this.index.slice(0).forEach(e.onProcessRule,e)},n.register=function(e){this.map[e.key]=e,e instanceof b?(this.map[e.selector]=e,e.id&&(this.classes[e.key]=e.id)):e instanceof I&&this.keyframes&&(this.keyframes[e.name]=e.id)},n.unregister=function(e){delete this.map[e.key],e instanceof b?(delete this.map[e.selector],delete this.classes[e.key]):e instanceof I&&delete this.keyframes[e.name]},n.update=function(){var e,t,n;if("string"==typeof(arguments.length<=0?void 0:arguments[0])?(e=arguments.length<=0?void 0:arguments[0],t=arguments.length<=1?void 0:arguments[1],n=arguments.length<=2?void 0:arguments[2]):(t=arguments.length<=0?void 0:arguments[0],n=arguments.length<=1?void 0:arguments[1],e=null),e)this.updateOne(this.map[e],t,n);else for(var r=0;r<this.index.length;r++)this.updateOne(this.index[r],t,n)},n.updateOne=function(t,n,r){void 0===r&&(r=z);var i=this.options,s=i.jss.plugins,o=i.sheet;if(t.rules instanceof e)t.rules.update(n,r);else{var a=t,u=a.style;if(s.onUpdate(n,t,o,r),r.process&&u&&u!==a.style){for(var h in s.onProcessStyle(a.style,a,o),a.style){var l=a.style[h];l!==u[h]&&a.prop(h,l,F)}for(var d in u){var c=a.style[d],f=u[d];null==c&&c!==f&&a.prop(d,null,F)}}}},n.toString=function(e){for(var t="",n=this.options.sheet,r=!!n&&n.options.link,i=0;i<this.index.length;i++){var s=this.index[i].toString(e);(s||r)&&(t&&(t+="\n"),t+=s)}return t},e}(),Y=function(){function e(e,n){for(var r in this.options=void 0,this.deployed=void 0,this.attached=void 0,this.rules=void 0,this.renderer=void 0,this.classes=void 0,this.keyframes=void 0,this.queue=void 0,this.attached=!1,this.deployed=!1,this.classes={},this.keyframes={},this.options=t({},n,{sheet:this,parent:this,classes:this.classes,keyframes:this.keyframes}),n.Renderer&&(this.renderer=new n.Renderer(this)),this.rules=new L(this.options),e)this.rules.add(r,e[r]);this.rules.process()}var r=e.prototype;return r.attach=function(){return this.attached?this:(this.renderer&&this.renderer.attach(),this.attached=!0,this.deployed||this.deploy(),this)},r.detach=function(){return this.attached?(this.renderer&&this.renderer.detach(),this.attached=!1,this):this},r.addRule=function(e,t,n){var r=this.queue;this.attached&&!r&&(this.queue=[]);var i=this.rules.add(e,t,n);return i?(this.options.jss.plugins.onProcessRule(i),this.attached?this.deployed?(r?r.push(i):(this.insertRule(i),this.queue&&(this.queue.forEach(this.insertRule,this),this.queue=void 0)),i):i:(this.deployed=!1,i)):null},r.insertRule=function(e){this.renderer&&this.renderer.insertRule(e)},r.addRules=function(e,t){var n=[];for(var r in e){var i=this.addRule(r,e[r],t);i&&n.push(i)}return n},r.getRule=function(e){return this.rules.get(e)},r.deleteRule=function(e){var t="object"===n(e)?e:this.rules.get(e);return!!t&&(this.rules.remove(t),!(this.attached&&t.renderable&&this.renderer)||this.renderer.deleteRule(t.renderable))},r.indexOf=function(e){return this.rules.indexOf(e)},r.deploy=function(){return this.renderer&&this.renderer.deploy(),this.deployed=!0,this},r.update=function(){var e;return(e=this.rules).update.apply(e,arguments),this},r.updateOne=function(e,t,n){return this.rules.updateOne(e,t,n),this},r.toString=function(e){return this.rules.toString(e)},e}(),H=function(){function e(){this.plugins={internal:[],external:[]},this.registry=void 0}var t=e.prototype;return t.onCreateRule=function(e,t,n){for(var r=0;r<this.registry.onCreateRule.length;r++){var i=this.registry.onCreateRule[r](e,t,n);if(i)return i}return null},t.onProcessRule=function(e){if(!e.isProcessed){for(var t=e.options.sheet,n=0;n<this.registry.onProcessRule.length;n++)this.registry.onProcessRule[n](e,t);e.style&&this.onProcessStyle(e.style,e,t),e.isProcessed=!0}},t.onProcessStyle=function(e,t,n){for(var r=0;r<this.registry.onProcessStyle.length;r++)t.style=this.registry.onProcessStyle[r](t.style,t,n)},t.onProcessSheet=function(e){for(var t=0;t<this.registry.onProcessSheet.length;t++)this.registry.onProcessSheet[t](e)},t.onUpdate=function(e,t,n,r){for(var i=0;i<this.registry.onUpdate.length;i++)this.registry.onUpdate[i](e,t,n,r)},t.onChangeValue=function(e,t,n){for(var r=e,i=0;i<this.registry.onChangeValue.length;i++)r=this.registry.onChangeValue[i](r,t,n);return r},t.use=function(e,t){void 0===t&&(t={queue:"external"});var n=this.plugins[t.queue];-1===n.indexOf(e)&&(n.push(e),this.registry=[].concat(this.plugins.external,this.plugins.internal).reduce(function(e,t){for(var n in t)n in e?e[n].push(t[n]):s(!1,'[JSS] Unknown hook "'+n+'".');return e},{onCreateRule:[],onProcessRule:[],onProcessStyle:[],onProcessSheet:[],onChangeValue:[],onUpdate:[]}))},e}();var K=function(){function e(){this.registry=[]}var t=e.prototype;return t.add=function(e){var t=this.registry,n=e.options.index;if(-1===t.indexOf(e))if(0===t.length||n>=this.index)t.push(e);else for(var r=0;r<t.length;r++)if(t[r].options.index>n)return void t.splice(r,0,e)},t.reset=function(){this.registry=[]},t.remove=function(e){var t=this.registry.indexOf(e);this.registry.splice(t,1)},t.toString=function(e){for(var t=void 0===e?{}:e,n=t.attached,r=function(e,t){if(null==e)return{};var n,r,i={},s=Object.keys(e);for(r=0;r<s.length;r++)n=s[r],t.indexOf(n)>=0||(i[n]=e[n]);return i}(t,["attached"]),i="",s=0;s<this.registry.length;s++){var o=this.registry[s];null!=n&&o.attached!==n||(i&&(i+="\n"),i+=o.toString(r))}return i},l(e,[{key:"index",get:function(){return 0===this.registry.length?0:this.registry[this.registry.length-1].options.index}}]),e}(),Q=new K,X="undefined"!=typeof window&&window.Math==Math?window:"undefined"!=typeof self&&self.Math==Math?self:Function("return this")(),Z="2f1acc6c3a606b082e5eef5e54414ffb";null==X[Z]&&(X[Z]=0);var ee=X[Z]++,te=function(e){void 0===e&&(e={});var t=0;return function(n,r){(t+=1)>1e10&&s(!1,"[JSS] You might have a memory leak. Rule counter is at "+t+".");var i="",o="";return r&&(r.options.classNamePrefix&&(o=r.options.classNamePrefix),null!=r.options.jss.id&&(i=String(r.options.jss.id))),e.minify?""+(o||"c")+ee+i+t:o+n.key+"-"+ee+(i?"-"+i:"")+"-"+t}},ne=function(e){var t;return function(){return t||(t=e()),t}};function re(e,t){try{return e.attributeStyleMap?e.attributeStyleMap.get(t):e.style.getPropertyValue(t)}catch(n){return""}}function ie(e,t,n){try{var r=n;if(Array.isArray(n)&&(r=p(n,!0),"!important"===n[n.length-1]))return e.style.setProperty(t,r,"important"),!0;e.attributeStyleMap?e.attributeStyleMap.set(t,r):e.style.setProperty(t,r)}catch(i){return!1}return!0}function se(e,t){try{e.attributeStyleMap?e.attributeStyleMap.delete(t):e.style.removeProperty(t)}catch(n){s(!1,'[JSS] DOMException "'+n.message+'" was thrown. Tried to remove property "'+t+'".')}}function oe(e,t){return e.selectorText=t,e.selectorText===t}var ae=ne(function(){return document.querySelector("head")});function ue(e){var t=Q.registry;if(t.length>0){var n=function(e,t){for(var n=0;n<e.length;n++){var r=e[n];if(r.attached&&r.options.index>t.index&&r.options.insertionPoint===t.insertionPoint)return r}return null}(t,e);if(n&&n.renderer)return{parent:n.renderer.element.parentNode,node:n.renderer.element};if((n=function(e,t){for(var n=e.length-1;n>=0;n--){var r=e[n];if(r.attached&&r.options.insertionPoint===t.insertionPoint)return r}return null}(t,e))&&n.renderer)return{parent:n.renderer.element.parentNode,node:n.renderer.element.nextSibling}}var r=e.insertionPoint;if(r&&"string"==typeof r){var i=function(e){for(var t=ae(),n=0;n<t.childNodes.length;n++){var r=t.childNodes[n];if(8===r.nodeType&&r.nodeValue.trim()===e)return r}return null}(r);if(i)return{parent:i.parentNode,node:i.nextSibling};s(!1,'[JSS] Insertion point "'+r+'" not found.')}return!1}var he=ne(function(){var e=document.querySelector('meta[property="csp-nonce"]');return e?e.getAttribute("content"):null}),le=function(e,t,n){var r=e.cssRules.length;(void 0===n||n>r)&&(n=r);try{if("insertRule"in e)e.insertRule(t,n);else if("appendRule"in e){e.appendRule(t)}}catch(i){return s(!1,"[JSS] "+i.message),!1}return e.cssRules[n]},de=function(){var e=document.createElement("style");return e.textContent="\n",e},ce=function(){function e(e){this.getPropertyValue=re,this.setProperty=ie,this.removeProperty=se,this.setSelector=oe,this.element=void 0,this.sheet=void 0,this.hasInsertedRules=!1,e&&Q.add(e),this.sheet=e;var t=this.sheet?this.sheet.options:{},n=t.media,r=t.meta,i=t.element;this.element=i||de(),this.element.setAttribute("data-jss",""),n&&this.element.setAttribute("media",n),r&&this.element.setAttribute("data-meta",r);var s=he();s&&this.element.setAttribute("nonce",s)}var t=e.prototype;return t.attach=function(){if(!this.element.parentNode&&this.sheet){!function(e,t){var n=t.insertionPoint,r=ue(t);if(!1!==r&&r.parent)r.parent.insertBefore(e,r.node);else if(n&&"number"==typeof n.nodeType){var i=n,o=i.parentNode;o?o.insertBefore(e,i.nextSibling):s(!1,"[JSS] Insertion point is not in the DOM.")}else ae().appendChild(e)}(this.element,this.sheet.options);var e=Boolean(this.sheet&&this.sheet.deployed);this.hasInsertedRules&&e&&(this.hasInsertedRules=!1,this.deploy())}},t.detach=function(){var e=this.element.parentNode;e&&e.removeChild(this.element)},t.deploy=function(){var e=this.sheet;e&&(e.options.link?this.insertRules(e.rules):this.element.textContent="\n"+e.toString()+"\n")},t.insertRules=function(e,t){for(var n=0;n<e.index.length;n++)this.insertRule(e.index[n],n,t)},t.insertRule=function(e,t,n){if(void 0===n&&(n=this.element.sheet),e.rules){var r=e,i=n;return("conditional"!==e.type&&"keyframes"!==e.type||!1!==(i=le(n,r.toString({children:!1}),t)))&&(this.insertRules(r.rules,i),i)}if(e.renderable&&e.renderable.parentStyleSheet===this.element.sheet)return e.renderable;var s=e.toString();if(!s)return!1;var o=le(n,s,t);return!1!==o&&(this.hasInsertedRules=!0,e.renderable=o,o)},t.deleteRule=function(e){var t=this.element.sheet,n=this.indexOf(e);return-1!==n&&(t.deleteRule(n),!0)},t.indexOf=function(e){for(var t=this.element.sheet.cssRules,n=0;n<t.length;n++)if(e===t[n])return n;return-1},t.replaceRule=function(e,t){var n=this.indexOf(e);return-1!==n&&(this.element.sheet.deleteRule(n),this.insertRule(t,n))},t.getRules=function(){return this.element.sheet.cssRules},e}(),fe=0,pe=function(){function e(e){this.id=fe++,this.version="10.0.4",this.plugins=new H,this.options={id:{minify:!1},createGenerateId:te,Renderer:i?ce:null,plugins:[]},this.generateId=te({minify:!1});for(var t=0;t<W.length;t++)this.plugins.use(W[t],{queue:"internal"});this.setup(e)}var r=e.prototype;return r.setup=function(e){return void 0===e&&(e={}),e.createGenerateId&&(this.options.createGenerateId=e.createGenerateId),e.id&&(this.options.id=t({},this.options.id,e.id)),(e.createGenerateId||e.id)&&(this.generateId=this.options.createGenerateId(this.options.id)),null!=e.insertionPoint&&(this.options.insertionPoint=e.insertionPoint),"Renderer"in e&&(this.options.Renderer=e.Renderer),e.plugins&&this.use.apply(this,e.plugins),this},r.createStyleSheet=function(e,n){void 0===n&&(n={});var r=n.index;"number"!=typeof r&&(r=0===Q.index?0:Q.index+1);var i=new Y(e,t({},n,{jss:this,generateId:n.generateId||this.generateId,insertionPoint:this.options.insertionPoint,Renderer:this.options.Renderer,index:r}));return this.plugins.onProcessSheet(i),i},r.removeStyleSheet=function(e){return e.detach(),Q.remove(e),this},r.createRule=function(e,r,i){if(void 0===r&&(r={}),void 0===i&&(i={}),"object"===n(e))return this.createRule(void 0,e,r);var s=t({},i,{name:e,jss:this,Renderer:this.options.Renderer});s.generateId||(s.generateId=this.generateId),s.classes||(s.classes={}),s.keyframes||(s.keyframes={});var o=u(e,r,s);return o&&this.plugins.onProcessRule(o),o},r.use=function(){for(var e=this,t=arguments.length,n=new Array(t),r=0;r<t;r++)n[r]=arguments[r];return n.forEach(function(t){e.plugins.use(t)}),this},e}();var ye=function(){function e(){this.length=0,this.sheets=new WeakMap}var t=e.prototype;return t.get=function(e){var t=this.sheets.get(e);return t&&t.sheet},t.add=function(e,t){this.sheets.has(e)||(this.length++,this.sheets.set(e,{sheet:t,refs:0}))},t.manage=function(e){var t=this.sheets.get(e);if(t)return 0===t.refs&&t.sheet.attach(),t.refs++,t.sheet;s(!1,"[JSS] SheetsManager: can't find sheet to manage")},t.unmanage=function(e){var t=this.sheets.get(e);t?t.refs>0&&(t.refs--,0===t.refs&&t.sheet.detach()):s(!1,"SheetsManager: can't find sheet to unmanage")},l(e,[{key:"size",get:function(){return this.length}}]),e}(),ve="undefined"!=typeof CSS&&CSS&&"number"in CSS,ge=function(e){return new pe(e)},me=ge();e.hasCSSTOMSupport=ve,e.create=ge,e.default=me,e.getDynamicStyles=function e(t){var r=null;for(var i in t){var s=t[i],o=n(s);if("function"===o)r||(r={}),r[i]=s;else if("object"===o&&null!==s&&!Array.isArray(s)){var a=e(s);a&&(r||(r={}),r[i]=a)}}return r},e.toCssValue=p,e.createRule=u,e.SheetsRegistry=K,e.SheetsManager=ye,e.RuleList=L,e.sheets=Q,e.createGenerateId=te,Object.defineProperty(e,"__esModule",{value:!0})});
-},{}]},{},["SCpa"], null)
+function _typeof2(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof2 = function _typeof2(obj) { return typeof obj; }; } else { _typeof2 = function _typeof2(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof2(obj); }
+
+(function (global, factory) {
+  (typeof exports === "undefined" ? "undefined" : _typeof2(exports)) === 'object' && typeof module !== 'undefined' ? factory(exports) : typeof define === 'function' && define.amd ? define(['exports'], factory) : (global = global || self, factory(global.jss = {}));
+})(this, function (exports) {
+  'use strict';
+
+  function _extends() {
+    _extends = Object.assign || function (target) {
+      for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i];
+
+        for (var key in source) {
+          if (Object.prototype.hasOwnProperty.call(source, key)) {
+            target[key] = source[key];
+          }
+        }
+      }
+
+      return target;
+    };
+
+    return _extends.apply(this, arguments);
+  }
+
+  var _typeof = typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol" ? function (obj) {
+    return _typeof2(obj);
+  } : function (obj) {
+    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : _typeof2(obj);
+  };
+
+  var isBrowser = (typeof window === "undefined" ? "undefined" : _typeof(window)) === "object" && (typeof document === "undefined" ? "undefined" : _typeof(document)) === 'object' && document.nodeType === 9;
+
+  function warning(condition, message) {
+    {
+      if (condition) {
+        return;
+      }
+
+      var text = "Warning: " + message;
+
+      if (typeof console !== 'undefined') {
+        console.warn(text);
+      }
+
+      try {
+        throw Error(text);
+      } catch (x) {}
+    }
+  }
+
+  var plainObjectConstrurctor = {}.constructor;
+
+  function cloneStyle(style) {
+    if (style == null || _typeof2(style) !== 'object') return style;
+    if (Array.isArray(style)) return style.map(cloneStyle);
+    if (style.constructor !== plainObjectConstrurctor) return style;
+    var newStyle = {};
+
+    for (var name in style) {
+      newStyle[name] = cloneStyle(style[name]);
+    }
+
+    return newStyle;
+  }
+  /**
+   * Create a rule instance.
+   */
+
+
+  function createRule(name, decl, options) {
+    if (name === void 0) {
+      name = 'unnamed';
+    }
+
+    var jss = options.jss;
+    var declCopy = cloneStyle(decl);
+    var rule = jss.plugins.onCreateRule(name, declCopy, options);
+    if (rule) return rule; // It is an at-rule and it has no instance.
+
+    if (name[0] === '@') {
+      warning(false, "[JSS] Unknown rule " + name);
+    }
+
+    return null;
+  }
+
+  function _defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  function _createClass(Constructor, protoProps, staticProps) {
+    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) _defineProperties(Constructor, staticProps);
+    return Constructor;
+  }
+
+  function _inheritsLoose(subClass, superClass) {
+    subClass.prototype = Object.create(superClass.prototype);
+    subClass.prototype.constructor = subClass;
+    subClass.__proto__ = superClass;
+  }
+
+  function _assertThisInitialized(self) {
+    if (self === void 0) {
+      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
+
+    return self;
+  }
+
+  var join = function join(value, by) {
+    var result = '';
+
+    for (var i = 0; i < value.length; i++) {
+      // Remove !important from the value, it will be readded later.
+      if (value[i] === '!important') break;
+      if (result) result += by;
+      result += value[i];
+    }
+
+    return result;
+  };
+  /**
+   * Converts array values to string.
+   *
+   * `margin: [['5px', '10px']]` > `margin: 5px 10px;`
+   * `border: ['1px', '2px']` > `border: 1px, 2px;`
+   * `margin: [['5px', '10px'], '!important']` > `margin: 5px 10px !important;`
+   * `color: ['red', !important]` > `color: red !important;`
+   */
+
+
+  function toCssValue(value, ignoreImportant) {
+    if (ignoreImportant === void 0) {
+      ignoreImportant = false;
+    }
+
+    if (!Array.isArray(value)) return value;
+    var cssValue = ''; // Support space separated values via `[['5px', '10px']]`.
+
+    if (Array.isArray(value[0])) {
+      for (var i = 0; i < value.length; i++) {
+        if (value[i] === '!important') break;
+        if (cssValue) cssValue += ', ';
+        cssValue += join(value[i], ' ');
+      }
+    } else cssValue = join(value, ', '); // Add !important, because it was ignored.
+
+
+    if (!ignoreImportant && value[value.length - 1] === '!important') {
+      cssValue += ' !important';
+    }
+
+    return cssValue;
+  }
+  /**
+   * Indent a string.
+   * http://jsperf.com/array-join-vs-for
+   */
+
+
+  function indentStr(str, indent) {
+    var result = '';
+
+    for (var index = 0; index < indent; index++) {
+      result += '  ';
+    }
+
+    return result + str;
+  }
+  /**
+   * Converts a Rule to CSS string.
+   */
+
+
+  function toCss(selector, style, options) {
+    if (options === void 0) {
+      options = {};
+    }
+
+    var result = '';
+    if (!style) return result;
+    var _options = options,
+        _options$indent = _options.indent,
+        indent = _options$indent === void 0 ? 0 : _options$indent;
+    var fallbacks = style.fallbacks;
+    if (selector) indent++; // Apply fallbacks first.
+
+    if (fallbacks) {
+      // Array syntax {fallbacks: [{prop: value}]}
+      if (Array.isArray(fallbacks)) {
+        for (var index = 0; index < fallbacks.length; index++) {
+          var fallback = fallbacks[index];
+
+          for (var prop in fallback) {
+            var value = fallback[prop];
+
+            if (value != null) {
+              if (result) result += '\n';
+              result += "" + indentStr(prop + ": " + toCssValue(value) + ";", indent);
+            }
+          }
+        }
+      } else {
+        // Object syntax {fallbacks: {prop: value}}
+        for (var _prop in fallbacks) {
+          var _value = fallbacks[_prop];
+
+          if (_value != null) {
+            if (result) result += '\n';
+            result += "" + indentStr(_prop + ": " + toCssValue(_value) + ";", indent);
+          }
+        }
+      }
+    }
+
+    for (var _prop2 in style) {
+      var _value2 = style[_prop2];
+
+      if (_value2 != null && _prop2 !== 'fallbacks') {
+        if (result) result += '\n';
+        result += "" + indentStr(_prop2 + ": " + toCssValue(_value2) + ";", indent);
+      }
+    } // Allow empty style in this case, because properties will be added dynamically.
+
+
+    if (!result && !options.allowEmpty) return result; // When rule is being stringified before selector was defined.
+
+    if (!selector) return result;
+    indent--;
+    if (result) result = "\n" + result + "\n";
+    return indentStr(selector + " {" + result, indent) + indentStr('}', indent);
+  }
+
+  var escapeRegex = /([[\].#*$><+~=|^:(),"'`\s])/g;
+  var nativeEscape = typeof CSS !== 'undefined' && CSS.escape;
+
+  var escape = function escape(str) {
+    return nativeEscape ? nativeEscape(str) : str.replace(escapeRegex, '\\$1');
+  };
+
+  var BaseStyleRule =
+  /*#__PURE__*/
+  function () {
+    function BaseStyleRule(key, style, options) {
+      this.type = 'style';
+      this.key = void 0;
+      this.isProcessed = false;
+      this.style = void 0;
+      this.renderer = void 0;
+      this.renderable = void 0;
+      this.options = void 0;
+      var sheet = options.sheet,
+          Renderer = options.Renderer;
+      this.key = key;
+      this.options = options;
+      this.style = style;
+      if (sheet) this.renderer = sheet.renderer;else if (Renderer) this.renderer = new Renderer();
+    }
+    /**
+     * Get or set a style property.
+     */
+
+
+    var _proto = BaseStyleRule.prototype;
+
+    _proto.prop = function prop(name, value, options) {
+      // It's a getter.
+      if (value === undefined) return this.style[name]; // Don't do anything if the value has not changed.
+
+      var force = options ? options.force : false;
+      if (!force && this.style[name] === value) return this;
+      var newValue = value;
+
+      if (!options || options.process !== false) {
+        newValue = this.options.jss.plugins.onChangeValue(value, name, this);
+      }
+
+      var isEmpty = newValue == null || newValue === false;
+      var isDefined = name in this.style; // Value is empty and wasn't defined before.
+
+      if (isEmpty && !isDefined && !force) return this; // We are going to remove this value.
+
+      var remove = isEmpty && isDefined;
+      if (remove) delete this.style[name];else this.style[name] = newValue; // Renderable is defined if StyleSheet option `link` is true.
+
+      if (this.renderable && this.renderer) {
+        if (remove) this.renderer.removeProperty(this.renderable, name);else this.renderer.setProperty(this.renderable, name, newValue);
+        return this;
+      }
+
+      var sheet = this.options.sheet;
+
+      if (sheet && sheet.attached) {
+        warning(false, '[JSS] Rule is not linked. Missing sheet option "link: true".');
+      }
+
+      return this;
+    };
+
+    return BaseStyleRule;
+  }();
+
+  var StyleRule =
+  /*#__PURE__*/
+  function (_BaseStyleRule) {
+    _inheritsLoose(StyleRule, _BaseStyleRule);
+
+    function StyleRule(key, style, options) {
+      var _this;
+
+      _this = _BaseStyleRule.call(this, key, style, options) || this;
+      _this.selectorText = void 0;
+      _this.id = void 0;
+      _this.renderable = void 0;
+      var selector = options.selector,
+          scoped = options.scoped,
+          sheet = options.sheet,
+          generateId = options.generateId;
+
+      if (selector) {
+        _this.selectorText = selector;
+      } else if (scoped !== false) {
+        _this.id = generateId(_assertThisInitialized(_assertThisInitialized(_this)), sheet);
+        _this.selectorText = "." + escape(_this.id);
+      }
+
+      return _this;
+    }
+    /**
+     * Set selector string.
+     * Attention: use this with caution. Most browsers didn't implement
+     * selectorText setter, so this may result in rerendering of entire Style Sheet.
+     */
+
+
+    var _proto2 = StyleRule.prototype;
+    /**
+     * Apply rule to an element inline.
+     */
+
+    _proto2.applyTo = function applyTo(renderable) {
+      var renderer = this.renderer;
+
+      if (renderer) {
+        var json = this.toJSON();
+
+        for (var prop in json) {
+          renderer.setProperty(renderable, prop, json[prop]);
+        }
+      }
+
+      return this;
+    }
+    /**
+     * Returns JSON representation of the rule.
+     * Fallbacks are not supported.
+     * Useful for inline styles.
+     */
+    ;
+
+    _proto2.toJSON = function toJSON() {
+      var json = {};
+
+      for (var prop in this.style) {
+        var value = this.style[prop];
+        if (_typeof2(value) !== 'object') json[prop] = value;else if (Array.isArray(value)) json[prop] = toCssValue(value);
+      }
+
+      return json;
+    }
+    /**
+     * Generates a CSS string.
+     */
+    ;
+
+    _proto2.toString = function toString(options) {
+      var sheet = this.options.sheet;
+      var link = sheet ? sheet.options.link : false;
+      var opts = link ? _extends({}, options, {
+        allowEmpty: true
+      }) : options;
+      return toCss(this.selectorText, this.style, opts);
+    };
+
+    _createClass(StyleRule, [{
+      key: "selector",
+      set: function set(selector) {
+        if (selector === this.selectorText) return;
+        this.selectorText = selector;
+        var renderer = this.renderer,
+            renderable = this.renderable;
+        if (!renderable || !renderer) return;
+        var hasChanged = renderer.setSelector(renderable, selector); // If selector setter is not implemented, rerender the rule.
+
+        if (!hasChanged) {
+          renderer.replaceRule(renderable, this);
+        }
+      }
+      /**
+       * Get selector string.
+       */
+      ,
+      get: function get() {
+        return this.selectorText;
+      }
+    }]);
+
+    return StyleRule;
+  }(BaseStyleRule);
+
+  var pluginStyleRule = {
+    onCreateRule: function onCreateRule(name, style, options) {
+      if (name[0] === '@' || options.parent && options.parent.type === 'keyframes') {
+        return null;
+      }
+
+      return new StyleRule(name, style, options);
+    }
+  };
+  var defaultToStringOptions = {
+    indent: 1,
+    children: true
+  };
+  var atRegExp = /@([\w-]+)/;
+  /**
+   * Conditional rule for @media, @supports
+   */
+
+  var ConditionalRule =
+  /*#__PURE__*/
+  function () {
+    function ConditionalRule(key, styles, options) {
+      this.type = 'conditional';
+      this.at = void 0;
+      this.key = void 0;
+      this.query = void 0;
+      this.rules = void 0;
+      this.options = void 0;
+      this.isProcessed = false;
+      this.renderable = void 0;
+      this.key = key; // Key might contain a unique suffix in case the `name` passed by user was duplicate.
+
+      this.query = options.name;
+      var atMatch = key.match(atRegExp);
+      this.at = atMatch ? atMatch[1] : 'unknown';
+      this.options = options;
+      this.rules = new RuleList(_extends({}, options, {
+        parent: this
+      }));
+
+      for (var name in styles) {
+        this.rules.add(name, styles[name]);
+      }
+
+      this.rules.process();
+    }
+    /**
+     * Get a rule.
+     */
+
+
+    var _proto = ConditionalRule.prototype;
+
+    _proto.getRule = function getRule(name) {
+      return this.rules.get(name);
+    }
+    /**
+     * Get index of a rule.
+     */
+    ;
+
+    _proto.indexOf = function indexOf(rule) {
+      return this.rules.indexOf(rule);
+    }
+    /**
+     * Create and register rule, run plugins.
+     */
+    ;
+
+    _proto.addRule = function addRule(name, style, options) {
+      var rule = this.rules.add(name, style, options);
+      if (!rule) return null;
+      this.options.jss.plugins.onProcessRule(rule);
+      return rule;
+    }
+    /**
+     * Generates a CSS string.
+     */
+    ;
+
+    _proto.toString = function toString(options) {
+      if (options === void 0) {
+        options = defaultToStringOptions;
+      }
+
+      if (options.indent == null) options.indent = defaultToStringOptions.indent;
+      if (options.children == null) options.children = defaultToStringOptions.children;
+
+      if (options.children === false) {
+        return this.query + " {}";
+      }
+
+      var children = this.rules.toString(options);
+      return children ? this.query + " {\n" + children + "\n}" : '';
+    };
+
+    return ConditionalRule;
+  }();
+
+  var keyRegExp = /@media|@supports\s+/;
+  var pluginConditionalRule = {
+    onCreateRule: function onCreateRule(key, styles, options) {
+      return keyRegExp.test(key) ? new ConditionalRule(key, styles, options) : null;
+    }
+  };
+  var defaultToStringOptions$1 = {
+    indent: 1,
+    children: true
+  };
+  var nameRegExp = /@keyframes\s+([\w-]+)/;
+  /**
+   * Rule for @keyframes
+   */
+
+  var KeyframesRule =
+  /*#__PURE__*/
+  function () {
+    function KeyframesRule(key, frames, options) {
+      this.type = 'keyframes';
+      this.at = '@keyframes';
+      this.key = void 0;
+      this.name = void 0;
+      this.id = void 0;
+      this.rules = void 0;
+      this.options = void 0;
+      this.isProcessed = false;
+      this.renderable = void 0;
+      var nameMatch = key.match(nameRegExp);
+
+      if (nameMatch && nameMatch[1]) {
+        this.name = nameMatch[1];
+      } else {
+        this.name = 'noname';
+        warning(false, "[JSS] Bad keyframes name " + key);
+      }
+
+      this.key = this.type + "-" + this.name;
+      this.options = options;
+      var scoped = options.scoped,
+          sheet = options.sheet,
+          generateId = options.generateId;
+      this.id = scoped === false ? this.name : escape(generateId(this, sheet));
+      this.rules = new RuleList(_extends({}, options, {
+        parent: this
+      }));
+
+      for (var name in frames) {
+        this.rules.add(name, frames[name], _extends({}, options, {
+          parent: this
+        }));
+      }
+
+      this.rules.process();
+    }
+    /**
+     * Generates a CSS string.
+     */
+
+
+    var _proto = KeyframesRule.prototype;
+
+    _proto.toString = function toString(options) {
+      if (options === void 0) {
+        options = defaultToStringOptions$1;
+      }
+
+      if (options.indent == null) options.indent = defaultToStringOptions$1.indent;
+      if (options.children == null) options.children = defaultToStringOptions$1.children;
+
+      if (options.children === false) {
+        return this.at + " " + this.id + " {}";
+      }
+
+      var children = this.rules.toString(options);
+      if (children) children = "\n" + children + "\n";
+      return this.at + " " + this.id + " {" + children + "}";
+    };
+
+    return KeyframesRule;
+  }();
+
+  var keyRegExp$1 = /@keyframes\s+/;
+  var refRegExp = /\$([\w-]+)/g;
+
+  var findReferencedKeyframe = function findReferencedKeyframe(val, keyframes) {
+    if (typeof val === 'string') {
+      return val.replace(refRegExp, function (match, name) {
+        if (name in keyframes) {
+          return keyframes[name];
+        }
+
+        warning(false, "[JSS] Referenced keyframes rule \"" + name + "\" is not defined.");
+        return match;
+      });
+    }
+
+    return val;
+  };
+  /**
+   * Replace the reference for a animation name.
+   */
+
+
+  var replaceRef = function replaceRef(style, prop, keyframes) {
+    var value = style[prop];
+    var refKeyframe = findReferencedKeyframe(value, keyframes);
+
+    if (refKeyframe !== value) {
+      style[prop] = refKeyframe;
+    }
+  };
+
+  var plugin = {
+    onCreateRule: function onCreateRule(key, frames, options) {
+      return typeof key === 'string' && keyRegExp$1.test(key) ? new KeyframesRule(key, frames, options) : null;
+    },
+    // Animation name ref replacer.
+    onProcessStyle: function onProcessStyle(style, rule, sheet) {
+      if (rule.type !== 'style' || !sheet) return style;
+      if ('animation-name' in style) replaceRef(style, 'animation-name', sheet.keyframes);
+      if ('animation' in style) replaceRef(style, 'animation', sheet.keyframes);
+      return style;
+    },
+    onChangeValue: function onChangeValue(val, prop, rule) {
+      var sheet = rule.options.sheet;
+
+      if (!sheet) {
+        return val;
+      }
+
+      switch (prop) {
+        case 'animation':
+          return findReferencedKeyframe(val, sheet.keyframes);
+
+        case 'animation-name':
+          return findReferencedKeyframe(val, sheet.keyframes);
+
+        default:
+          return val;
+      }
+    }
+  };
+
+  var KeyframeRule =
+  /*#__PURE__*/
+  function (_BaseStyleRule) {
+    _inheritsLoose(KeyframeRule, _BaseStyleRule);
+
+    function KeyframeRule() {
+      var _this;
+
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      _this = _BaseStyleRule.call.apply(_BaseStyleRule, [this].concat(args)) || this;
+      _this.renderable = void 0;
+      return _this;
+    }
+
+    var _proto = KeyframeRule.prototype;
+    /**
+     * Generates a CSS string.
+     */
+
+    _proto.toString = function toString(options) {
+      var sheet = this.options.sheet;
+      var link = sheet ? sheet.options.link : false;
+      var opts = link ? _extends({}, options, {
+        allowEmpty: true
+      }) : options;
+      return toCss(this.key, this.style, opts);
+    };
+
+    return KeyframeRule;
+  }(BaseStyleRule);
+
+  var pluginKeyframeRule = {
+    onCreateRule: function onCreateRule(key, style, options) {
+      if (options.parent && options.parent.type === 'keyframes') {
+        return new KeyframeRule(key, style, options);
+      }
+
+      return null;
+    }
+  };
+
+  var FontFaceRule =
+  /*#__PURE__*/
+  function () {
+    function FontFaceRule(key, style, options) {
+      this.type = 'font-face';
+      this.at = '@font-face';
+      this.key = void 0;
+      this.style = void 0;
+      this.options = void 0;
+      this.isProcessed = false;
+      this.renderable = void 0;
+      this.key = key;
+      this.style = style;
+      this.options = options;
+    }
+    /**
+     * Generates a CSS string.
+     */
+
+
+    var _proto = FontFaceRule.prototype;
+
+    _proto.toString = function toString(options) {
+      if (Array.isArray(this.style)) {
+        var str = '';
+
+        for (var index = 0; index < this.style.length; index++) {
+          str += toCss(this.key, this.style[index]);
+          if (this.style[index + 1]) str += '\n';
+        }
+
+        return str;
+      }
+
+      return toCss(this.key, this.style, options);
+    };
+
+    return FontFaceRule;
+  }();
+
+  var pluginFontFaceRule = {
+    onCreateRule: function onCreateRule(key, style, options) {
+      return key === '@font-face' ? new FontFaceRule(key, style, options) : null;
+    }
+  };
+
+  var ViewportRule =
+  /*#__PURE__*/
+  function () {
+    function ViewportRule(key, style, options) {
+      this.type = 'viewport';
+      this.at = '@viewport';
+      this.key = void 0;
+      this.style = void 0;
+      this.options = void 0;
+      this.isProcessed = false;
+      this.renderable = void 0;
+      this.key = key;
+      this.style = style;
+      this.options = options;
+    }
+    /**
+     * Generates a CSS string.
+     */
+
+
+    var _proto = ViewportRule.prototype;
+
+    _proto.toString = function toString(options) {
+      return toCss(this.key, this.style, options);
+    };
+
+    return ViewportRule;
+  }();
+
+  var pluginViewportRule = {
+    onCreateRule: function onCreateRule(key, style, options) {
+      return key === '@viewport' || key === '@-ms-viewport' ? new ViewportRule(key, style, options) : null;
+    }
+  };
+
+  var SimpleRule =
+  /*#__PURE__*/
+  function () {
+    function SimpleRule(key, value, options) {
+      this.type = 'simple';
+      this.key = void 0;
+      this.value = void 0;
+      this.options = void 0;
+      this.isProcessed = false;
+      this.renderable = void 0;
+      this.key = key;
+      this.value = value;
+      this.options = options;
+    }
+    /**
+     * Generates a CSS string.
+     */
+    // eslint-disable-next-line no-unused-vars
+
+
+    var _proto = SimpleRule.prototype;
+
+    _proto.toString = function toString(options) {
+      if (Array.isArray(this.value)) {
+        var str = '';
+
+        for (var index = 0; index < this.value.length; index++) {
+          str += this.key + " " + this.value[index] + ";";
+          if (this.value[index + 1]) str += '\n';
+        }
+
+        return str;
+      }
+
+      return this.key + " " + this.value + ";";
+    };
+
+    return SimpleRule;
+  }();
+
+  var keysMap = {
+    '@charset': true,
+    '@import': true,
+    '@namespace': true
+  };
+  var pluginSimpleRule = {
+    onCreateRule: function onCreateRule(key, value, options) {
+      return key in keysMap ? new SimpleRule(key, value, options) : null;
+    }
+  };
+  var plugins = [pluginStyleRule, pluginConditionalRule, plugin, pluginKeyframeRule, pluginFontFaceRule, pluginViewportRule, pluginSimpleRule];
+  var defaultUpdateOptions = {
+    process: true
+  };
+  var forceUpdateOptions = {
+    force: true,
+    process: true
+    /**
+     * Contains rules objects and allows adding/removing etc.
+     * Is used for e.g. by `StyleSheet` or `ConditionalRule`.
+     */
+
+  };
+
+  var RuleList =
+  /*#__PURE__*/
+  function () {
+    // Rules registry for access by .get() method.
+    // It contains the same rule registered by name and by selector.
+    // Original styles object.
+    // Used to ensure correct rules order.
+    function RuleList(options) {
+      this.map = {};
+      this.raw = {};
+      this.index = [];
+      this.counter = 0;
+      this.options = void 0;
+      this.classes = void 0;
+      this.keyframes = void 0;
+      this.options = options;
+      this.classes = options.classes;
+      this.keyframes = options.keyframes;
+    }
+    /**
+     * Create and register rule.
+     *
+     * Will not render after Style Sheet was rendered the first time.
+     */
+
+
+    var _proto = RuleList.prototype;
+
+    _proto.add = function add(name, decl, ruleOptions) {
+      var _this$options = this.options,
+          parent = _this$options.parent,
+          sheet = _this$options.sheet,
+          jss = _this$options.jss,
+          Renderer = _this$options.Renderer,
+          generateId = _this$options.generateId,
+          scoped = _this$options.scoped;
+
+      var options = _extends({
+        classes: this.classes,
+        parent: parent,
+        sheet: sheet,
+        jss: jss,
+        Renderer: Renderer,
+        generateId: generateId,
+        scoped: scoped,
+        name: name
+      }, ruleOptions); // When user uses .createStyleSheet(), duplicate names are not possible, but
+      // `sheet.addRule()` opens the door for any duplicate rule name. When this happens
+      // we need to make the key unique within this RuleList instance scope.
+
+
+      var key = name;
+
+      if (name in this.raw) {
+        key = name + "-d" + this.counter++;
+      } // We need to save the original decl before creating the rule
+      // because cache plugin needs to use it as a key to return a cached rule.
+
+
+      this.raw[key] = decl;
+
+      if (key in this.classes) {
+        // E.g. rules inside of @media container
+        options.selector = "." + escape(this.classes[key]);
+      }
+
+      var rule = createRule(key, decl, options);
+      if (!rule) return null;
+      this.register(rule);
+      var index = options.index === undefined ? this.index.length : options.index;
+      this.index.splice(index, 0, rule);
+      return rule;
+    }
+    /**
+     * Get a rule.
+     */
+    ;
+
+    _proto.get = function get(name) {
+      return this.map[name];
+    }
+    /**
+     * Delete a rule.
+     */
+    ;
+
+    _proto.remove = function remove(rule) {
+      this.unregister(rule);
+      delete this.raw[rule.key];
+      this.index.splice(this.index.indexOf(rule), 1);
+    }
+    /**
+     * Get index of a rule.
+     */
+    ;
+
+    _proto.indexOf = function indexOf(rule) {
+      return this.index.indexOf(rule);
+    }
+    /**
+     * Run `onProcessRule()` plugins on every rule.
+     */
+    ;
+
+    _proto.process = function process() {
+      var plugins$$1 = this.options.jss.plugins; // We need to clone array because if we modify the index somewhere else during a loop
+      // we end up with very hard-to-track-down side effects.
+
+      this.index.slice(0).forEach(plugins$$1.onProcessRule, plugins$$1);
+    }
+    /**
+     * Register a rule in `.map`, `.classes` and `.keyframes` maps.
+     */
+    ;
+
+    _proto.register = function register(rule) {
+      this.map[rule.key] = rule;
+
+      if (rule instanceof StyleRule) {
+        this.map[rule.selector] = rule;
+        if (rule.id) this.classes[rule.key] = rule.id;
+      } else if (rule instanceof KeyframesRule && this.keyframes) {
+        this.keyframes[rule.name] = rule.id;
+      }
+    }
+    /**
+     * Unregister a rule.
+     */
+    ;
+
+    _proto.unregister = function unregister(rule) {
+      delete this.map[rule.key];
+
+      if (rule instanceof StyleRule) {
+        delete this.map[rule.selector];
+        delete this.classes[rule.key];
+      } else if (rule instanceof KeyframesRule) {
+        delete this.keyframes[rule.name];
+      }
+    }
+    /**
+     * Update the function values with a new data.
+     */
+    ;
+
+    _proto.update = function update() {
+      var name;
+      var data;
+      var options;
+
+      if (typeof (arguments.length <= 0 ? undefined : arguments[0]) === 'string') {
+        name = arguments.length <= 0 ? undefined : arguments[0]; // $FlowFixMe
+
+        data = arguments.length <= 1 ? undefined : arguments[1]; // $FlowFixMe
+
+        options = arguments.length <= 2 ? undefined : arguments[2];
+      } else {
+        data = arguments.length <= 0 ? undefined : arguments[0]; // $FlowFixMe
+
+        options = arguments.length <= 1 ? undefined : arguments[1];
+        name = null;
+      }
+
+      if (name) {
+        this.updateOne(this.map[name], data, options);
+      } else {
+        for (var index = 0; index < this.index.length; index++) {
+          this.updateOne(this.index[index], data, options);
+        }
+      }
+    }
+    /**
+     * Execute plugins, update rule props.
+     */
+    ;
+
+    _proto.updateOne = function updateOne(rule, data, options) {
+      if (options === void 0) {
+        options = defaultUpdateOptions;
+      }
+
+      var _this$options2 = this.options,
+          plugins$$1 = _this$options2.jss.plugins,
+          sheet = _this$options2.sheet; // It is a rules container like for e.g. ConditionalRule.
+
+      if (rule.rules instanceof RuleList) {
+        rule.rules.update(data, options);
+        return;
+      }
+
+      var styleRule = rule;
+      var style = styleRule.style;
+      plugins$$1.onUpdate(data, rule, sheet, options); // We rely on a new `style` ref in case it was mutated during onUpdate hook.
+
+      if (options.process && style && style !== styleRule.style) {
+        // We need to run the plugins in case new `style` relies on syntax plugins.
+        plugins$$1.onProcessStyle(styleRule.style, styleRule, sheet); // Update and add props.
+
+        for (var prop in styleRule.style) {
+          var nextValue = styleRule.style[prop];
+          var prevValue = style[prop]; // We need to use `force: true` because `rule.style` has been updated during onUpdate hook, so `rule.prop()` will not update the CSSOM rule.
+          // We do this comparison to avoid unneeded `rule.prop()` calls, since we have the old `style` object here.
+
+          if (nextValue !== prevValue) {
+            styleRule.prop(prop, nextValue, forceUpdateOptions);
+          }
+        } // Remove props.
+
+
+        for (var _prop in style) {
+          var _nextValue = styleRule.style[_prop];
+          var _prevValue = style[_prop]; // We need to use `force: true` because `rule.style` has been updated during onUpdate hook, so `rule.prop()` will not update the CSSOM rule.
+          // We do this comparison to avoid unneeded `rule.prop()` calls, since we have the old `style` object here.
+
+          if (_nextValue == null && _nextValue !== _prevValue) {
+            styleRule.prop(_prop, null, forceUpdateOptions);
+          }
+        }
+      }
+    }
+    /**
+     * Convert rules to a CSS string.
+     */
+    ;
+
+    _proto.toString = function toString(options) {
+      var str = '';
+      var sheet = this.options.sheet;
+      var link = sheet ? sheet.options.link : false;
+
+      for (var index = 0; index < this.index.length; index++) {
+        var rule = this.index[index];
+        var css = rule.toString(options); // No need to render an empty rule.
+
+        if (!css && !link) continue;
+        if (str) str += '\n';
+        str += css;
+      }
+
+      return str;
+    };
+
+    return RuleList;
+  }();
+
+  var StyleSheet =
+  /*#__PURE__*/
+  function () {
+    function StyleSheet(styles, options) {
+      this.options = void 0;
+      this.deployed = void 0;
+      this.attached = void 0;
+      this.rules = void 0;
+      this.renderer = void 0;
+      this.classes = void 0;
+      this.keyframes = void 0;
+      this.queue = void 0;
+      this.attached = false;
+      this.deployed = false;
+      this.classes = {};
+      this.keyframes = {};
+      this.options = _extends({}, options, {
+        sheet: this,
+        parent: this,
+        classes: this.classes,
+        keyframes: this.keyframes
+      });
+
+      if (options.Renderer) {
+        this.renderer = new options.Renderer(this);
+      }
+
+      this.rules = new RuleList(this.options);
+
+      for (var name in styles) {
+        this.rules.add(name, styles[name]);
+      }
+
+      this.rules.process();
+    }
+    /**
+     * Attach renderable to the render tree.
+     */
+
+
+    var _proto = StyleSheet.prototype;
+
+    _proto.attach = function attach() {
+      if (this.attached) return this;
+      if (this.renderer) this.renderer.attach();
+      this.attached = true; // Order is important, because we can't use insertRule API if style element is not attached.
+
+      if (!this.deployed) this.deploy();
+      return this;
+    }
+    /**
+     * Remove renderable from render tree.
+     */
+    ;
+
+    _proto.detach = function detach() {
+      if (!this.attached) return this;
+      if (this.renderer) this.renderer.detach();
+      this.attached = false;
+      return this;
+    }
+    /**
+     * Add a rule to the current stylesheet.
+     * Will insert a rule also after the stylesheet has been rendered first time.
+     */
+    ;
+
+    _proto.addRule = function addRule(name, decl, options) {
+      var queue = this.queue; // Plugins can create rules.
+      // In order to preserve the right order, we need to queue all `.addRule` calls,
+      // which happen after the first `rules.add()` call.
+
+      if (this.attached && !queue) this.queue = [];
+      var rule = this.rules.add(name, decl, options);
+      if (!rule) return null;
+      this.options.jss.plugins.onProcessRule(rule);
+
+      if (this.attached) {
+        if (!this.deployed) return rule; // Don't insert rule directly if there is no stringified version yet.
+        // It will be inserted all together when .attach is called.
+
+        if (queue) queue.push(rule);else {
+          this.insertRule(rule);
+
+          if (this.queue) {
+            this.queue.forEach(this.insertRule, this);
+            this.queue = undefined;
+          }
+        }
+        return rule;
+      } // We can't add rules to a detached style node.
+      // We will redeploy the sheet once user will attach it.
+
+
+      this.deployed = false;
+      return rule;
+    }
+    /**
+     * Insert rule into the StyleSheet
+     */
+    ;
+
+    _proto.insertRule = function insertRule(rule) {
+      if (this.renderer) {
+        this.renderer.insertRule(rule);
+      }
+    }
+    /**
+     * Create and add rules.
+     * Will render also after Style Sheet was rendered the first time.
+     */
+    ;
+
+    _proto.addRules = function addRules(styles, options) {
+      var added = [];
+
+      for (var name in styles) {
+        var rule = this.addRule(name, styles[name], options);
+        if (rule) added.push(rule);
+      }
+
+      return added;
+    }
+    /**
+     * Get a rule by name.
+     */
+    ;
+
+    _proto.getRule = function getRule(name) {
+      return this.rules.get(name);
+    }
+    /**
+     * Delete a rule by name.
+     * Returns `true`: if rule has been deleted from the DOM.
+     */
+    ;
+
+    _proto.deleteRule = function deleteRule(name) {
+      var rule = _typeof2(name) === 'object' ? name : this.rules.get(name);
+      if (!rule) return false;
+      this.rules.remove(rule);
+
+      if (this.attached && rule.renderable && this.renderer) {
+        return this.renderer.deleteRule(rule.renderable);
+      }
+
+      return true;
+    }
+    /**
+     * Get index of a rule.
+     */
+    ;
+
+    _proto.indexOf = function indexOf(rule) {
+      return this.rules.indexOf(rule);
+    }
+    /**
+     * Deploy pure CSS string to a renderable.
+     */
+    ;
+
+    _proto.deploy = function deploy() {
+      if (this.renderer) this.renderer.deploy();
+      this.deployed = true;
+      return this;
+    }
+    /**
+     * Update the function values with a new data.
+     */
+    ;
+
+    _proto.update = function update() {
+      var _this$rules;
+
+      (_this$rules = this.rules).update.apply(_this$rules, arguments);
+
+      return this;
+    }
+    /**
+     * Updates a single rule.
+     */
+    ;
+
+    _proto.updateOne = function updateOne(rule, data, options) {
+      this.rules.updateOne(rule, data, options);
+      return this;
+    }
+    /**
+     * Convert rules to a CSS string.
+     */
+    ;
+
+    _proto.toString = function toString(options) {
+      return this.rules.toString(options);
+    };
+
+    return StyleSheet;
+  }();
+
+  var PluginsRegistry =
+  /*#__PURE__*/
+  function () {
+    function PluginsRegistry() {
+      this.plugins = {
+        internal: [],
+        external: []
+      };
+      this.registry = void 0;
+    }
+
+    var _proto = PluginsRegistry.prototype;
+    /**
+     * Call `onCreateRule` hooks and return an object if returned by a hook.
+     */
+
+    _proto.onCreateRule = function onCreateRule(name, decl, options) {
+      for (var i = 0; i < this.registry.onCreateRule.length; i++) {
+        var rule = this.registry.onCreateRule[i](name, decl, options);
+        if (rule) return rule;
+      }
+
+      return null;
+    }
+    /**
+     * Call `onProcessRule` hooks.
+     */
+    ;
+
+    _proto.onProcessRule = function onProcessRule(rule) {
+      if (rule.isProcessed) return;
+      var sheet = rule.options.sheet;
+
+      for (var i = 0; i < this.registry.onProcessRule.length; i++) {
+        this.registry.onProcessRule[i](rule, sheet);
+      }
+
+      if (rule.style) this.onProcessStyle(rule.style, rule, sheet);
+      rule.isProcessed = true;
+    }
+    /**
+     * Call `onProcessStyle` hooks.
+     */
+    ;
+
+    _proto.onProcessStyle = function onProcessStyle(style, rule, sheet) {
+      for (var i = 0; i < this.registry.onProcessStyle.length; i++) {
+        // $FlowFixMe
+        rule.style = this.registry.onProcessStyle[i](rule.style, rule, sheet);
+      }
+    }
+    /**
+     * Call `onProcessSheet` hooks.
+     */
+    ;
+
+    _proto.onProcessSheet = function onProcessSheet(sheet) {
+      for (var i = 0; i < this.registry.onProcessSheet.length; i++) {
+        this.registry.onProcessSheet[i](sheet);
+      }
+    }
+    /**
+     * Call `onUpdate` hooks.
+     */
+    ;
+
+    _proto.onUpdate = function onUpdate(data, rule, sheet, options) {
+      for (var i = 0; i < this.registry.onUpdate.length; i++) {
+        this.registry.onUpdate[i](data, rule, sheet, options);
+      }
+    }
+    /**
+     * Call `onChangeValue` hooks.
+     */
+    ;
+
+    _proto.onChangeValue = function onChangeValue(value, prop, rule) {
+      var processedValue = value;
+
+      for (var i = 0; i < this.registry.onChangeValue.length; i++) {
+        processedValue = this.registry.onChangeValue[i](processedValue, prop, rule);
+      }
+
+      return processedValue;
+    }
+    /**
+     * Register a plugin.
+     */
+    ;
+
+    _proto.use = function use(newPlugin, options) {
+      if (options === void 0) {
+        options = {
+          queue: 'external'
+        };
+      }
+
+      var plugins = this.plugins[options.queue]; // Avoids applying same plugin twice, at least based on ref.
+
+      if (plugins.indexOf(newPlugin) !== -1) {
+        return;
+      }
+
+      plugins.push(newPlugin);
+      this.registry = [].concat(this.plugins.external, this.plugins.internal).reduce(function (registry, plugin) {
+        for (var name in plugin) {
+          if (name in registry) {
+            registry[name].push(plugin[name]);
+          } else {
+            warning(false, "[JSS] Unknown hook \"" + name + "\".");
+          }
+        }
+
+        return registry;
+      }, {
+        onCreateRule: [],
+        onProcessRule: [],
+        onProcessStyle: [],
+        onProcessSheet: [],
+        onChangeValue: [],
+        onUpdate: []
+      });
+    };
+
+    return PluginsRegistry;
+  }();
+
+  function _objectWithoutPropertiesLoose(source, excluded) {
+    if (source == null) return {};
+    var target = {};
+    var sourceKeys = Object.keys(source);
+    var key, i;
+
+    for (i = 0; i < sourceKeys.length; i++) {
+      key = sourceKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      target[key] = source[key];
+    }
+
+    return target;
+  }
+  /**
+   * Sheets registry to access them all at one place.
+   */
+
+
+  var SheetsRegistry =
+  /*#__PURE__*/
+  function () {
+    function SheetsRegistry() {
+      this.registry = [];
+    }
+
+    var _proto = SheetsRegistry.prototype;
+    /**
+     * Register a Style Sheet.
+     */
+
+    _proto.add = function add(sheet) {
+      var registry = this.registry;
+      var index = sheet.options.index;
+      if (registry.indexOf(sheet) !== -1) return;
+
+      if (registry.length === 0 || index >= this.index) {
+        registry.push(sheet);
+        return;
+      } // Find a position.
+
+
+      for (var i = 0; i < registry.length; i++) {
+        if (registry[i].options.index > index) {
+          registry.splice(i, 0, sheet);
+          return;
+        }
+      }
+    }
+    /**
+     * Reset the registry.
+     */
+    ;
+
+    _proto.reset = function reset() {
+      this.registry = [];
+    }
+    /**
+     * Remove a Style Sheet.
+     */
+    ;
+
+    _proto.remove = function remove(sheet) {
+      var index = this.registry.indexOf(sheet);
+      this.registry.splice(index, 1);
+    }
+    /**
+     * Convert all attached sheets to a CSS string.
+     */
+    ;
+
+    _proto.toString = function toString(_temp) {
+      var _ref = _temp === void 0 ? {} : _temp,
+          attached = _ref.attached,
+          options = _objectWithoutPropertiesLoose(_ref, ["attached"]);
+
+      var css = '';
+
+      for (var i = 0; i < this.registry.length; i++) {
+        var sheet = this.registry[i];
+
+        if (attached != null && sheet.attached !== attached) {
+          continue;
+        }
+
+        if (css) css += '\n';
+        css += sheet.toString(options);
+      }
+
+      return css;
+    };
+
+    _createClass(SheetsRegistry, [{
+      key: "index",
+
+      /**
+       * Current highest index number.
+       */
+      get: function get() {
+        return this.registry.length === 0 ? 0 : this.registry[this.registry.length - 1].options.index;
+      }
+    }]);
+
+    return SheetsRegistry;
+  }();
+  /**
+   * This is a global sheets registry. Only DomRenderer will add sheets to it.
+   * On the server one should use an own SheetsRegistry instance and add the
+   * sheets to it, because you need to make sure to create a new registry for
+   * each request in order to not leak sheets across requests.
+   */
+
+
+  var sheets = new SheetsRegistry();
+  /* eslint-disable */
+  // https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
+
+  var globalThis = typeof window != 'undefined' && window.Math == Math ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
+  var ns = '2f1acc6c3a606b082e5eef5e54414ffb';
+  if (globalThis[ns] == null) globalThis[ns] = 0; // Bundle may contain multiple JSS versions at the same time. In order to identify
+  // the current version with just one short number and use it for classes generation
+  // we use a counter. Also it is more accurate, because user can manually reevaluate
+  // the module.
+
+  var moduleId = globalThis[ns]++;
+  var maxRules = 1e10;
+  /**
+   * Returns a function which generates unique class names based on counters.
+   * When new generator function is created, rule counter is reseted.
+   * We need to reset the rule counter for SSR for each request.
+   */
+
+  var createGenerateId = function createGenerateId(options) {
+    if (options === void 0) {
+      options = {};
+    }
+
+    var ruleCounter = 0;
+    return function (rule, sheet) {
+      ruleCounter += 1;
+
+      if (ruleCounter > maxRules) {
+        warning(false, "[JSS] You might have a memory leak. Rule counter is at " + ruleCounter + ".");
+      }
+
+      var jssId = '';
+      var prefix = '';
+
+      if (sheet) {
+        if (sheet.options.classNamePrefix) {
+          prefix = sheet.options.classNamePrefix;
+        }
+
+        if (sheet.options.jss.id != null) {
+          jssId = String(sheet.options.jss.id);
+        }
+      }
+
+      if (options.minify) {
+        // Using "c" because a number can't be the first char in a class name.
+        return "" + (prefix || 'c') + moduleId + jssId + ruleCounter;
+      }
+
+      return prefix + rule.key + "-" + moduleId + (jssId ? "-" + jssId : '') + "-" + ruleCounter;
+    };
+  };
+  /**
+   * Cache the value from the first time a function is called.
+   */
+
+
+  var memoize = function memoize(fn) {
+    var value;
+    return function () {
+      if (!value) value = fn();
+      return value;
+    };
+  };
+  /**
+   * Get a style property value.
+   */
+
+
+  function getPropertyValue(cssRule, prop) {
+    try {
+      // Support CSSTOM.
+      if (cssRule.attributeStyleMap) {
+        return cssRule.attributeStyleMap.get(prop);
+      }
+
+      return cssRule.style.getPropertyValue(prop);
+    } catch (err) {
+      // IE may throw if property is unknown.
+      return '';
+    }
+  }
+  /**
+   * Set a style property.
+   */
+
+
+  function setProperty(cssRule, prop, value) {
+    try {
+      var cssValue = value;
+
+      if (Array.isArray(value)) {
+        cssValue = toCssValue(value, true);
+
+        if (value[value.length - 1] === '!important') {
+          cssRule.style.setProperty(prop, cssValue, 'important');
+          return true;
+        }
+      } // Support CSSTOM.
+
+
+      if (cssRule.attributeStyleMap) {
+        cssRule.attributeStyleMap.set(prop, cssValue);
+      } else {
+        cssRule.style.setProperty(prop, cssValue);
+      }
+    } catch (err) {
+      // IE may throw if property is unknown.
+      return false;
+    }
+
+    return true;
+  }
+  /**
+   * Remove a style property.
+   */
+
+
+  function removeProperty(cssRule, prop) {
+    try {
+      // Support CSSTOM.
+      if (cssRule.attributeStyleMap) {
+        cssRule.attributeStyleMap.delete(prop);
+      } else {
+        cssRule.style.removeProperty(prop);
+      }
+    } catch (err) {
+      warning(false, "[JSS] DOMException \"" + err.message + "\" was thrown. Tried to remove property \"" + prop + "\".");
+    }
+  }
+  /**
+   * Set the selector.
+   */
+
+
+  function setSelector(cssRule, selectorText) {
+    cssRule.selectorText = selectorText; // Return false if setter was not successful.
+    // Currently works in chrome only.
+
+    return cssRule.selectorText === selectorText;
+  }
+  /**
+   * Gets the `head` element upon the first call and caches it.
+   * We assume it can't be null.
+   */
+
+
+  var getHead = memoize(function () {
+    return document.querySelector('head');
+  });
+  /**
+   * Find attached sheet with an index higher than the passed one.
+   */
+
+  function findHigherSheet(registry, options) {
+    for (var i = 0; i < registry.length; i++) {
+      var sheet = registry[i];
+
+      if (sheet.attached && sheet.options.index > options.index && sheet.options.insertionPoint === options.insertionPoint) {
+        return sheet;
+      }
+    }
+
+    return null;
+  }
+  /**
+   * Find attached sheet with the highest index.
+   */
+
+
+  function findHighestSheet(registry, options) {
+    for (var i = registry.length - 1; i >= 0; i--) {
+      var sheet = registry[i];
+
+      if (sheet.attached && sheet.options.insertionPoint === options.insertionPoint) {
+        return sheet;
+      }
+    }
+
+    return null;
+  }
+  /**
+   * Find a comment with "jss" inside.
+   */
+
+
+  function findCommentNode(text) {
+    var head = getHead();
+
+    for (var i = 0; i < head.childNodes.length; i++) {
+      var node = head.childNodes[i];
+
+      if (node.nodeType === 8 && node.nodeValue.trim() === text) {
+        return node;
+      }
+    }
+
+    return null;
+  }
+  /**
+   * Find a node before which we can insert the sheet.
+   */
+
+
+  function findPrevNode(options) {
+    var registry = sheets.registry;
+
+    if (registry.length > 0) {
+      // Try to insert before the next higher sheet.
+      var sheet = findHigherSheet(registry, options);
+
+      if (sheet && sheet.renderer) {
+        return {
+          parent: sheet.renderer.element.parentNode,
+          node: sheet.renderer.element
+        };
+      } // Otherwise insert after the last attached.
+
+
+      sheet = findHighestSheet(registry, options);
+
+      if (sheet && sheet.renderer) {
+        return {
+          parent: sheet.renderer.element.parentNode,
+          node: sheet.renderer.element.nextSibling
+        };
+      }
+    } // Try to find a comment placeholder if registry is empty.
+
+
+    var insertionPoint = options.insertionPoint;
+
+    if (insertionPoint && typeof insertionPoint === 'string') {
+      var comment = findCommentNode(insertionPoint);
+
+      if (comment) {
+        return {
+          parent: comment.parentNode,
+          node: comment.nextSibling
+        };
+      } // If user specifies an insertion point and it can't be found in the document -
+      // bad specificity issues may appear.
+
+
+      warning(false, "[JSS] Insertion point \"" + insertionPoint + "\" not found.");
+    }
+
+    return false;
+  }
+  /**
+   * Insert style element into the DOM.
+   */
+
+
+  function insertStyle(style, options) {
+    var insertionPoint = options.insertionPoint;
+    var nextNode = findPrevNode(options);
+
+    if (nextNode !== false && nextNode.parent) {
+      nextNode.parent.insertBefore(style, nextNode.node);
+      return;
+    } // Works with iframes and any node types.
+
+
+    if (insertionPoint && typeof insertionPoint.nodeType === 'number') {
+      // https://stackoverflow.com/questions/41328728/force-casting-in-flow
+      var insertionPointElement = insertionPoint;
+      var parentNode = insertionPointElement.parentNode;
+      if (parentNode) parentNode.insertBefore(style, insertionPointElement.nextSibling);else warning(false, '[JSS] Insertion point is not in the DOM.');
+      return;
+    }
+
+    getHead().appendChild(style);
+  }
+  /**
+   * Read jss nonce setting from the page if the user has set it.
+   */
+
+
+  var getNonce = memoize(function () {
+    var node = document.querySelector('meta[property="csp-nonce"]');
+    return node ? node.getAttribute('content') : null;
+  });
+
+  var _insertRule = function insertRule(container, rule, index) {
+    var maxIndex = container.cssRules.length; // In case previous insertion fails, passed index might be wrong
+
+    if (index === undefined || index > maxIndex) {
+      // eslint-disable-next-line no-param-reassign
+      index = maxIndex;
+    }
+
+    try {
+      if ('insertRule' in container) {
+        var c = container;
+        c.insertRule(rule, index);
+      } // Keyframes rule.
+      else if ('appendRule' in container) {
+          var _c = container;
+
+          _c.appendRule(rule);
+        }
+    } catch (err) {
+      warning(false, "[JSS] " + err.message);
+      return false;
+    }
+
+    return container.cssRules[index];
+  };
+
+  var createStyle = function createStyle() {
+    var el = document.createElement('style'); // Without it, IE will have a broken source order specificity if we
+    // insert rules after we insert the style tag.
+    // It seems to kick-off the source order specificity algorithm.
+
+    el.textContent = '\n';
+    return el;
+  };
+
+  var DomRenderer =
+  /*#__PURE__*/
+  function () {
+    // HTMLStyleElement needs fixing https://github.com/facebook/flow/issues/2696
+    function DomRenderer(sheet) {
+      this.getPropertyValue = getPropertyValue;
+      this.setProperty = setProperty;
+      this.removeProperty = removeProperty;
+      this.setSelector = setSelector;
+      this.element = void 0;
+      this.sheet = void 0;
+      this.hasInsertedRules = false; // There is no sheet when the renderer is used from a standalone StyleRule.
+
+      if (sheet) sheets.add(sheet);
+      this.sheet = sheet;
+
+      var _ref = this.sheet ? this.sheet.options : {},
+          media = _ref.media,
+          meta = _ref.meta,
+          element = _ref.element;
+
+      this.element = element || createStyle();
+      this.element.setAttribute('data-jss', '');
+      if (media) this.element.setAttribute('media', media);
+      if (meta) this.element.setAttribute('data-meta', meta);
+      var nonce = getNonce();
+      if (nonce) this.element.setAttribute('nonce', nonce);
+    }
+    /**
+     * Insert style element into render tree.
+     */
+
+
+    var _proto = DomRenderer.prototype;
+
+    _proto.attach = function attach() {
+      // In the case the element node is external and it is already in the DOM.
+      if (this.element.parentNode || !this.sheet) return;
+      insertStyle(this.element, this.sheet.options); // When rules are inserted using `insertRule` API, after `sheet.detach().attach()`
+      // most browsers create a new CSSStyleSheet, except of all IEs.
+
+      var deployed = Boolean(this.sheet && this.sheet.deployed);
+
+      if (this.hasInsertedRules && deployed) {
+        this.hasInsertedRules = false;
+        this.deploy();
+      }
+    }
+    /**
+     * Remove style element from render tree.
+     */
+    ;
+
+    _proto.detach = function detach() {
+      var parentNode = this.element.parentNode;
+      if (parentNode) parentNode.removeChild(this.element);
+    }
+    /**
+     * Inject CSS string into element.
+     */
+    ;
+
+    _proto.deploy = function deploy() {
+      var sheet = this.sheet;
+      if (!sheet) return;
+
+      if (sheet.options.link) {
+        this.insertRules(sheet.rules);
+        return;
+      }
+
+      this.element.textContent = "\n" + sheet.toString() + "\n";
+    }
+    /**
+     * Insert RuleList into an element.
+     */
+    ;
+
+    _proto.insertRules = function insertRules(rules, nativeParent) {
+      for (var i = 0; i < rules.index.length; i++) {
+        this.insertRule(rules.index[i], i, nativeParent);
+      }
+    }
+    /**
+     * Insert a rule into element.
+     */
+    ;
+
+    _proto.insertRule = function insertRule(rule, index, nativeParent) {
+      if (nativeParent === void 0) {
+        nativeParent = this.element.sheet;
+      }
+
+      if (rule.rules) {
+        var parent = rule;
+        var latestNativeParent = nativeParent;
+
+        if (rule.type === 'conditional' || rule.type === 'keyframes') {
+          // We need to render the container without children first.
+          latestNativeParent = _insertRule(nativeParent, parent.toString({
+            children: false
+          }), index);
+
+          if (latestNativeParent === false) {
+            return false;
+          }
+        }
+
+        this.insertRules(parent.rules, latestNativeParent);
+        return latestNativeParent;
+      } // IE keeps the CSSStyleSheet after style node has been reattached,
+      // so we need to check if the `renderable` reference the right style sheet and not
+      // rerender those rules.
+
+
+      if (rule.renderable && rule.renderable.parentStyleSheet === this.element.sheet) {
+        return rule.renderable;
+      }
+
+      var ruleStr = rule.toString();
+      if (!ruleStr) return false;
+
+      var nativeRule = _insertRule(nativeParent, ruleStr, index);
+
+      if (nativeRule === false) {
+        return false;
+      }
+
+      this.hasInsertedRules = true;
+      rule.renderable = nativeRule;
+      return nativeRule;
+    }
+    /**
+     * Delete a rule.
+     */
+    ;
+
+    _proto.deleteRule = function deleteRule(cssRule) {
+      var sheet = this.element.sheet;
+      var index = this.indexOf(cssRule);
+      if (index === -1) return false;
+      sheet.deleteRule(index);
+      return true;
+    }
+    /**
+     * Get index of a CSS Rule.
+     */
+    ;
+
+    _proto.indexOf = function indexOf(cssRule) {
+      var cssRules = this.element.sheet.cssRules;
+
+      for (var index = 0; index < cssRules.length; index++) {
+        if (cssRule === cssRules[index]) return index;
+      }
+
+      return -1;
+    }
+    /**
+     * Generate a new CSS rule and replace the existing one.
+     *
+     * Only used for some old browsers because they can't set a selector.
+     */
+    ;
+
+    _proto.replaceRule = function replaceRule(cssRule, rule) {
+      var index = this.indexOf(cssRule);
+      if (index === -1) return false;
+      this.element.sheet.deleteRule(index);
+      return this.insertRule(rule, index);
+    }
+    /**
+     * Get all rules elements.
+     */
+    ;
+
+    _proto.getRules = function getRules() {
+      return this.element.sheet.cssRules;
+    };
+
+    return DomRenderer;
+  }();
+
+  var instanceCounter = 0;
+
+  var Jss =
+  /*#__PURE__*/
+  function () {
+    function Jss(options) {
+      this.id = instanceCounter++;
+      this.version = "10.0.4";
+      this.plugins = new PluginsRegistry();
+      this.options = {
+        id: {
+          minify: false
+        },
+        createGenerateId: createGenerateId,
+        Renderer: isBrowser ? DomRenderer : null,
+        plugins: []
+      };
+      this.generateId = createGenerateId({
+        minify: false
+      });
+
+      for (var i = 0; i < plugins.length; i++) {
+        this.plugins.use(plugins[i], {
+          queue: 'internal'
+        });
+      }
+
+      this.setup(options);
+    }
+    /**
+     * Prepares various options, applies plugins.
+     * Should not be used twice on the same instance, because there is no plugins
+     * deduplication logic.
+     */
+
+
+    var _proto = Jss.prototype;
+
+    _proto.setup = function setup(options) {
+      if (options === void 0) {
+        options = {};
+      }
+
+      if (options.createGenerateId) {
+        this.options.createGenerateId = options.createGenerateId;
+      }
+
+      if (options.id) {
+        this.options.id = _extends({}, this.options.id, options.id);
+      }
+
+      if (options.createGenerateId || options.id) {
+        this.generateId = this.options.createGenerateId(this.options.id);
+      }
+
+      if (options.insertionPoint != null) this.options.insertionPoint = options.insertionPoint;
+
+      if ('Renderer' in options) {
+        this.options.Renderer = options.Renderer;
+      } // eslint-disable-next-line prefer-spread
+
+
+      if (options.plugins) this.use.apply(this, options.plugins);
+      return this;
+    }
+    /**
+     * Create a Style Sheet.
+     */
+    ;
+
+    _proto.createStyleSheet = function createStyleSheet(styles, options) {
+      if (options === void 0) {
+        options = {};
+      }
+
+      var _options = options,
+          index = _options.index;
+
+      if (typeof index !== 'number') {
+        index = sheets.index === 0 ? 0 : sheets.index + 1;
+      }
+
+      var sheet = new StyleSheet(styles, _extends({}, options, {
+        jss: this,
+        generateId: options.generateId || this.generateId,
+        insertionPoint: this.options.insertionPoint,
+        Renderer: this.options.Renderer,
+        index: index
+      }));
+      this.plugins.onProcessSheet(sheet);
+      return sheet;
+    }
+    /**
+     * Detach the Style Sheet and remove it from the registry.
+     */
+    ;
+
+    _proto.removeStyleSheet = function removeStyleSheet(sheet) {
+      sheet.detach();
+      sheets.remove(sheet);
+      return this;
+    }
+    /**
+     * Create a rule without a Style Sheet.
+     * [Deprecated] will be removed in the next major version.
+     */
+    ;
+
+    _proto.createRule = function createRule$$1(name, style, options) {
+      if (style === void 0) {
+        style = {};
+      }
+
+      if (options === void 0) {
+        options = {};
+      } // Enable rule without name for inline styles.
+
+
+      if (_typeof2(name) === 'object') {
+        return this.createRule(undefined, name, style);
+      }
+
+      var ruleOptions = _extends({}, options, {
+        name: name,
+        jss: this,
+        Renderer: this.options.Renderer
+      });
+
+      if (!ruleOptions.generateId) ruleOptions.generateId = this.generateId;
+      if (!ruleOptions.classes) ruleOptions.classes = {};
+      if (!ruleOptions.keyframes) ruleOptions.keyframes = {};
+      var rule = createRule(name, style, ruleOptions);
+      if (rule) this.plugins.onProcessRule(rule);
+      return rule;
+    }
+    /**
+     * Register plugin. Passed function will be invoked with a rule instance.
+     */
+    ;
+
+    _proto.use = function use() {
+      var _this = this;
+
+      for (var _len = arguments.length, plugins$$1 = new Array(_len), _key = 0; _key < _len; _key++) {
+        plugins$$1[_key] = arguments[_key];
+      }
+
+      plugins$$1.forEach(function (plugin) {
+        _this.plugins.use(plugin);
+      });
+      return this;
+    };
+
+    return Jss;
+  }();
+  /**
+   * Extracts a styles object with only props that contain function values.
+   */
+
+
+  function getDynamicStyles(styles) {
+    var to = null;
+
+    for (var key in styles) {
+      var value = styles[key];
+
+      var type = _typeof2(value);
+
+      if (type === 'function') {
+        if (!to) to = {};
+        to[key] = value;
+      } else if (type === 'object' && value !== null && !Array.isArray(value)) {
+        var extracted = getDynamicStyles(value);
+
+        if (extracted) {
+          if (!to) to = {};
+          to[key] = extracted;
+        }
+      }
+    }
+
+    return to;
+  }
+  /**
+   * SheetsManager is like a WeakMap which is designed to count StyleSheet
+   * instances and attach/detach automatically.
+   */
+
+
+  var SheetsManager =
+  /*#__PURE__*/
+  function () {
+    function SheetsManager() {
+      this.length = 0;
+      this.sheets = new WeakMap();
+    }
+
+    var _proto = SheetsManager.prototype;
+
+    _proto.get = function get(key) {
+      var entry = this.sheets.get(key);
+      return entry && entry.sheet;
+    };
+
+    _proto.add = function add(key, sheet) {
+      if (this.sheets.has(key)) return;
+      this.length++;
+      this.sheets.set(key, {
+        sheet: sheet,
+        refs: 0
+      });
+    };
+
+    _proto.manage = function manage(key) {
+      var entry = this.sheets.get(key);
+
+      if (entry) {
+        if (entry.refs === 0) {
+          entry.sheet.attach();
+        }
+
+        entry.refs++;
+        return entry.sheet;
+      }
+
+      warning(false, "[JSS] SheetsManager: can't find sheet to manage");
+      return undefined;
+    };
+
+    _proto.unmanage = function unmanage(key) {
+      var entry = this.sheets.get(key);
+
+      if (entry) {
+        if (entry.refs > 0) {
+          entry.refs--;
+          if (entry.refs === 0) entry.sheet.detach();
+        }
+      } else {
+        warning(false, "SheetsManager: can't find sheet to unmanage");
+      }
+    };
+
+    _createClass(SheetsManager, [{
+      key: "size",
+      get: function get() {
+        return this.length;
+      }
+    }]);
+
+    return SheetsManager;
+  }();
+  /**
+   * A better abstraction over CSS.
+   *
+   * @copyright Oleg Isonen (Slobodskoi) / Isonen 2014-present
+   * @website https://github.com/cssinjs/jss
+   * @license MIT
+   */
+
+  /**
+   * Export a constant indicating if this browser has CSSTOM support.
+   * https://developers.google.com/web/updates/2018/03/cssom
+   */
+
+
+  var hasCSSTOMSupport = typeof CSS !== 'undefined' && CSS && 'number' in CSS;
+  /**
+   * Creates a new instance of Jss.
+   */
+
+  var create = function create(options) {
+    return new Jss(options);
+  };
+  /**
+   * A global Jss instance.
+   */
+
+
+  var index = create();
+  exports.hasCSSTOMSupport = hasCSSTOMSupport;
+  exports.create = create;
+  exports.default = index;
+  exports.getDynamicStyles = getDynamicStyles;
+  exports.toCssValue = toCssValue;
+  exports.createRule = createRule;
+  exports.SheetsRegistry = SheetsRegistry;
+  exports.SheetsManager = SheetsManager;
+  exports.RuleList = RuleList;
+  exports.sheets = sheets;
+  exports.createGenerateId = createGenerateId;
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+});
+},{}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+var global = arguments[3];
+var OVERLAY_ID = '__parcel__error__overlay__';
+var OldModule = module.bundle.Module;
+
+function Module(moduleName) {
+  OldModule.call(this, moduleName);
+  this.hot = {
+    data: module.bundle.hotData,
+    _acceptCallbacks: [],
+    _disposeCallbacks: [],
+    accept: function (fn) {
+      this._acceptCallbacks.push(fn || function () {});
+    },
+    dispose: function (fn) {
+      this._disposeCallbacks.push(fn);
+    }
+  };
+  module.bundle.hotData = null;
+}
+
+module.bundle.Module = Module;
+var checkedAssets, assetsToAccept;
+var parent = module.bundle.parent;
+
+if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
+  var hostname = "" || location.hostname;
+  var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52377" + '/');
+
+  ws.onmessage = function (event) {
+    checkedAssets = {};
+    assetsToAccept = [];
+    var data = JSON.parse(event.data);
+
+    if (data.type === 'update') {
+      var handled = false;
+      data.assets.forEach(function (asset) {
+        if (!asset.isNew) {
+          var didAccept = hmrAcceptCheck(global.parcelRequire, asset.id);
+
+          if (didAccept) {
+            handled = true;
+          }
+        }
+      }); // Enable HMR for CSS by default.
+
+      handled = handled || data.assets.every(function (asset) {
+        return asset.type === 'css' && asset.generated.js;
+      });
+
+      if (handled) {
+        console.clear();
+        data.assets.forEach(function (asset) {
+          hmrApply(global.parcelRequire, asset);
+        });
+        assetsToAccept.forEach(function (v) {
+          hmrAcceptRun(v[0], v[1]);
+        });
+      } else if (location.reload) {
+        // `location` global exists in a web worker context but lacks `.reload()` function.
+        location.reload();
+      }
+    }
+
+    if (data.type === 'reload') {
+      ws.close();
+
+      ws.onclose = function () {
+        location.reload();
+      };
+    }
+
+    if (data.type === 'error-resolved') {
+      console.log('[parcel] ✨ Error resolved');
+      removeErrorOverlay();
+    }
+
+    if (data.type === 'error') {
+      console.error('[parcel] 🚨  ' + data.error.message + '\n' + data.error.stack);
+      removeErrorOverlay();
+      var overlay = createErrorOverlay(data);
+      document.body.appendChild(overlay);
+    }
+  };
+}
+
+function removeErrorOverlay() {
+  var overlay = document.getElementById(OVERLAY_ID);
+
+  if (overlay) {
+    overlay.remove();
+  }
+}
+
+function createErrorOverlay(data) {
+  var overlay = document.createElement('div');
+  overlay.id = OVERLAY_ID; // html encode message and stack trace
+
+  var message = document.createElement('div');
+  var stackTrace = document.createElement('pre');
+  message.innerText = data.error.message;
+  stackTrace.innerText = data.error.stack;
+  overlay.innerHTML = '<div style="background: black; font-size: 16px; color: white; position: fixed; height: 100%; width: 100%; top: 0px; left: 0px; padding: 30px; opacity: 0.85; font-family: Menlo, Consolas, monospace; z-index: 9999;">' + '<span style="background: red; padding: 2px 4px; border-radius: 2px;">ERROR</span>' + '<span style="top: 2px; margin-left: 5px; position: relative;">🚨</span>' + '<div style="font-size: 18px; font-weight: bold; margin-top: 20px;">' + message.innerHTML + '</div>' + '<pre>' + stackTrace.innerHTML + '</pre>' + '</div>';
+  return overlay;
+}
+
+function getParents(bundle, id) {
+  var modules = bundle.modules;
+
+  if (!modules) {
+    return [];
+  }
+
+  var parents = [];
+  var k, d, dep;
+
+  for (k in modules) {
+    for (d in modules[k][1]) {
+      dep = modules[k][1][d];
+
+      if (dep === id || Array.isArray(dep) && dep[dep.length - 1] === id) {
+        parents.push(k);
+      }
+    }
+  }
+
+  if (bundle.parent) {
+    parents = parents.concat(getParents(bundle.parent, id));
+  }
+
+  return parents;
+}
+
+function hmrApply(bundle, asset) {
+  var modules = bundle.modules;
+
+  if (!modules) {
+    return;
+  }
+
+  if (modules[asset.id] || !bundle.parent) {
+    var fn = new Function('require', 'module', 'exports', asset.generated.js);
+    asset.isNew = !modules[asset.id];
+    modules[asset.id] = [fn, asset.deps];
+  } else if (bundle.parent) {
+    hmrApply(bundle.parent, asset);
+  }
+}
+
+function hmrAcceptCheck(bundle, id) {
+  var modules = bundle.modules;
+
+  if (!modules) {
+    return;
+  }
+
+  if (!modules[id] && bundle.parent) {
+    return hmrAcceptCheck(bundle.parent, id);
+  }
+
+  if (checkedAssets[id]) {
+    return;
+  }
+
+  checkedAssets[id] = true;
+  var cached = bundle.cache[id];
+  assetsToAccept.push([bundle, id]);
+
+  if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
+    return true;
+  }
+
+  return getParents(global.parcelRequire, id).some(function (id) {
+    return hmrAcceptCheck(global.parcelRequire, id);
+  });
+}
+
+function hmrAcceptRun(bundle, id) {
+  var cached = bundle.cache[id];
+  bundle.hotData = {};
+
+  if (cached) {
+    cached.hot.data = bundle.hotData;
+  }
+
+  if (cached && cached.hot && cached.hot._disposeCallbacks.length) {
+    cached.hot._disposeCallbacks.forEach(function (cb) {
+      cb(bundle.hotData);
+    });
+  }
+
+  delete bundle.cache[id];
+  bundle(id);
+  cached = bundle.cache[id];
+
+  if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
+    cached.hot._acceptCallbacks.forEach(function (cb) {
+      cb();
+    });
+
+    return true;
+  }
+}
+},{}]},{},["../node_modules/parcel/src/builtins/hmr-runtime.js","assets/js/jss.js"], null)
+//# sourceMappingURL=/jss.2d517eac.js.map

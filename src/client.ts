@@ -170,9 +170,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     const fullBody = true;//getQueryStringValue('fullbody') === "true";
     const phoneCasing = getQueryStringValue('phonecasing') === "true";
     const brandColor = getQueryStringValue('brandcolor') || "#087b36";
+    const isRtl = getQueryStringValue('lang') === "ar";
     brandColor = brandColor.replace('_', '#');
 
-    imiPreview.viewInit('.test-container', fullBody, phoneCasing);
+    imiPreview.viewInit('.test-container', fullBody, phoneCasing, isRtl);
     const $chatInput = document.getElementById('chat-input') as HTMLInputElement;
     imiPreview.initAdditionalDom({$chatInput});
     // imiPreview.
@@ -201,7 +202,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         'imi_bot_middleware_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiVGhpcyBpcyBJTUkgQk9UIG1pZGRsZXdhcmUiLCJpYXQiOjE1Njc4ODc5MTAsImV4cCI6NDE1OTg4NzkxMH0.dYbMaf8HYMD5K532p7DpHN0cmru-JKMjst-WS9zi7u8'
     };
 
-    initializeSocketConnection(data);
+    // initializeSocketConnection(data);
 });
 
 let eventInit = false;

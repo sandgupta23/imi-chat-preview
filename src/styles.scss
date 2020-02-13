@@ -55,6 +55,14 @@ ul, li {
   .content {
     text-align: right !important;
   }
+
+  .lang-option-ar {
+    display: none;
+  }
+
+  .lang-option-en {
+    display: inline-block !important;
+  }
 }
 
 .bg-opaque {
@@ -174,6 +182,7 @@ ul, li {
       .bot-logo {
         display: flex;
         margin-right: 10px;
+        margin-left: 10px;
         flex-grow: 0;
 
         img {
@@ -191,7 +200,7 @@ ul, li {
       }
 
       .bot-details {
-        flex-grow: 1;
+        //flex-grow: 1;
         height: 100%;
         display: flex;
         justify-content: center;
@@ -200,6 +209,32 @@ ul, li {
 
         #bot-description {
           margin-top: -6px !important;
+        }
+      }
+
+      .lang-option {
+        flex-grow: 1;
+        display: flex;
+        font-weight: bold;
+        margin-left: 30px;
+        margin-right: 30px;
+
+        a {
+          color: white;
+          text-decoration: none;
+          cursor: pointer;
+
+          &:hover {
+            text-underline: #0b3b8b;
+          }
+        }
+
+        .lang-option-en {
+          display: none;
+        }
+
+        .lang-option-ar {
+          justify-content: flex-end;
         }
       }
     }
@@ -266,6 +301,28 @@ ul, li {
 
     img {
       height: 100px;
+    }
+  }
+}
+
+.underline-animate {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    top: 100%;
+    border: 1px solid white;
+    left: 100%;
+    right: 0;
+    content: '';
+    opacity: 0;
+    transition: all 0.5s;
+  }
+
+  &:hover {
+    &::after {
+      left: 0;
+      opacity: 1;
     }
   }
 }

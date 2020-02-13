@@ -684,6 +684,12 @@ ul, li {
 .lang-rtl .content {
   text-align: right !important;
 }
+.lang-rtl .lang-option-ar {
+  display: none;
+}
+.lang-rtl .lang-option-en {
+  display: inline-block !important;
+}
 
 .bg-opaque {
   background: rgba(0, 0, 0, 0.32) !important;
@@ -778,6 +784,7 @@ ul, li {
 .imi-preview-grid-container .header .bot-intro .bot-logo {
   display: flex;
   margin-right: 10px;
+  margin-left: 10px;
   flex-grow: 0;
 }
 .imi-preview-grid-container .header .bot-intro .bot-logo img {
@@ -792,7 +799,6 @@ ul, li {
   padding: 8px;
 }
 .imi-preview-grid-container .header .bot-intro .bot-details {
-  flex-grow: 1;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -800,6 +806,27 @@ ul, li {
 }
 .imi-preview-grid-container .header .bot-intro .bot-details #bot-description {
   margin-top: -6px !important;
+}
+.imi-preview-grid-container .header .bot-intro .lang-option {
+  flex-grow: 1;
+  display: flex;
+  font-weight: bold;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+.imi-preview-grid-container .header .bot-intro .lang-option a {
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}
+.imi-preview-grid-container .header .bot-intro .lang-option a:hover {
+  text-underline: #0b3b8b;
+}
+.imi-preview-grid-container .header .bot-intro .lang-option .lang-option-en {
+  display: none;
+}
+.imi-preview-grid-container .header .bot-intro .lang-option .lang-option-ar {
+  justify-content: flex-end;
 }
 .imi-preview-grid-container .footer {
   height: 60px;
@@ -853,6 +880,24 @@ ul, li {
 }
 .imi-preview-grid-container .loader img {
   height: 100px;
+}
+
+.underline-animate {
+  position: relative;
+}
+.underline-animate::after {
+  position: absolute;
+  top: 100%;
+  border: 1px solid white;
+  left: 100%;
+  right: 0;
+  content: "";
+  opacity: 0;
+  transition: all 0.5s;
+}
+.underline-animate:hover::after {
+  left: 0;
+  opacity: 1;
 }
 
 .chat-body {

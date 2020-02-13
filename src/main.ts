@@ -92,9 +92,9 @@ class ImiPreview {
     _cb;
     _feedbackCB;
 
-    viewInit(selector, fullBody = true, phoneCasing = true) {
+    viewInit(selector, fullBody = true, phoneCasing = true, isRtl) {
         let mainParent = document.querySelector(selector) as HTMLElement;
-        mainParent.innerHTML = mainBodyTemplate(fullBody, phoneCasing);
+        mainParent.innerHTML = mainBodyTemplate(fullBody, phoneCasing, isRtl);
     }
 
     initAdditionalDom(dom) {
@@ -111,7 +111,8 @@ class ImiPreview {
         this._feedbackCB = cb;
     }
 
-    setOptions(botDetails: { description: string, logo: string, title: string }, theme: { brandColor: string, feedbackEnabled: boolean, showOptionsEllipsis: boolean, time24HrFormat: boolean
+    setOptions(botDetails: { description: string, logo: string, title: string }, theme: {
+        brandColor: string, feedbackEnabled: boolean, showOptionsEllipsis: boolean, time24HrFormat: boolean
     }) {
         if ($envOptions) {
             if (theme.showOptionsEllipsis === true) {
@@ -185,6 +186,7 @@ function initEvents(imiPreview: ImiPreview) {
             target.parentElement.classList.add('active');
             imiPreview._feedbackCB({txn, bot_message_id}, Number(feedback));
         }
+
         if (target.hasAttribute('data-payload')) {
             imiPreview._cb(target.getAttribute('data-payload'));
             return;
@@ -283,6 +285,24 @@ function initEvents(imiPreview: ImiPreview) {
         });
     } catch (e) {
         console.log(e)
+    }
+
+    try {
+        const langOption = document.getElementsByClassName('lang-option')[0];
+        langOption.addEventListener('click', function (event) {
+            const target = event.target as HTMLElement;
+            let lang;
+            if (target.classList.contains('lang-option-ar')) {
+                lang = 'ar';
+            }else {
+                lang = 'en';
+            }
+
+            const newUrl = updateQueryStringParameter(location.href, 'lang', lang);
+            location.href = newUrl;
+        });
+    } catch (e) {
+
     }
 
 
@@ -416,11 +436,11 @@ function findParentWithClass($child, className) {
 // }, 2000);
 
 
-function mainBodyTemplate(fullBody, phoneCasing) {
+function mainBodyTemplate(fullBody, phoneCasing, isRtl) {
     let str = "";
     if (fullBody) {
         // phoneCasing = false;
-        str = phoneCasing ? getPhoneCoverTemplate() : getFullBodyExceptPhoneCover();
+        str = phoneCasing ? getPhoneCoverTemplate(isRtl) : getFullBodyExceptPhoneCover(isRtl);
     } else {
         str = `
     <!-- The Modal -->
@@ -457,13 +477,14 @@ function getModelTemplate() {
             </div>
     `;
 }
+
 //
-function getFullBodyExceptPhoneCover() {
+function getFullBodyExceptPhoneCover(isRtl) {
 
     return `
         <div class="imi-preview-grid-container">
                         <div class="header" style="z-index: 1">
-                            <div class="bot-intro" id="botIntro">
+                            <div class="bot-intro" id="botIntro" dir="${isRtl?'rtl':'ltr'}">
                                 <span class="bot-logo">
                                     <img id="bot-logo"
                                     onerror="this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'" 
@@ -474,6 +495,10 @@ function getFullBodyExceptPhoneCover() {
                                     <div id="bot-title" ></div>
                                     <div id="bot-description">hello</div>
                                 </div>
+                                <div class="lang-option">
+                                    <a class="lang-option-ar underline-animate">اتصل بنا </a>
+                                    <a class="lang-option-en underline-animate">English</a>
+                                 </div>
                                 <div class="options"  id="env-options">
                                     <i class="fa fa-ellipsis-v"></i>
                                 </div>
@@ -529,7 +554,7 @@ function getFullBodyExceptPhoneCover() {
 }
 
 
-function getPhoneCoverTemplate() {
+function getPhoneCoverTemplate(isRtl) {
     return `
     <div class="page1">
     <div class="page__content">

@@ -1961,7 +1961,7 @@ function initApp(imiPreview) {
 var ImiPreview = function () {
   function ImiPreview() {}
 
-  ImiPreview.prototype.viewInit = function (selector, fullBody, phoneCasing) {
+  ImiPreview.prototype.viewInit = function (selector, fullBody, phoneCasing, isRtl) {
     if (fullBody === void 0) {
       fullBody = true;
     }
@@ -1971,7 +1971,7 @@ var ImiPreview = function () {
     }
 
     var mainParent = document.querySelector(selector);
-    mainParent.innerHTML = mainBodyTemplate(fullBody, phoneCasing);
+    mainParent.innerHTML = mainBodyTemplate(fullBody, phoneCasing, isRtl);
   };
 
   ImiPreview.prototype.initAdditionalDom = function (dom) {
@@ -2155,6 +2155,23 @@ function initEvents(imiPreview) {
   }
 
   try {
+    var langOption = document.getElementsByClassName('lang-option')[0];
+    langOption.addEventListener('click', function (event) {
+      var target = event.target;
+      var lang;
+
+      if (target.classList.contains('lang-option-ar')) {
+        lang = 'ar';
+      } else {
+        lang = 'en';
+      }
+
+      var newUrl = utility_1.updateQueryStringParameter(location.href, 'lang', lang);
+      location.href = newUrl;
+    });
+  } catch (e) {}
+
+  try {
     dom_1.$envOptions.addEventListener('click', function () {
       return;
       var $phoneView = document.getElementsByClassName('chat-body')[0];
@@ -2317,11 +2334,11 @@ function findParentWithClass($child, className) {
   }
 }
 
-function mainBodyTemplate(fullBody, phoneCasing) {
+function mainBodyTemplate(fullBody, phoneCasing, isRtl) {
   var str = "";
 
   if (fullBody) {
-    str = phoneCasing ? getPhoneCoverTemplate() : getFullBodyExceptPhoneCover();
+    str = phoneCasing ? getPhoneCoverTemplate(isRtl) : getFullBodyExceptPhoneCover(isRtl);
   } else {
     str = "\n    <!-- The Modal -->\n            <div id=\"myModal\" class=\"modal2\">\n                <span class=\"close\">&times;</span>\n                <img class=\"modal-content\" id=\"img01\">\n                <div id=\"caption\"></div>\n            </div>\n\n                <div class=\"imi-preview-grid-container\">\n\n                       \n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"padding: 8px 12px; display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        \n                    </div>\n    \n    \n    ";
   }
@@ -2333,11 +2350,11 @@ function getModelTemplate() {
   return "\n        <div id=\"myModal\" class=\"modal2\">\n                <span class=\"close\">&times;</span>\n                <img class=\"modal-content\" id=\"img01\">\n                <div id=\"caption\"></div>\n            </div>\n    ";
 }
 
-function getFullBodyExceptPhoneCover() {
-  return "\n        <div class=\"imi-preview-grid-container\">\n                        <div class=\"header\" style=\"z-index: 1\">\n                            <div class=\"bot-intro\" id=\"botIntro\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\"\n                                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\" \n                                    src=\"https://whizkey.ae/wisdom/static/media/rammas.42381205.gif\"\n                                         alt=\"\">\n                                </span>\n                                <div class=\"bot-details\">\n                                    <div id=\"bot-title\" ></div>\n                                    <div id=\"bot-description\">hello</div>\n                                </div>\n                                <div class=\"options\"  id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n                            </div>\n                        </div>\n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        <!--chat body ends-->\n                        <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>\n                    </div>\n      <!--know more starts-->\n        <div class=\"chat-img-overlay\" id=\"chat-img-overlay\" style=\"display: none\">\n          <span class=\"fa fa-times close-chat-img-overlay\"></span>\n          <div class=\"chat-know-more-overlay\">\n            <header class=\"chat-know-more-overlay-header\">\n              <div class=\"description-top\" style=\"text-align: center\">This bot was built using</div>\n              <div><img src=\"https://staging.imibot.ai/static/assets/img/IMI_logo.png\" alt=\"\"></div>\n              <strong class=\"description-bottom\">The enterprise bot building platform to automate conversations</strong>\n            </header>\n    \n            <div class=\"chat-know-more-overlay-item\">\n              <img src=\"https://staging.imibot.ai/static/assets/img/chat/bot.svg\" alt=\"\">\n              <div>Contextualise bot interactions with artificial intelligence</div>\n            </div>\n            <div class=\"chat-know-more-overlay-item\">\n              <img src=\"https://staging.imibot.ai/static/assets/img/chat/group-5.svg\" alt=\"\">\n              <div>Provide seamless omnichannel experience</div>\n            </div>\n            <div class=\"chat-know-more-overlay-item\">\n              <img src=\"https://staging.imibot.ai/static/assets/img/chat/browser.svg\" alt=\"\">\n              <div>Orchestrate individual bots using a controller</div>\n            </div>\n            <div class=\"chat-know-more-overlay-item\">\n              <img src=\"https://staging.imibot.ai/static/assets/img/chat/group-2.svg\" alt=\"\">\n              <div>Integrate various services within your flow to help user</div>\n            </div>\n    \n            <a href=\"https://imimobile.com/products/ai-automation\" target=\"_blank\">\n            <button  class=\"imi-button-primary\" style=\"width: 100px;background: #00abd3; border: none; color: white\" mat-flat-button color=\"primary\"> Know more</button></a>\n    \n          </div>\n        </div>\n    ";
+function getFullBodyExceptPhoneCover(isRtl) {
+  return "\n        <div class=\"imi-preview-grid-container\">\n                        <div class=\"header\" style=\"z-index: 1\">\n                            <div class=\"bot-intro\" id=\"botIntro\" dir=\"" + (isRtl ? 'rtl' : 'ltr') + "\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\"\n                                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\" \n                                    src=\"https://whizkey.ae/wisdom/static/media/rammas.42381205.gif\"\n                                         alt=\"\">\n                                </span>\n                                <div class=\"bot-details\">\n                                    <div id=\"bot-title\" ></div>\n                                    <div id=\"bot-description\">hello</div>\n                                </div>\n                                <div class=\"lang-option\">\n                                    <a class=\"lang-option-ar underline-animate\">\u0627\u062A\u0635\u0644 \u0628\u0646\u0627 </a>\n                                    <a class=\"lang-option-en underline-animate\">English</a>\n                                 </div>\n                                <div class=\"options\"  id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n                            </div>\n                        </div>\n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        <!--chat body ends-->\n                        <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>\n                    </div>\n      <!--know more starts-->\n        <div class=\"chat-img-overlay\" id=\"chat-img-overlay\" style=\"display: none\">\n          <span class=\"fa fa-times close-chat-img-overlay\"></span>\n          <div class=\"chat-know-more-overlay\">\n            <header class=\"chat-know-more-overlay-header\">\n              <div class=\"description-top\" style=\"text-align: center\">This bot was built using</div>\n              <div><img src=\"https://staging.imibot.ai/static/assets/img/IMI_logo.png\" alt=\"\"></div>\n              <strong class=\"description-bottom\">The enterprise bot building platform to automate conversations</strong>\n            </header>\n    \n            <div class=\"chat-know-more-overlay-item\">\n              <img src=\"https://staging.imibot.ai/static/assets/img/chat/bot.svg\" alt=\"\">\n              <div>Contextualise bot interactions with artificial intelligence</div>\n            </div>\n            <div class=\"chat-know-more-overlay-item\">\n              <img src=\"https://staging.imibot.ai/static/assets/img/chat/group-5.svg\" alt=\"\">\n              <div>Provide seamless omnichannel experience</div>\n            </div>\n            <div class=\"chat-know-more-overlay-item\">\n              <img src=\"https://staging.imibot.ai/static/assets/img/chat/browser.svg\" alt=\"\">\n              <div>Orchestrate individual bots using a controller</div>\n            </div>\n            <div class=\"chat-know-more-overlay-item\">\n              <img src=\"https://staging.imibot.ai/static/assets/img/chat/group-2.svg\" alt=\"\">\n              <div>Integrate various services within your flow to help user</div>\n            </div>\n    \n            <a href=\"https://imimobile.com/products/ai-automation\" target=\"_blank\">\n            <button  class=\"imi-button-primary\" style=\"width: 100px;background: #00abd3; border: none; color: white\" mat-flat-button color=\"primary\"> Know more</button></a>\n    \n          </div>\n        </div>\n    ";
 }
 
-function getPhoneCoverTemplate() {
+function getPhoneCoverTemplate(isRtl) {
   return "\n    <div class=\"page1\">\n    <div class=\"page__content\">\n        <div class=\"phone\">\n            <div class=\"phone__body\">\n                <div class=\"phone__view\">\n                    <div id=\"phone-modal\" class=\"modal1\" style=\"\">\n                        <i class=\"fa fa-times\" id=\"close-modal1\"></i>\n                        <div class=\"lang-panel\">\n                            <h1>Select language</h1>\n                            <div>\n                                <select id=\"lang-select\">\n                                    <option value=\"en\">English</option>\n                                    <option value=\"ar\" style=\"direction: rtl;\">\u0639\u0631\u0628\u064A</option>\n                                </select>\n                            </div>\n                            <button class=\"imi-button-primary\" id=\"lang-submit\">Submit</button>\n                        </div>\n                    </div>\n                    <div class=\"imi-preview-grid-container\">\n\n                        <div class=\"header\" style=\"z-index: 1\">\n                            <div class=\"basel-bg\"></div>\n                            <div class=\"bot-intro\" id=\"botIntro\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\"\n                                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\" \n                                       alt=\"\">\n                                </span>\n                                <div class=\"bot-details\">\n                                    <div id=\"bot-title\" style=\"text-align: center\" ></div>\n                                </div>\n                                <div style=\"width: 50px\">\n                                <div class=\"options\" id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n</div>\n                            </div>\n                        </div>\n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"padding: 8px 12px; display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        <!--chat body ends-->\n                        <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"phone__notch\">\n                    <div class=\"phone__speaker\"></div>\n                    <div class=\"phone__camera\"></div>\n                </div>\n            </div>\n            <div class=\"phone__btn\">\n                <button class=\"phone__btn--power\"></button>\n                <div class=\"phone__btn--volume\">\n                    <button class=\"phone__btn--volume-up\"></button>\n                    <button class=\"phone__btn--volume-down\"></button>\n                </div>\n                <button class=\"phone__btn--mute\"></button>\n            </div>\n        </div>\n    </div>\n</div>\n    ";
 }
 
@@ -7340,7 +7357,7 @@ function changeFavicon(img) {
 
 document.addEventListener('DOMContentLoaded', function () {
   return __awaiter(this, void 0, void 0, function () {
-    var botDetails, imiPreview, fullBody, phoneCasing, brandColor, $chatInput, theme, firstMessageData, data;
+    var botDetails, imiPreview, fullBody, phoneCasing, brandColor, isRtl, $chatInput, theme, firstMessageData, data;
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
@@ -7371,8 +7388,9 @@ document.addEventListener('DOMContentLoaded', function () {
           fullBody = true;
           phoneCasing = utility_1.getQueryStringValue('phonecasing') === "true";
           brandColor = utility_1.getQueryStringValue('brandcolor') || "#087b36";
+          isRtl = utility_1.getQueryStringValue('lang') === "ar";
           brandColor = brandColor.replace('_', '#');
-          imiPreview.viewInit('.test-container', fullBody, phoneCasing);
+          imiPreview.viewInit('.test-container', fullBody, phoneCasing, isRtl);
           $chatInput = document.getElementById('chat-input');
           imiPreview.initAdditionalDom({
             $chatInput: $chatInput
@@ -7399,7 +7417,6 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             'imi_bot_middleware_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiVGhpcyBpcyBJTUkgQk9UIG1pZGRsZXdhcmUiLCJpYXQiOjE1Njc4ODc5MTAsImV4cCI6NDE1OTg4NzkxMH0.dYbMaf8HYMD5K532p7DpHN0cmru-JKMjst-WS9zi7u8'
           };
-          initializeSocketConnection(data);
           return [2];
       }
     });
@@ -7456,7 +7473,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57534" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52377" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
