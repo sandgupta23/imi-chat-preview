@@ -18,7 +18,7 @@ import 'regenerator-runtime/runtime'
 import {sendFeedback, sendMessageToBot, serializeGeneratedMessagesToPreviewMessages} from "./send-api";
 import {environment} from "./environment";
 import {ESourceType, ISendApiResp, ISendApiResponsePayload} from "./typings/send-api";
-import {getQueryStringValue, updateQueryStringParameter} from "./utility";
+import {getQueryStringValue, scrollBodyToBottom, updateQueryStringParameter} from "./utility";
 
 let isModelShown = false;
 
@@ -111,14 +111,16 @@ class ImiPreview {
         this._feedbackCB = cb;
     }
 
-    setOptions(botDetails: { description: string, logo: string, title: string }, theme: { brandColor: string, feedbackEnabled: boolean, showOptionsEllipsis: boolean, time24HrFormat: boolean
+    setOptions(botDetails: { description: string, logo: string, title: string }, theme: {
+        brandColor: string, feedbackEnabled: boolean, showOptionsEllipsis: boolean, time24HrFormat: boolean
     }) {
         if ($envOptions) {
-            if (theme.showOptionsEllipsis === true) {
-                $envOptions.style.display = "block"
-            } else {
-                $envOptions.style.display = "none"
-            }
+            // $envOptions.style.display = "block"
+            // if (theme.showOptionsEllipsis === true) {
+            //     $envOptions.style.display = "block"
+            // } else {
+            //     $envOptions.style.display = "none"
+            // }
         }
         themeOptions = theme;
         setOptions(botDetails);
@@ -160,30 +162,65 @@ function removeModal() {
 
 function initEvents(imiPreview: ImiPreview) {
 
-    // document.getElementById('close-modal1').addEventListener('click', ($event) => {
-    //     removeModal();
-    // });
+    try {
+        document.getElementById('close-modal1').addEventListener('click', ($event) => {
+            removeModal();
+        });
+    } catch (e) {
+        console.log(e);
+    }
 
 
     console.log($chatBody);
     $chatBody.addEventListener('click', ($event) => {
         const target = $event.target as HTMLElement;
 
-        if (target.classList.contains('feedback-like') || target.classList.contains('feedback-dislike')) {
+        if (target.classList.contains('feedback-like')
+            || target.classList.contains('feedback-dislike')
+            || target.classList.contains('downvote-comment-submit')
+            || target.classList.contains('downvote-comment-skip')) {
 
-            const $feedbackWrapper = findParentWithClass(target, 'msg-bubble-options-panel');
-            $feedbackWrapper.classList.remove('ask-feedback');
-            const oldFeedback = $feedbackWrapper.getAttribute('data-feedback');
-            if (oldFeedback != null) {
+            const parent = findParentWithClass(target, 'feedback');
+            if (parent && parent.classList.contains('active')) {
                 return;
             }
+            const $feedbackWrapper = findParentWithClass(target, 'msg-bubble-options-panel');
+            const $feedbackWrapperParent = $feedbackWrapper.parentElement;
+            debugger;
+            const $commentTextArea = $feedbackWrapperParent.querySelector('.downvote-comment-textarea');
+            const $downvoteCommentWrapper = $feedbackWrapperParent.querySelector('.downvote-comment');
+            $feedbackWrapper.classList.remove('ask-feedback');
+            const oldFeedback = $feedbackWrapper.getAttribute('data-feedback');
+            // if (oldFeedback != null) {
+            //     return;
+            // }
             const $messageBubble = findParentWithClass(target, 'msg-bubble');
             const feedback = target.getAttribute('data-feedback-value');
             const txn = $messageBubble.getAttribute('data-txn');
             const bot_message_id = $messageBubble.getAttribute('data-bot_message_id');
-            $feedbackWrapper.setAttribute('data-feedback', feedback);
             target.parentElement.classList.add('active');
-            imiPreview._feedbackCB({txn, bot_message_id}, Number(feedback));
+            if (target.classList.contains('feedback-dislike')) {
+                $downvoteCommentWrapper.style.display = "flex";
+                $feedbackWrapper.setAttribute('data-feedback', feedback);
+                scrollBodyToBottom();
+            }
+            const comment = $commentTextArea.value as string;
+            if (target.classList.contains('downvote-comment-submit')
+                || target.classList.contains('downvote-comment-skip')
+                || target.classList.contains('feedback-like')) {
+                if (target.classList.contains('downvote-comment-submit')) {
+                    if (!comment || !comment.trim()) {
+                        $commentTextArea.style.border = '1px solid red';
+                        return;
+                    }
+                }
+                const feedbackNumber = Number(feedback);
+                imiPreview._feedbackCB({txn, bot_message_id, comment}, feedbackNumber);
+                $downvoteCommentWrapper.style.display = "none";
+                if (feedbackNumber === 0 && target.classList.contains('downvote-comment-submit')) {
+                    $messageBubble.querySelector('.active').querySelector('.final-label').innerText = 'Downvoted with comment';
+                }
+            }
         }
         if (target.hasAttribute('data-payload')) {
             imiPreview._cb(target.getAttribute('data-payload'));
@@ -285,6 +322,24 @@ function initEvents(imiPreview: ImiPreview) {
         console.log(e)
     }
 
+    try {
+        const langOption = document.getElementsByClassName('lang-option')[0];
+        langOption.addEventListener('click', function (event) {
+            const target = event.target as HTMLElement;
+            let lang;
+            if (target.classList.contains('lang-option-ar')) {
+                lang = 'ar';
+            } else {
+                lang = 'en';
+            }
+
+            const newUrl = updateQueryStringParameter(location.href, 'lang', lang);
+            location.href = newUrl;
+        });
+    } catch (e) {
+
+    }
+
 
     try {
         $envOptions.addEventListener('click', () => {
@@ -341,19 +396,22 @@ function getBotResponseByTxnId(txn) {
     return botResponses.find(res => res.transaction_id === txn)
 }
 
-export async function sendFeedbackHandler(resp: { txn: string, bot_message_id: string }, feedback: number) {
+export async function sendFeedbackHandler(resp: { txn: string, bot_message_id: string, comment: string }, feedback: number) {
+    debugger;
     let parsedFeedback;
     if (feedback === 0) {
         parsedFeedback = 'NEGATIVE'
     } else if (feedback === 1) {
         parsedFeedback = 'POSITIVE'
     }
+    debugger;
     const res = getBotResponseByTxnId(resp.txn);
     try {
         await sendFeedback({
             consumer_id: res.room.consumer_id,
             feedback: parsedFeedback,
-            bot_message_id: res.bot_message_id
+            bot_message_id: res.bot_message_id,
+            feedback_comment: resp.comment,
         });
     } catch (e) {
         /*todo: remove like from view*/
@@ -457,13 +515,14 @@ function getModelTemplate() {
             </div>
     `;
 }
+
 //
-function getFullBodyExceptPhoneCover() {
+function getFullBodyExceptPhoneCover(isRtl?) {
     debugger;
     return `
         <div class="imi-preview-grid-container">
                         <div class="header" style="z-index: 1">
-                            <div class="bot-intro" id="botIntro">
+                            <div class="bot-intro" id="botIntro" dir="${isRtl ? 'rtl' : 'ltr'}">
                                 <span class="bot-logo">
                                     <img id="bot-logo"
                                     onerror="this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'" 
@@ -529,7 +588,7 @@ function getFullBodyExceptPhoneCover() {
 }
 
 
-function getPhoneCoverTemplate() {
+function getPhoneCoverTemplate(isRtl?) {
     return `
     <div class="page1">
     <div class="page__content">
@@ -551,7 +610,7 @@ function getPhoneCoverTemplate() {
                     </div>
                     <div class="imi-preview-grid-container">
 
-                        <div class="header" style="z-index: 1">
+                        <div class="header" dir="${isRtl ? 'rtl' : 'ltr'}" style="z-index: 1">
                             <div class="basel-bg"></div>
                             <div class="bot-intro" id="botIntro">
                                 <span class="bot-logo">
@@ -559,7 +618,7 @@ function getPhoneCoverTemplate() {
                                     onerror="this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'" 
                                        alt="">
                                 </span>
-                                <div class="bot-details">
+                                <div class="bot-details" style="margin-left: ${isRtl ? '42px' : '-42px'}">
                                     <div id="bot-title" style="text-align: center" ></div>
                                 </div>
                                 <div style="width: 50px">

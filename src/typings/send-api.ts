@@ -11,6 +11,7 @@ export interface ISendApiReq {
 export interface ISendApiResp {
     "TimeStamp"?: 1567167604976,
     "bot_message_id"?: 750126,
+    "comment"?: string,
     "bot_msg"?: "",
     "extra_params"?: {},
     "extras"?: {},
@@ -276,6 +277,7 @@ export interface IMessageData extends IGeneratedMessageItem {
     messageMediaType?: EBotMessageMediaType;
     bot_message_id?: number;
     feedback?: any;
+    feedback_comment?: string;
     isLast?: boolean;
     response_language?: string;
     video: {url:string},

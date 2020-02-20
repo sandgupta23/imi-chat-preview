@@ -13,22 +13,49 @@ export class Feedback {
         return convertStringToDom(str);
     }
 
-    getTemplate({txnId, bot_message_id, humanClass, isLast, feedbackSTr, likeActive, disLikeActive, time, str, randomNumber, hideFeedback}) {
+    getTemplate({txnId, bot_message_id, humanClass, isLast, feedbackSTr, likeActive, disLikeActive, time, str, randomNumber, hideFeedback, feedback_comment}) {
         debugger;
         const askFeedbackClass = (likeActive || disLikeActive) ? '' : 'ask-feedback';
         let feedbackHtml = `
         <div class="msg-bubble-options-panel ${askFeedbackClass}" ${feedbackSTr}>
-                    <div class="feedback  ${likeActive}" data-feedback-value="1" title="Helpful">
-                         <i class="fa fa-thumbs-up feedback-like" data-feedback-value="1"></i>
-                         <span class="feedback-like ask-label" data-feedback-value="1">Upvote</span>
-                         <span class="feedback-like final-label" data-feedback-value="1">Upvoted</span>
+                    <div>
+                    <div style="display: flex">
+                        <div class="feedback  ${likeActive}" data-feedback-value="1" title="Helpful">
+                             <i class="fa fa-thumbs-up feedback-like" data-feedback-value="1"></i>
+                             <span class="feedback-like ask-label" data-feedback-value="1">Upvote</span>
+                             <span class="feedback-like final-label" data-feedback-value="1">Upvoted</span>
+                        </div>
+                        <div class="feedback ${disLikeActive}" title="Not helpful" data-feedback-value="0">
+                            <i class="fa fa-thumbs-down feedback-dislike" data-feedback-value="0"></i>
+                            <span class="feedback-dislike ask-label" data-feedback-value="0">Downvote</span>
+                            <span class="feedback-dislike final-label" data-feedback-value="0">Downvoted ${feedback_comment? 'with comment':''}</span>
+                        </div>
                     </div>
-                    <div class="feedback ${disLikeActive}" title="Not helpful" data-feedback-value="0">
-                        <i class="fa fa-thumbs-down feedback-dislike" data-feedback-value="0"></i>
-                        <span class="feedback-like ask-label" data-feedback-value="0">Downvote</span>
-                        <span class="feedback-dislike final-label" data-feedback-value="0">Downvoted</span>
+                    <div class="downvote-comment" style="display: none; min-width: 200px; border: 1px solid #d8d8d8; flex-direction: column; padding: 4px 10px; border-radius: 2px">
+                        <div style="display: flex;height: 28px;align-items: center;">
+                            <div class="feedback ${disLikeActive}" title="Not helpful" data-feedback-value="0">
+                                <i class="fa fa-thumbs-down feedback-dislike" data-feedback-value="0"></i>
+                            </div>
+                            <div style="margin-left: 6px">Please leave feedback if any</div>
+                        </div>
+                        <div>
+                            <textarea class="downvote-comment-textarea" style="border: 1px solid #d8d8d8;background: #f8f8f8;
+      height: 52px;
+      border-radius: 3px;
+      padding: 4px;
+    " name="" id="" cols="30" rows="4"></textarea>
+                        </div>
+                        <div style="display: flex">
+                            <button style="width: 68px;
+                            border-color: #d8d8d8;
+        height: 28px; margin-right: 6px" class="imi-button-primary downvote-comment-skip">Skip</button>
+                            <button style="flex: 1;background: #00abd3;
+        height: 28px; border-color: #00abd3; color: white" class="imi-button-primary downvote-comment-submit">Submit</button>
+                        </div>
                     </div>
+</div>
                 </div>
+                
         `;
 
         if (hideFeedback) {
