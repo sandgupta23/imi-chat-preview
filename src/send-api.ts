@@ -5,7 +5,7 @@ import {EBotMessageMediaType, ESourceType, IGeneratedMessageItem, IMessageData, 
 
 export const socketKey = createRandomString(15);
 
-export function sendMessageToBot(bot_access_token: string, enterprise_unique_name: string, humanMessage: string, sourceType: ESourceType): Promise<ISendApiResp> {
+export function sendMessageToBot(bot_access_token: string, enterprise_unique_name: string, humanMessage: string, sourceType: ESourceType, payload?:string): Promise<ISendApiResp> {
     const url = `https://${environment.root}imibot.ai/api/v1/webhook/web/`;
     const body = {
         "consumer": {
@@ -15,7 +15,7 @@ export function sendMessageToBot(bot_access_token: string, enterprise_unique_nam
             }
         },
         "type": sourceType || ESourceType.human,
-        "msg": humanMessage,
+        "msg": payload || humanMessage,
         "platform": "web",
         "is_test": false
     };

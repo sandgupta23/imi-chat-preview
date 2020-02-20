@@ -904,7 +904,7 @@ var send_api_1 = require("./typings/send-api");
 
 exports.socketKey = createRandomString(15);
 
-function sendMessageToBot(bot_access_token, enterprise_unique_name, humanMessage, sourceType) {
+function sendMessageToBot(bot_access_token, enterprise_unique_name, humanMessage, sourceType, payload) {
   var url = "https://" + environment_1.environment.root + "imibot.ai/api/v1/webhook/web/";
   var body = {
     "consumer": __assign(__assign({}, environment_1.environment.consumer || {}), {
@@ -913,7 +913,7 @@ function sendMessageToBot(bot_access_token, enterprise_unique_name, humanMessage
       }
     }),
     "type": sourceType || send_api_1.ESourceType.human,
-    "msg": humanMessage,
+    "msg": payload || humanMessage,
     "platform": "web",
     "is_test": false
   };
@@ -2066,7 +2066,9 @@ function initEvents(imiPreview) {
     }
 
     if (target.hasAttribute('data-payload')) {
-      imiPreview._cb(target.getAttribute('data-payload'));
+      debugger;
+
+      imiPreview._cb(target.textContent, target.getAttribute('data-payload'));
 
       return;
     }
@@ -2201,7 +2203,7 @@ function initEvents(imiPreview) {
   }
 }
 
-function humanMessageHandler(humanMessage, sourceType) {
+function humanMessageHandler(humanMessage, sourceType, payload) {
   return __awaiter(this, void 0, void 0, function () {
     var botResponse, messageData;
     return __generator(this, function (_a) {
@@ -2212,7 +2214,7 @@ function humanMessageHandler(humanMessage, sourceType) {
             text: humanMessage,
             time: Date.now()
           }]);
-          return [4, send_api_1.sendMessageToBot(environment_1.environment.bot_access_token, environment_1.environment.enterprise_unique_name, humanMessage)];
+          return [4, send_api_1.sendMessageToBot(environment_1.environment.bot_access_token, environment_1.environment.enterprise_unique_name, humanMessage, null, payload)];
 
         case 1:
           botResponse = _a.sent();
@@ -7380,8 +7382,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
           imiPreview = new ImiPreview();
           imiPreviewTemp = imiPreview;
-          imiPreview.setSendHumanMessageCallback(function (val) {
-            main_1.humanMessageHandler(val);
+          imiPreview.setSendHumanMessageCallback(function (message, quickReplyPayload) {
+            debugger;
+            main_1.humanMessageHandler(message, send_api_2.ESourceType.human, quickReplyPayload);
           });
           imiPreview.setSendFeedback(function (val, feedback) {
             main_1.sendFeedbackHandler(val, feedback);
@@ -7474,7 +7477,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60746" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63775" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

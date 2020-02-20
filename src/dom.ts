@@ -74,7 +74,7 @@ export function setOptions(intro: IBotDetailsApiResp) {
     }
 }
 
-export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload, hideFeedback) {
+export function AppendMessageInChatBody(messages: IMessageData[], botResponse?: ISendApiResponsePayload, hideFeedback?) {
 
     // if (botResponse) {
     //     if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {

@@ -159,8 +159,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const imiPreview = new ImiPreview();
     imiPreviewTemp = imiPreview;
-    imiPreview.setSendHumanMessageCallback((val) => {
-        humanMessageHandler(val);
+    imiPreview.setSendHumanMessageCallback((message, quickReplyPayload) => {
+        debugger;
+        humanMessageHandler(message,ESourceType.human, quickReplyPayload);
     });
     imiPreview.setSendFeedback((val, feedback) => {
         sendFeedbackHandler(val, feedback);

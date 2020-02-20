@@ -194,7 +194,8 @@ function initEvents(imiPreview: ImiPreview) {
         }
 
         if (target.hasAttribute('data-payload')) {
-            imiPreview._cb(target.getAttribute('data-payload'));
+            debugger;
+            imiPreview._cb(target.textContent, target.getAttribute('data-payload'));
             return;
         }
 
@@ -337,7 +338,7 @@ function initEvents(imiPreview: ImiPreview) {
 
 }
 
-export async function humanMessageHandler(humanMessage: string, sourceType?) {
+    export async function humanMessageHandler(humanMessage: string, sourceType?, payload?: string) {
     // alert();
     AppendMessageInChatBody([{
         sourceType: sourceType || ESourceType.human,
@@ -345,7 +346,7 @@ export async function humanMessageHandler(humanMessage: string, sourceType?) {
         time: Date.now()
     }]);
 
-    const botResponse = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, humanMessage);
+    const botResponse = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, humanMessage,null, payload);
     // if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
     //     AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null);
     //     console.log(`previous room : ${environment.room}. new room ${botResponse.room.id}`);
