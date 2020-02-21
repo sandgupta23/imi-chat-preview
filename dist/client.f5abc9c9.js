@@ -423,7 +423,8 @@ var QuickReply = function () {
   };
 
   QuickReply.prototype.getTemplate = function (quick_reply, source) {
-    var htmlStr = "\n                <div class=\"message-wrapper " + (source === send_api_1.ESourceType.human ? 'message-wrapper-human' : '') + "\">\n                    <div class=\"content\">" + quick_reply.text + "</div>\n                </div>\n                <div class=\"message-wrapper-quick-reply\">\n                    " + this.createQuickReplyButtons(quick_reply) + "\n                </div>\n            ";
+    var quickReplyTitleHtml = quick_reply.text ? "<div class=\"content\">" + quick_reply.text + "</div>" : '';
+    var htmlStr = "\n                <div class=\"message-wrapper " + (source === send_api_1.ESourceType.human ? 'message-wrapper-human' : '') + "\">\n                    " + quickReplyTitleHtml + "\n                </div>\n                <div class=\"message-wrapper-quick-reply\">\n                    " + this.createQuickReplyButtons(quick_reply) + "\n                </div>\n            ";
     return htmlStr;
   };
 
@@ -7267,7 +7268,9 @@ var style = {
           "color": "#268126",
           "font-weight": 600,
           "border-radius": "10px",
-          "padding": "9px 10px",
+          "padding": "5px 10px",
+          "font-family": "inherit",
+          fontSize: "14px",
           "&:hover": {
             "background": "#268126",
             "color": "white",
@@ -7477,7 +7480,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63775" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52242" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

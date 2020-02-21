@@ -42,7 +42,9 @@ const style = {
                     "color": "#268126",
                     "font-weight": 600,
                     "border-radius": "10px",
-                    "padding": "9px 10px",
+                    "padding": "5px 10px",
+                    "font-family": "inherit",
+                    fontSize: "14px",
                     "&:hover": {
                         "background": "#268126",
                         "color": "white",

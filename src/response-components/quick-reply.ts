@@ -10,9 +10,10 @@ export class QuickReply {
     }
 
     getTemplate(quick_reply, source?: ESourceType) {
+        const quickReplyTitleHtml = quick_reply.text? `<div class="content">${quick_reply.text}</div>`: '';
         const htmlStr = `
                 <div class="message-wrapper ${source === ESourceType.human ? 'message-wrapper-human' : ''}">
-                    <div class="content">${quick_reply.text}</div>
+                    ${quickReplyTitleHtml}
                 </div>
                 <div class="message-wrapper-quick-reply">
                     ${this.createQuickReplyButtons(quick_reply)}
