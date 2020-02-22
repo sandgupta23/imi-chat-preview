@@ -57,6 +57,15 @@ export function initClientEvents() {
         });
         $chatInput.addEventListener('keypress', ($event) => {
             if ($event.key === 'Enter') {
+                const downvoteCommentWrapper = document.querySelectorAll('.downvote-comment.d-flex');
+                Array.from(downvoteCommentWrapper).forEach((downvoteCommentBox: HTMLElement)=>{
+                    const skipButton: HTMLElement = downvoteCommentBox.querySelector('.downvote-comment-skip');
+                    skipButton.click();
+                });
+                // const lastButton =
+                // if (skipFeedbackButton) {
+                //     skipFeedbackButton.click();
+                // }
                 let humanMessage = $chatInput.value;
                 if (!humanMessage || !humanMessage.trim()) {
                     return;
@@ -170,8 +179,25 @@ function initEvents(imiPreview: ImiPreview) {
         console.log(e);
     }
 
+    $chatBody.addEventListener('keyup', ($event) => {
+        const target = $event.target as HTMLElement;
 
-    console.log($chatBody);
+        if (target.classList.contains('downvote-comment-textarea')) {
+            const $form = target.parentElement.parentElement;
+            const $error: HTMLElement = target.parentElement.parentElement.parentElement.querySelector('.form-error');
+            if ($event.target.value.length > 2000) {
+                $form.classList.add('feedback-form-diabled');
+                $error.style.display = 'block';
+            } else if ($event.target.value.length === 0) {
+                $form.classList.add('feedback-form-diabled');
+                $error.style.display = 'none';
+            } else {
+                $form.classList.remove('feedback-form-diabled');
+                $error.style.display = 'none';
+            }
+        }
+    }
+
     $chatBody.addEventListener('click', ($event) => {
         const target = $event.target as HTMLElement;
 
@@ -187,7 +213,7 @@ function initEvents(imiPreview: ImiPreview) {
             const $feedbackWrapper = findParentWithClass(target, 'msg-bubble-options-panel');
             const $feedbackWrapperParent = $feedbackWrapper.parentElement;
             debugger;
-            const $commentTextArea = $feedbackWrapperParent.querySelector('.downvote-comment-textarea');
+            const $commentTextArea: HTMLTextAreaElement = $feedbackWrapperParent.querySelector('.downvote-comment-textarea');
             const $downvoteCommentWrapper = $feedbackWrapperParent.querySelector('.downvote-comment');
             $feedbackWrapper.classList.remove('ask-feedback');
             const oldFeedback = $feedbackWrapper.getAttribute('data-feedback');
@@ -200,7 +226,9 @@ function initEvents(imiPreview: ImiPreview) {
             const bot_message_id = $messageBubble.getAttribute('data-bot_message_id');
             target.parentElement.classList.add('active');
             if (target.classList.contains('feedback-dislike')) {
-                $downvoteCommentWrapper.style.display = "flex";
+                $downvoteCommentWrapper.classList.remove('d-none');
+                $downvoteCommentWrapper.classList.add('d-flex');
+                $commentTextArea.focus();
                 $feedbackWrapper.setAttribute('data-feedback', feedback);
                 scrollBodyToBottom();
             }
@@ -215,10 +243,14 @@ function initEvents(imiPreview: ImiPreview) {
                     }
                 }
                 const feedbackNumber = Number(feedback);
-                imiPreview._feedbackCB({txn, bot_message_id, comment}, feedbackNumber);
-                $downvoteCommentWrapper.style.display = "none";
+                // $downvoteCommentWrapper.style.display = "none";
+                $downvoteCommentWrapper.classList.remove('d-flex');
+                $downvoteCommentWrapper.classList.add('d-none');
                 if (feedbackNumber === 0 && target.classList.contains('downvote-comment-submit')) {
                     $messageBubble.querySelector('.active').querySelector('.final-label').innerText = 'Downvoted with comment';
+                    imiPreview._feedbackCB({txn, bot_message_id, comment}, feedbackNumber);
+                } else {
+                    imiPreview._feedbackCB({txn, bot_message_id}, feedbackNumber);
                 }
             }
         }
