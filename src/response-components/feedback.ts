@@ -31,7 +31,8 @@ export class Feedback {
                             <span class="feedback-dislike final-label" data-feedback-value="0">Downvoted ${feedback_comment? 'with comment':''}</span>
                         </div>
                     </div>
-                    <div class="downvote-comment d-none feedback-form-diabled" style="display: none; min-width: 200px; border: 1px solid #d8d8d8; flex-direction: column; padding: 4px 10px; border-radius: 2px">
+                    <div class="downvote-comment d-none feedback-form-diabled"
+                     style="display: none; min-width: 200px; margin-top: 4px; border: 1px solid #d8d8d8; flex-direction: column; padding: 4px 10px; border-radius: 2px">
                         <div style="display: flex;height: 28px;align-items: center;">
                             <div class="feedback ${disLikeActive}" title="Not helpful" data-feedback-value="0">
                                 <i class="fa fa-thumbs-down feedback-dislike" data-feedback-value="0"></i>
@@ -39,11 +40,11 @@ export class Feedback {
                             <div style="margin-left: 6px">Please leave feedback if any</div>
                         </div>
                         <div>
-                            <textarea placeholder="Share your thoughts.." class="downvote-comment-textarea" style="border: 1px solid #d8d8d8;background: #f8f8f8;
+                            <textarea  placeholder="Share your thoughts.." class="downvote-comment-textarea" style="border: 1px solid #d8d8d8;background: #f8f8f8;
       height: 52px;
       border-radius: 3px;
-      padding: 4px;
-    " name="" id="" cols="30" rows="4"></textarea>
+      width: 210px;
+      padding: 4px;"  rows="4"></textarea>
                              <span class="form-error">Max limit is 2000</span>
                         </div>
                         <div style="display: flex">
@@ -68,7 +69,7 @@ export class Feedback {
                 
                 <div class="message-container" data-id="${randomNumber}">
                   
-                    <div ">
+                    <div>
                     ${isLast ? feedbackHtml : ''}
                     <div class="time" style="font-size: 9px">${time}</div>
                     </div>
