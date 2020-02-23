@@ -75,7 +75,7 @@ export function setOptions(intro: IBotDetailsApiResp) {
 }
 
 export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload, hideFeedback) {
-    debugger;
+    
     // if (botResponse) {
     //     if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
     //         AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null, true);

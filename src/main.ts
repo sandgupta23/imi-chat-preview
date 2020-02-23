@@ -72,7 +72,7 @@ export function initClientEvents(imiPreview) {
                     return;
                 }
                 $chatInput.value = "";
-                debugger;
+                
                 imiPreview._cb(humanMessage);
                 // humanMessageHandler(humanMessage);
                 
@@ -227,7 +227,7 @@ function initEvents(imiPreview: ImiPreview) {
             }
             const $feedbackWrapper = findParentWithClass(target, 'msg-bubble-options-panel');
             const $feedbackWrapperParent = $feedbackWrapper.parentElement;
-            debugger;
+            
             const $commentTextArea: HTMLTextAreaElement = $feedbackWrapperParent.querySelector('.downvote-comment-textarea');
             const $downvoteCommentWrapper = $feedbackWrapperParent.querySelector('.downvote-comment');
             $feedbackWrapper.classList.remove('ask-feedback');
@@ -444,14 +444,14 @@ function getBotResponseByTxnId(txn) {
 }
 
 export async function sendFeedbackHandler(resp: { txn: string, bot_message_id: string, comment: string }, feedback: number) {
-    debugger;
+    
     let parsedFeedback;
     if (feedback === 0) {
         parsedFeedback = 'NEGATIVE'
     } else if (feedback === 1) {
         parsedFeedback = 'POSITIVE'
     }
-    debugger;
+    
     const res = getBotResponseByTxnId(resp.txn);
     try {
         await sendFeedback({
@@ -565,7 +565,7 @@ function getModelTemplate() {
 
 //
 function getFullBodyExceptPhoneCover(isRtl?) {
-    debugger;
+    
     return `
         <div class="imi-preview-grid-container">
                         <div class="header" style="z-index: 1">

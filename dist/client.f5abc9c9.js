@@ -180,7 +180,9 @@ function makePostReq(reqObj) {
   xmlHttp.send(JSON.stringify(reqObj.body));
   return new Promise(function (resolve, reject) {
     xmlHttp.onreadystatechange = function () {
-      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) resolve(JSON.parse(xmlHttp.responseText));
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+        resolve(JSON.parse(xmlHttp.responseText));
+      }
     };
   });
 }
@@ -194,7 +196,9 @@ function makePutReq(reqObj) {
   xmlHttp.send(JSON.stringify(reqObj.body));
   return new Promise(function (resolve, reject) {
     xmlHttp.onreadystatechange = function () {
-      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) resolve(JSON.parse(xmlHttp.responseText));
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+        resolve(JSON.parse(xmlHttp.responseText));
+      }
     };
   });
 }
@@ -583,7 +587,6 @@ var Feedback = function () {
         randomNumber = _a.randomNumber,
         hideFeedback = _a.hideFeedback,
         feedback_comment = _a.feedback_comment;
-    debugger;
     var askFeedbackClass = likeActive || disLikeActive ? '' : 'ask-feedback';
     var feedbackHtml = "\n        <div class=\"msg-bubble-options-panel " + askFeedbackClass + "\" " + feedbackSTr + ">\n                    <div>\n                    <div style=\"display: flex\">\n                        <div class=\"feedback  " + likeActive + "\" data-feedback-value=\"1\" title=\"Helpful\">\n                             <i class=\"fa fa-thumbs-up feedback-like\" data-feedback-value=\"1\"></i>\n                             <span class=\"feedback-like ask-label\" data-feedback-value=\"1\">Upvote</span>\n                             <span class=\"feedback-like final-label\" data-feedback-value=\"1\">Upvoted</span>\n                        </div>\n                        <div class=\"feedback " + disLikeActive + "\" title=\"Not helpful\" data-feedback-value=\"0\">\n                            <i class=\"fa fa-thumbs-down feedback-dislike\" data-feedback-value=\"0\"></i>\n                            <span class=\"feedback-dislike ask-label\" data-feedback-value=\"0\">Downvote</span>\n                            <span class=\"feedback-dislike final-label\" data-feedback-value=\"0\">Downvoted " + (feedback_comment ? 'with comment' : '') + "</span>\n                        </div>\n                    </div>\n                    <div class=\"downvote-comment d-none feedback-form-diabled\"\n                     style=\"display: none; min-width: 200px; margin-top: 4px; border: 1px solid #d8d8d8; flex-direction: column; padding: 4px 10px; border-radius: 2px\">\n                        <div style=\"display: flex;height: 28px;align-items: center;\">\n                            <div class=\"feedback " + disLikeActive + "\" title=\"Not helpful\" data-feedback-value=\"0\">\n                                <i class=\"fa fa-thumbs-down feedback-dislike\" data-feedback-value=\"0\"></i>\n                            </div>\n                            <div style=\"margin-left: 6px\">Please leave feedback if any</div>\n                        </div>\n                        <div>\n                            <textarea  placeholder=\"Share your thoughts..\" class=\"downvote-comment-textarea\" style=\"border: 1px solid #d8d8d8;background: #f8f8f8;\n      height: 52px;\n      border-radius: 3px;\n      width: 210px;\n      padding: 4px;\"  rows=\"4\"></textarea>\n                             <span class=\"form-error\">Max limit is 2000</span>\n                        </div>\n                        <div style=\"display: flex\">\n                            <button style=\"width: 68px;\n                            border-color: #d8d8d8;\n        height: 28px; margin-right: 6px\" class=\"imi-button-primary downvote-comment-skip\">Skip</button>\n                            <button style=\"flex: 1;background: #00abd3;\n        height: 28px; border-color: #00abd3; color: white\" class=\"imi-button-primary downvote-comment-submit\">Submit</button>\n                        </div>\n                    </div>\n</div>\n                </div>\n                \n        ";
 
@@ -591,7 +594,8 @@ var Feedback = function () {
       feedbackHtml = "";
     }
 
-    return "<div xmlns=\"http://www.w3.org/1999/xhtml\" data-txn=\"" + txnId + "\"  data-bot_message_id=\"" + bot_message_id + "\"\n             class=\"msg-bubble " + humanClass + "\" style=\"position:relative;\">\n                \n                <div class=\"message-container\" data-id=\"" + randomNumber + "\">\n                  \n                    <div>\n                    " + (isLast ? feedbackHtml : '') + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                    </div>\n                </div>\n            </div>";
+    debugger;
+    return "<div xmlns=\"http://www.w3.org/1999/xhtml\" data-txn=\"" + txnId + "\"  data-bot_message_id=\"" + bot_message_id + "\"\n             class=\"msg-bubble " + humanClass + "\" style=\"position:relative;\">\n                \n                <div class=\"message-container\" data-id=\"" + randomNumber + "\">\n                  \n                    <div>\n                    " + (isLast && bot_message_id !== 0 && bot_message_id !== 'human' ? feedbackHtml : '') + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                    </div>\n                </div>\n            </div>";
   };
 
   return Feedback;
@@ -692,7 +696,6 @@ function setOptions(intro) {
 exports.setOptions = setOptions;
 
 function AppendMessageInChatBody(messages, botResponse, hideFeedback) {
-  debugger;
   var txnId = botResponse && botResponse.transaction_id || 'human';
   var bot_message_id = botResponse && botResponse.bot_message_id || 'human';
   var str = "";
@@ -1927,7 +1930,6 @@ function initClientEvents(imiPreview) {
         }
 
         dom_1.$chatInput.value = "";
-        debugger;
 
         imiPreview._cb(humanMessage);
       }
@@ -2083,7 +2085,6 @@ function initEvents(imiPreview) {
 
       var $feedbackWrapper = findParentWithClass(target, 'msg-bubble-options-panel');
       var $feedbackWrapperParent = $feedbackWrapper.parentElement;
-      debugger;
       var $commentTextArea = $feedbackWrapperParent.querySelector('.downvote-comment-textarea');
       var $downvoteCommentWrapper = $feedbackWrapperParent.querySelector('.downvote-comment');
       $feedbackWrapper.classList.remove('ask-feedback');
@@ -2310,15 +2311,12 @@ function sendFeedbackHandler(resp, feedback) {
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
-          debugger;
-
           if (feedback === 0) {
             parsedFeedback = 'NEGATIVE';
           } else if (feedback === 1) {
             parsedFeedback = 'POSITIVE';
           }
 
-          debugger;
           res = getBotResponseByTxnId(resp.txn);
           _a.label = 1;
 
@@ -2427,7 +2425,6 @@ function getModelTemplate() {
 }
 
 function getFullBodyExceptPhoneCover(isRtl) {
-  debugger;
   return "\n        <div class=\"imi-preview-grid-container\">\n                        <div class=\"header\" style=\"z-index: 1\">\n                            <div class=\"bot-intro\" id=\"botIntro\" dir=\"" + (isRtl ? 'rtl' : 'ltr') + "\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\"\n                                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\" \n                                    src=\"https://whizkey.ae/wisdom/static/media/rammas.42381205.gif\"\n                                         alt=\"\">\n                                </span>\n                                <div class=\"bot-details\">\n                                    <div id=\"bot-title\" ></div>\n                                    <div id=\"bot-description\">hello</div>\n                                </div>\n                                <div class=\"options\"  id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n                            </div>\n                        </div>\n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"padding: 8px 22px; display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        <!--chat body ends-->\n                        <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>\n                    </div>\n      <!--know more starts-->\n        <div class=\"chat-img-overlay\" id=\"chat-img-overlay\" style=\"display: none\">\n          <span class=\"fa fa-times close-chat-img-overlay\"></span>\n          <div class=\"chat-know-more-overlay\">\n            <header class=\"chat-know-more-overlay-header\">\n              <div class=\"description-top\" style=\"text-align: center\">This bot was built using</div>\n              <div><img src=\"https://staging.imibot.ai/static/assets/img/IMI_logo.png\" alt=\"\"></div>\n              <strong class=\"description-bottom\">The enterprise bot building platform to automate conversations</strong>\n            </header>\n    \n            <div class=\"chat-know-more-overlay-item\">\n              <img src=\"https://staging.imibot.ai/static/assets/img/chat/bot.svg\" alt=\"\">\n              <div>Contextualise bot interactions with artificial intelligence</div>\n            </div>\n            <div class=\"chat-know-more-overlay-item\">\n              <img src=\"https://staging.imibot.ai/static/assets/img/chat/group-5.svg\" alt=\"\">\n              <div>Provide seamless omnichannel experience</div>\n            </div>\n            <div class=\"chat-know-more-overlay-item\">\n              <img src=\"https://staging.imibot.ai/static/assets/img/chat/browser.svg\" alt=\"\">\n              <div>Orchestrate individual bots using a controller</div>\n            </div>\n            <div class=\"chat-know-more-overlay-item\">\n              <img src=\"https://staging.imibot.ai/static/assets/img/chat/group-2.svg\" alt=\"\">\n              <div>Integrate various services within your flow to help user</div>\n            </div>\n    \n            <a href=\"https://imimobile.com/products/ai-automation\" target=\"_blank\">\n            <button  class=\"imi-button-primary\" style=\"width: 100px;background: #00abd3; border: none; color: white\" mat-flat-button color=\"primary\"> Know more</button></a>\n    \n          </div>\n        </div>\n    ";
 }
 
@@ -2680,7 +2677,6 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             'imi_bot_middleware_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiVGhpcyBpcyBJTUkgQk9UIG1pZGRsZXdhcmUiLCJpYXQiOjE1Njc4ODc5MTAsImV4cCI6NDE1OTg4NzkxMH0.dYbMaf8HYMD5K532p7DpHN0cmru-JKMjst-WS9zi7u8'
           };
-          debugger;
           initializeSocketConnection(data);
           return [2];
       }
@@ -2690,7 +2686,6 @@ document.addEventListener('DOMContentLoaded', function () {
 var eventInit = false;
 
 function initializeSocketConnection(socketData) {
-  debugger;
   var url = 'https://rtm.imibot.ai';
   socket = window.io(url, {
     query: "data=" + JSON.stringify(socketData)
@@ -2742,7 +2737,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52960" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62689" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

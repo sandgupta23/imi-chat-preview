@@ -8,13 +8,12 @@ export class Feedback {
     }
 
     getElement(obj, source?: ESourceType) {
-
         const str = this.getTemplate(obj);
         return convertStringToDom(str);
     }
 
     getTemplate({txnId, bot_message_id, humanClass, isLast, feedbackSTr, likeActive, disLikeActive, time, str, randomNumber, hideFeedback, feedback_comment}) {
-        debugger;
+        
         const askFeedbackClass = (likeActive || disLikeActive) ? '' : 'ask-feedback';
         let feedbackHtml = `
         <div class="msg-bubble-options-panel ${askFeedbackClass}" ${feedbackSTr}>
@@ -63,6 +62,7 @@ export class Feedback {
         if (hideFeedback) {
             feedbackHtml = ``;
         }
+        debugger;
 
         return `<div xmlns="http://www.w3.org/1999/xhtml" data-txn="${txnId}"  data-bot_message_id="${bot_message_id}"
              class="msg-bubble ${humanClass}" style="position:relative;">
@@ -70,7 +70,7 @@ export class Feedback {
                 <div class="message-container" data-id="${randomNumber}">
                   
                     <div>
-                    ${isLast ? feedbackHtml : ''}
+                    ${(isLast && (bot_message_id!== 0 && bot_message_id!=='human')) ? feedbackHtml : ''}
                     <div class="time" style="font-size: 9px">${time}</div>
                     </div>
                 </div>
