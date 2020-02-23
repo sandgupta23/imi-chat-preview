@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const firstMessageData = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, 'hi', ESourceType.bot);
 
     imiPreview.appendMessageInChatBody(firstMessageData.generated_msg, null, true);
-    initClientEvents();
+    initClientEvents(imiPreview);
     const data = {
         'connectionConfig': {
             'namespace': 'BOT',

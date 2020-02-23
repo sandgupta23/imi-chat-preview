@@ -27,7 +27,7 @@ export enum modes {
     full_screen = "full_screen",
 }
 
-export function initClientEvents() {
+export function initClientEvents(imiPreview) {
 
     try {
 
@@ -57,11 +57,12 @@ export function initClientEvents() {
         });
         $chatInput.addEventListener('keypress', ($event) => {
             if ($event.key === 'Enter') {
-                const downvoteCommentWrapper = document.querySelectorAll('.downvote-comment.d-flex');
-                Array.from(downvoteCommentWrapper).forEach((downvoteCommentBox: HTMLElement)=>{
-                    const skipButton: HTMLElement = downvoteCommentBox.querySelector('.downvote-comment-skip');
-                    skipButton.click();
-                });
+                // const downvoteCommentWrapper = document.querySelectorAll('.downvote-comment.d-flex');
+                // Array.from(downvoteCommentWrapper).forEach((downvoteCommentBox: HTMLElement)=>{
+                //     const skipButton: HTMLElement = downvoteCommentBox.querySelector('.downvote-comment-skip');
+                //     skipButton.click();
+                // });
+                
                 // const lastButton =
                 // if (skipFeedbackButton) {
                 //     skipFeedbackButton.click();
@@ -71,7 +72,10 @@ export function initClientEvents() {
                     return;
                 }
                 $chatInput.value = "";
-                humanMessageHandler(humanMessage);
+                debugger;
+                imiPreview._cb(humanMessage);
+                // humanMessageHandler(humanMessage);
+                
             }
         });
     } catch (e) {
@@ -108,12 +112,23 @@ class ImiPreview {
 
     initAdditionalDom(dom) {
         domInit(dom);
-
         initApp(this);
     }
 
     setSendHumanMessageCallback(cb) {
-        this._cb = cb;
+        
+        this._cb = (humanMessage)=>{
+            try {
+                const downvoteCommentWrapper = document.querySelectorAll('.downvote-comment.d-flex');
+                Array.from(downvoteCommentWrapper).forEach((downvoteCommentBox: HTMLElement)=>{
+                    const skipButton: HTMLElement = downvoteCommentBox.querySelector('.downvote-comment-skip');
+                    skipButton.click();
+                });
+            }catch (e) {
+    
+            }
+            cb(humanMessage);
+        }
     }
 
     setSendFeedback(cb) {
