@@ -767,6 +767,18 @@ ul, li {
   // width: 210px !important;
 // }
 
-.text-link{
-  color: white !important;
+.msg-bubble{
+  a{
+    color: var(--color-brand);
+    text-decoration: none;
+    &:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+}
+.msg-bubble-human{
+  a{
+    color: white !important;
+  }
 }

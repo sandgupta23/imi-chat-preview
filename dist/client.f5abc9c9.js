@@ -365,6 +365,10 @@ function convertToLink(inputText, className) {
     className = "text-link";
   }
 
+  if (inputText.includes('<') && inputText.includes('>')) {
+    return inputText;
+  }
+
   var replacedText, replacePattern1, replacePattern2;
   replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
   replacedText = inputText.replace(replacePattern1, "<a href=\"$1\" target=\"_blank\" class=\"" + className + "\">$1</a>");
@@ -2399,6 +2403,7 @@ function initEnvironment(botDetails) {
   environment_1.environment.bot_access_token = botDetails.bot_access_token;
   environment_1.environment.logo = botDetails.logo;
   var root = utility_1.getQueryStringValue('root');
+  debugger;
 
   if (root) {
     if (root === '.') {
@@ -2762,7 +2767,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50752" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55943" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

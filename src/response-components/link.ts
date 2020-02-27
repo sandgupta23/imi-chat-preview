@@ -2,6 +2,10 @@
   * linkify: replaces all texts to <a> links in a string
   * */
 export function convertToLink(inputText, className = "text-link") {
+    if (inputText.includes('<') && inputText.includes('>')) {
+        return inputText;
+    }
+
     let replacedText, replacePattern1, replacePattern2;
 
     // URLs starting with http://, https://, or ftp://

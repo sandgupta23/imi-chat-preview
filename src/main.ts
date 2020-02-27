@@ -487,6 +487,7 @@ export function initEnvironment(botDetails: any = {}) {
     environment.bot_access_token = botDetails.bot_access_token;
     environment.logo = botDetails.logo;
     const root = getQueryStringValue('root');
+    debugger;
     if (root) {
         if (root === '.') {
             environment.root = "";
