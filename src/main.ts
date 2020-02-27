@@ -394,15 +394,16 @@ export function initEnvironment(botDetails: any = {}) {
         $chatContainer && $chatContainer.classList.add('lang-rtl');
         if ($chatInput) {
             $chatInput.setAttribute("dir", "rtl");
-            $chatInput.placeholder = "كيف حالك";
+            // $chatInput.placeholder = "كيف حالك";
         }
     } else {
         $chatContainer && $chatContainer.classList.remove('lang-rtl');
         if ($chatInput) {
             $chatInput.setAttribute("dir", "ltr");
-            $chatInput.placeholder = "Ask Wisdom";
+            // $chatInput.placeholder = `Ask ${botDetails.name || 'Bot'}`;
         }
     }
+    $chatInput && ($chatInput.placeholder = `Ask ${botDetails.name || 'Bot'}`);
 
     environment.bot_access_token = botDetails.bot_access_token;
     environment.logo = botDetails.logo;

@@ -2292,17 +2292,16 @@ function initEnvironment(botDetails) {
 
     if (dom_1.$chatInput) {
       dom_1.$chatInput.setAttribute("dir", "rtl");
-      dom_1.$chatInput.placeholder = "كيف حالك";
     }
   } else {
     dom_1.$chatContainer && dom_1.$chatContainer.classList.remove('lang-rtl');
 
     if (dom_1.$chatInput) {
       dom_1.$chatInput.setAttribute("dir", "ltr");
-      dom_1.$chatInput.placeholder = "Ask Wisdom";
     }
   }
 
+  dom_1.$chatInput && (dom_1.$chatInput.placeholder = "Ask " + (botDetails.name || 'Bot'));
   environment_1.environment.bot_access_token = botDetails.bot_access_token;
   environment_1.environment.logo = botDetails.logo;
   var root = utility_1.getQueryStringValue('root');
@@ -7480,7 +7479,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52242" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61563" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
