@@ -1,5 +1,6 @@
 import {ESourceType} from "../typings/send-api";
 import {convertStringToDom} from "../utility";
+import {convertToLink} from "./link";
 
 export class TextReply {
     constructor(message){}
@@ -7,7 +8,7 @@ export class TextReply {
     getTemplate(text, source?: ESourceType) {
         const htmlStr = `
                 <div class="message-wrapper ${source === ESourceType.human ? 'message-wrapper-human' : ''}">
-                    <div class="content">${text}</div>
+                    <div class="content">${convertToLink(text, 'text-link')}</div>
                 </div>
             `;
         return htmlStr;

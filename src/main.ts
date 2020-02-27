@@ -203,7 +203,7 @@ function initEvents(imiPreview: ImiPreview) {
             if ($event.target.value.length > 2000) {
                 $form.classList.add('feedback-form-diabled');
                 $error.style.display = 'block';
-            } else if ($event.target.value.length === 0) {
+            } else if ($event.target.value.length === 0 || $event.target.value.trim().length === 0) {
                 $form.classList.add('feedback-form-diabled');
                 $error.style.display = 'none';
             } else {

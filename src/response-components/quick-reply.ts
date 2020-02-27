@@ -1,5 +1,6 @@
 import {ESourceType} from "../typings/send-api";
 import {convertStringToDom} from "../utility";
+import {convertToLink} from "./link";
 
 export class QuickReply {
     constructor(message) {
@@ -12,7 +13,9 @@ export class QuickReply {
     getTemplate(quick_reply, source?: ESourceType) {
         const htmlStr = `
                 <div class="message-wrapper ${source === ESourceType.human ? 'message-wrapper-human' : ''}">
-                    <div class="content">${quick_reply.text}</div>
+                    <div class="content">
+                        ${convertToLink(quick_reply.text, 'text-link')}
+                    </div>
                 </div>
                 <div class="message-wrapper-quick-reply">
                     ${this.createQuickReplyButtons(quick_reply)}

@@ -353,7 +353,28 @@ function removeInActiveFeedbackPanel($chatbody) {
 }
 
 exports.removeInActiveFeedbackPanel = removeInActiveFeedbackPanel;
-},{"./dom":"dom.ts"}],"response-components/text-reply.ts":[function(require,module,exports) {
+},{"./dom":"dom.ts"}],"response-components/link.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function convertToLink(inputText, className) {
+  if (className === void 0) {
+    className = "text-link";
+  }
+
+  var replacedText, replacePattern1, replacePattern2;
+  replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+  replacedText = inputText.replace(replacePattern1, "<a href=\"$1\" target=\"_blank\" class=\"" + className + "\">$1</a>");
+  replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+  replacedText = replacedText.replace(replacePattern2, "$1<a href=\"http://$2\" class=\"" + className + " target=\"_blank\">$2</a>");
+  return replacedText;
+}
+
+exports.convertToLink = convertToLink;
+},{}],"response-components/text-reply.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -364,11 +385,13 @@ var send_api_1 = require("../typings/send-api");
 
 var utility_1 = require("../utility");
 
+var link_1 = require("./link");
+
 var TextReply = function () {
   function TextReply(message) {}
 
   TextReply.prototype.getTemplate = function (text, source) {
-    var htmlStr = "\n                <div class=\"message-wrapper " + (source === send_api_1.ESourceType.human ? 'message-wrapper-human' : '') + "\">\n                    <div class=\"content\">" + text + "</div>\n                </div>\n            ";
+    var htmlStr = "\n                <div class=\"message-wrapper " + (source === send_api_1.ESourceType.human ? 'message-wrapper-human' : '') + "\">\n                    <div class=\"content\">" + link_1.convertToLink(text, 'text-link') + "</div>\n                </div>\n            ";
     return htmlStr;
   };
 
@@ -381,7 +404,7 @@ var TextReply = function () {
 }();
 
 exports.TextReply = TextReply;
-},{"../typings/send-api":"typings/send-api.ts","../utility":"utility.ts"}],"response-components/session-expiry.ts":[function(require,module,exports) {
+},{"../typings/send-api":"typings/send-api.ts","../utility":"utility.ts","./link":"response-components/link.ts"}],"response-components/session-expiry.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -418,6 +441,8 @@ var send_api_1 = require("../typings/send-api");
 
 var utility_1 = require("../utility");
 
+var link_1 = require("./link");
+
 var QuickReply = function () {
   function QuickReply(message) {}
 
@@ -427,7 +452,7 @@ var QuickReply = function () {
   };
 
   QuickReply.prototype.getTemplate = function (quick_reply, source) {
-    var htmlStr = "\n                <div class=\"message-wrapper " + (source === send_api_1.ESourceType.human ? 'message-wrapper-human' : '') + "\">\n                    <div class=\"content\">" + quick_reply.text + "</div>\n                </div>\n                <div class=\"message-wrapper-quick-reply\">\n                    " + this.createQuickReplyButtons(quick_reply) + "\n                </div>\n            ";
+    var htmlStr = "\n                <div class=\"message-wrapper " + (source === send_api_1.ESourceType.human ? 'message-wrapper-human' : '') + "\">\n                    <div class=\"content\">\n                        " + link_1.convertToLink(quick_reply.text, 'text-link') + "\n                    </div>\n                </div>\n                <div class=\"message-wrapper-quick-reply\">\n                    " + this.createQuickReplyButtons(quick_reply) + "\n                </div>\n            ";
     return htmlStr;
   };
 
@@ -443,7 +468,7 @@ var QuickReply = function () {
 }();
 
 exports.QuickReply = QuickReply;
-},{"../typings/send-api":"typings/send-api.ts","../utility":"utility.ts"}],"response-components/carousel-reply.ts":[function(require,module,exports) {
+},{"../typings/send-api":"typings/send-api.ts","../utility":"utility.ts","./link":"response-components/link.ts"}],"response-components/carousel-reply.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2065,7 +2090,7 @@ function initEvents(imiPreview) {
       if ($event.target.value.length > 2000) {
         $form.classList.add('feedback-form-diabled');
         $error.style.display = 'block';
-      } else if ($event.target.value.length === 0) {
+      } else if ($event.target.value.length === 0 || $event.target.value.trim().length === 0) {
         $form.classList.add('feedback-form-diabled');
         $error.style.display = 'none';
       } else {
@@ -2737,7 +2762,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62689" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50752" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
