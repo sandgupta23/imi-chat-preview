@@ -18,7 +18,7 @@ import 'regenerator-runtime/runtime'
 import {sendFeedback, sendMessageToBot, serializeGeneratedMessagesToPreviewMessages} from "./send-api";
 import {environment} from "./environment";
 import {ESourceType, ISendApiResp, ISendApiResponsePayload} from "./typings/send-api";
-import {getQueryStringValue, scrollBodyToBottom, updateQueryStringParameter} from "./utility";
+import {getQueryStringValue, scrollBodyToBottom, showToaster, updateQueryStringParameter} from "./utility";
 
 let isModelShown = false;
 
@@ -62,7 +62,7 @@ export function initClientEvents(imiPreview) {
                 //     const skipButton: HTMLElement = downvoteCommentBox.querySelector('.downvote-comment-skip');
                 //     skipButton.click();
                 // });
-                
+
                 // const lastButton =
                 // if (skipFeedbackButton) {
                 //     skipFeedbackButton.click();
@@ -72,10 +72,10 @@ export function initClientEvents(imiPreview) {
                     return;
                 }
                 $chatInput.value = "";
-                
+
                 imiPreview._cb(humanMessage);
                 // humanMessageHandler(humanMessage);
-                
+
             }
         });
     } catch (e) {
@@ -104,6 +104,7 @@ async function initApp(imiPreview: ImiPreview) {
 class ImiPreview {
     _cb;
     _feedbackCB;
+    _roomInactiveMap;
 
     viewInit(selector, fullBody = true, phoneCasing = true) {
         let mainParent = document.querySelector(selector) as HTMLElement;
@@ -116,16 +117,16 @@ class ImiPreview {
     }
 
     setSendHumanMessageCallback(cb) {
-        
-        this._cb = (humanMessage)=>{
+
+        this._cb = (humanMessage) => {
             try {
                 const downvoteCommentWrapper = document.querySelectorAll('.downvote-comment.d-flex');
-                Array.from(downvoteCommentWrapper).forEach((downvoteCommentBox: HTMLElement)=>{
+                Array.from(downvoteCommentWrapper).forEach((downvoteCommentBox: HTMLElement) => {
                     const skipButton: HTMLElement = downvoteCommentBox.querySelector('.downvote-comment-skip');
                     skipButton.click();
                 });
-            }catch (e) {
-    
+            } catch (e) {
+
             }
             cb(humanMessage);
         }
@@ -133,6 +134,17 @@ class ImiPreview {
 
     setSendFeedback(cb) {
         this._feedbackCB = cb;
+    }
+
+    setRoomInactiveMap(obj) {
+        this._roomInactiveMap = {...obj, ...this._roomInactiveMap};
+    }
+
+    hideFeedbackPanelForTxnId(id) {
+        // data-id="1583252563496"
+        const $parent: HTMLElement = document.querySelector(`[data-bot_message_id='${id}']`);
+        const $feedback = $parent.querySelector(".msg-bubble-options-panel");
+        $feedback.parentElement.removeChild($feedback);
     }
 
     setOptions(botDetails: { description: string, logo: string, title: string }, theme: {
@@ -227,7 +239,7 @@ function initEvents(imiPreview: ImiPreview) {
             }
             const $feedbackWrapper = findParentWithClass(target, 'msg-bubble-options-panel');
             const $feedbackWrapperParent = $feedbackWrapper.parentElement;
-            
+
             const $commentTextArea: HTMLTextAreaElement = $feedbackWrapperParent.querySelector('.downvote-comment-textarea');
             const $downvoteCommentWrapper = $feedbackWrapperParent.querySelector('.downvote-comment');
             $feedbackWrapper.classList.remove('ask-feedback');
@@ -443,16 +455,17 @@ function getBotResponseByTxnId(txn) {
     return botResponses.find(res => res.transaction_id === txn)
 }
 
-export async function sendFeedbackHandler(resp: { txn: string, bot_message_id: string, comment: string }, feedback: number) {
-    
+export async function sendFeedbackHandler(resp: { txn: string, bot_message_id: string, comment: string }, feedback: number, imiPreview) {
     let parsedFeedback;
+    // showToaster("e.message");
     if (feedback === 0) {
         parsedFeedback = 'NEGATIVE'
     } else if (feedback === 1) {
         parsedFeedback = 'POSITIVE'
     }
-    
+
     const res = getBotResponseByTxnId(resp.txn);
+    debugger;
     try {
         await sendFeedback({
             consumer_id: res.room.consumer_id,
@@ -462,6 +475,9 @@ export async function sendFeedbackHandler(resp: { txn: string, bot_message_id: s
         });
     } catch (e) {
         /*todo: remove like from view*/
+        imiPreview.hideFeedbackPanelForTxnId(resp.bot_message_id);
+        debugger;
+        showToaster(e.message);
     }
 }
 
@@ -566,9 +582,10 @@ function getModelTemplate() {
 
 //
 function getFullBodyExceptPhoneCover(isRtl?) {
-    
+
     return `
         <div class="imi-preview-grid-container">
+        <div id="snackbar"></div>
                         <div class="header" style="z-index: 1">
                             <div class="bot-intro" id="botIntro" dir="${isRtl ? 'rtl' : 'ltr'}">
                                 <span class="bot-logo">
@@ -641,6 +658,7 @@ function getPhoneCoverTemplate(isRtl?) {
     <div class="page1">
     <div class="page__content">
         <div class="phone">
+        <div id="snackbar"></div>
             <div class="phone__body">
                 <div class="phone__view">
                     <div id="phone-modal" class="modal1" style="">

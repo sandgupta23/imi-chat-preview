@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         humanMessageHandler(val);
     });
     imiPreview.setSendFeedback((val, feedback) => {
-        sendFeedbackHandler(val, feedback);
+        sendFeedbackHandler(val, feedback, imiPreview);
     });
 
     const fullBody = true;//getQueryStringValue('fullbody') === "true";
