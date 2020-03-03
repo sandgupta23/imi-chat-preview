@@ -74,8 +74,8 @@ export function setOptions(intro: IBotDetailsApiResp) {
     }
 }
 
-export function AppendMessageInChatBody(messages: IMessageData[], botResponse?: ISendApiResponsePayload, hideFeedback?) {
-
+export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload, hideFeedback) {
+    
     // if (botResponse) {
     //     if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
     //         AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null, true);
@@ -94,7 +94,6 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse?: 
     let frag = document.createDocumentFragment();
     let videoStr = "";
     if (messages[0].SESSION_EXPIRY) {
-
         if (document.getElementsByClassName('msg-bubble').length > 0) {
             const reply = new SessionExpiry(messages[0]);
             // str = str + reply.getTemplate(messages[0]);
@@ -197,11 +196,13 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse?: 
         let time = themeOptions.time24HrFormat? getTimeIn24HrFormat(messages[0].time): getTimeInHHMM(messages[0].time);
 
         let feedbackSTr = "";
-        const messageWithFeedback = (messages.find((message) => message.feedback != null));
+        const messageWithFeedback = messages.find((message) => message.feedback != null);
         let likeActive;
         let disLikeActive;
+        let feedback_comment;
         if (messageWithFeedback) {
-            const feedback = messageWithFeedback.feedback
+            const feedback = messageWithFeedback.feedback;
+            feedback_comment = messageWithFeedback.feedback_comment;
             likeActive = (feedback === "1" || feedback === "POSITIVE") ? 'active' : '';
             disLikeActive = (feedback === "0" || feedback === "NEGATIVE") ? 'active' : '';
             feedbackSTr = `data-feedback="${feedback}"`;
@@ -219,6 +220,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse?: 
             feedbackSTr,
             likeActive,
             disLikeActive,
+            feedback_comment,
             time,
             str,
             randomNumber,

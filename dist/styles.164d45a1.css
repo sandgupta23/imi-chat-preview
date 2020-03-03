@@ -1278,4 +1278,28 @@ ul, li {
   display: none;
 }
 
+.feedback-form-diabled .downvote-comment-submit {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.feedback-form-diabled .form-error {
+  display: none;
+  font-size: 9px;
+  color: red;
+  margin-bottom: 6px;
+}
+
+.msg-bubble a {
+  color: var(--color-brand);
+  text-decoration: none;
+}
+.msg-bubble a:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.msg-bubble-human a {
+  color: white !important;
+}
+
 /*# sourceMappingURL=/styles.164d45a1.css.map */

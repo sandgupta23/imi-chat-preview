@@ -28,7 +28,7 @@ export function sendMessageToBot(bot_access_token: string, enterprise_unique_nam
 }
 
 
-export function sendFeedback(body: { "bot_message_id": number, "feedback": string, "consumer_id": number }): Promise<ISendApiResp> {
+export function sendFeedback(body: { "bot_message_id": number, "feedback": string, "consumer_id": number, feedback_comment?: string }): Promise<ISendApiResp> {
 
     const url = `https://${environment.root}imibot.ai/api/v1/message/feedback/`;//https://dev.imibot.ai/api/v1/message/feedback/
 

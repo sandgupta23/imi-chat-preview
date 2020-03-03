@@ -12,6 +12,8 @@
 src/.cache
 node_modules1
 
+/dist
+
 cypress/screenshots
 cypress/videos
 cypress/screenshots/

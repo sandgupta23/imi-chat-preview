@@ -819,3 +819,36 @@ ul, li {
     display: none;
   }
 }
+
+.feedback-form-diabled{
+    .downvote-comment-submit{
+    pointer-events: none;
+    opacity: .5;
+  }
+  .form-error{
+    display: none;
+    font-size: 9px;
+    color: red;
+    margin-bottom: 6px;
+  }
+}
+
+// .downvote-comment-textarea{
+  // width: 210px !important;
+// }
+
+.msg-bubble{
+  a{
+    color: var(--color-brand);
+    text-decoration: none;
+    &:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+}
+.msg-bubble-human{
+  a{
+    color: white !important;
+  }
+}

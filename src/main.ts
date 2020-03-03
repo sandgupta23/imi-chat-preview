@@ -18,7 +18,7 @@ import 'regenerator-runtime/runtime'
 import {sendFeedback, sendMessageToBot, serializeGeneratedMessagesToPreviewMessages} from "./send-api";
 import {environment} from "./environment";
 import {ESourceType, ISendApiResp, ISendApiResponsePayload} from "./typings/send-api";
-import {getQueryStringValue, updateQueryStringParameter} from "./utility";
+import {getQueryStringValue, scrollBodyToBottom, showToaster, updateQueryStringParameter} from "./utility";
 
 let isModelShown = false;
 
@@ -27,7 +27,7 @@ export enum modes {
     full_screen = "full_screen",
 }
 
-export function initClientEvents() {
+export function initClientEvents(imiPreview) {
 
     try {
 
@@ -58,12 +58,25 @@ export function initClientEvents() {
         $chatInput.addEventListener('keypress', ($event) => {
             debugger;
             if ($event.key === 'Enter') {
+                // const downvoteCommentWrapper = document.querySelectorAll('.downvote-comment.d-flex');
+                // Array.from(downvoteCommentWrapper).forEach((downvoteCommentBox: HTMLElement)=>{
+                //     const skipButton: HTMLElement = downvoteCommentBox.querySelector('.downvote-comment-skip');
+                //     skipButton.click();
+                // });
+
+                // const lastButton =
+                // if (skipFeedbackButton) {
+                //     skipFeedbackButton.click();
+                // }
                 let humanMessage = $chatInput.value;
                 if (!humanMessage || !humanMessage.trim()) {
                     return;
                 }
                 $chatInput.value = "";
-                humanMessageHandler(humanMessage);
+
+                imiPreview._cb(humanMessage);
+                // humanMessageHandler(humanMessage);
+
             }
         });
     } catch (e) {
@@ -92,6 +105,7 @@ async function initApp(imiPreview: ImiPreview) {
 class ImiPreview {
     _cb;
     _feedbackCB;
+    _roomInactiveMap;
 
     viewInit(selector, fullBody = true, phoneCasing = true, isRtl) {
         let mainParent = document.querySelector(selector) as HTMLElement;
@@ -100,23 +114,45 @@ class ImiPreview {
 
     initAdditionalDom(dom) {
         domInit(dom);
-
         initApp(this);
     }
 
     setSendHumanMessageCallback(cb) {
-        this._cb = cb;
+
+        this._cb = (humanMessage) => {
+            try {
+                const downvoteCommentWrapper = document.querySelectorAll('.downvote-comment.d-flex');
+                Array.from(downvoteCommentWrapper).forEach((downvoteCommentBox: HTMLElement) => {
+                    const skipButton: HTMLElement = downvoteCommentBox.querySelector('.downvote-comment-skip');
+                    skipButton.click();
+                });
+            } catch (e) {
+
+            }
+            cb(humanMessage);
+        }
     }
 
     setSendFeedback(cb) {
         this._feedbackCB = cb;
     }
 
+    setRoomInactiveMap(obj) {
+        this._roomInactiveMap = {...obj, ...this._roomInactiveMap};
+    }
+
+    hideFeedbackPanelForTxnId(id) {
+        // data-id="1583252563496"
+        const $parent: HTMLElement = document.querySelector(`[data-bot_message_id='${id}']`);
+        const $feedback = $parent.querySelector(".msg-bubble-options-panel");
+        $feedback.parentElement.removeChild($feedback);
+    }
+
     setOptions(botDetails: { description: string, logo: string, title: string }, theme: {
         brandColor: string, feedbackEnabled: boolean, showOptionsEllipsis: boolean, time24HrFormat: boolean
     }) {
         if ($envOptions) {
-                // $envOptions.style.display = "block"
+            // $envOptions.style.display = "block"
             // if (theme.showOptionsEllipsis === true) {
             //     $envOptions.style.display = "block"
             // } else {
@@ -163,34 +199,88 @@ function removeModal() {
 
 function initEvents(imiPreview: ImiPreview) {
 
-    try{
+    try {
         document.getElementById('close-modal1').addEventListener('click', ($event) => {
             removeModal();
         });
-    }catch (e) {
+    } catch (e) {
         console.log(e);
     }
 
+    $chatBody.addEventListener('keyup', ($event) => {
+        const target = $event.target as HTMLElement;
 
-    console.log($chatBody);
+        if (target.classList.contains('downvote-comment-textarea')) {
+            const $form = target.parentElement.parentElement;
+            const $error: HTMLElement = target.parentElement.parentElement.parentElement.querySelector('.form-error');
+            if ($event.target.value.length > 2000) {
+                $form.classList.add('feedback-form-diabled');
+                $error.style.display = 'block';
+            } else if ($event.target.value.length === 0 || $event.target.value.trim().length === 0) {
+                $form.classList.add('feedback-form-diabled');
+                $error.style.display = 'none';
+            } else {
+                $form.classList.remove('feedback-form-diabled');
+                $error.style.display = 'none';
+            }
+        }
+    }
+
     $chatBody.addEventListener('click', ($event) => {
         const target = $event.target as HTMLElement;
 
-        if (target.classList.contains('feedback-like') || target.classList.contains('feedback-dislike')) {
+        if (target.classList.contains('feedback-like')
+            || target.classList.contains('feedback-dislike')
+            || target.classList.contains('downvote-comment-submit')
+            || target.classList.contains('downvote-comment-skip')) {
 
-            const $feedbackWrapper = findParentWithClass(target, 'msg-bubble-options-panel');
-            $feedbackWrapper.classList.remove('ask-feedback');
-            const oldFeedback = $feedbackWrapper.getAttribute('data-feedback');
-            if (oldFeedback != null) {
+            const parent = findParentWithClass(target, 'feedback');
+            if (parent && parent.classList.contains('active')) {
                 return;
             }
+            const $feedbackWrapper = findParentWithClass(target, 'msg-bubble-options-panel');
+            const $feedbackWrapperParent = $feedbackWrapper.parentElement;
+
+            const $commentTextArea: HTMLTextAreaElement = $feedbackWrapperParent.querySelector('.downvote-comment-textarea');
+            const $downvoteCommentWrapper = $feedbackWrapperParent.querySelector('.downvote-comment');
+            $feedbackWrapper.classList.remove('ask-feedback');
+            const oldFeedback = $feedbackWrapper.getAttribute('data-feedback');
+            // if (oldFeedback != null) {
+            //     return;
+            // }
             const $messageBubble = findParentWithClass(target, 'msg-bubble');
             const feedback = target.getAttribute('data-feedback-value');
             const txn = $messageBubble.getAttribute('data-txn');
             const bot_message_id = $messageBubble.getAttribute('data-bot_message_id');
-            $feedbackWrapper.setAttribute('data-feedback', feedback);
             target.parentElement.classList.add('active');
-            imiPreview._feedbackCB({txn, bot_message_id}, Number(feedback));
+            if (target.classList.contains('feedback-dislike')) {
+                $downvoteCommentWrapper.classList.remove('d-none');
+                $downvoteCommentWrapper.classList.add('d-flex');
+                $commentTextArea.focus();
+                $feedbackWrapper.setAttribute('data-feedback', feedback);
+                scrollBodyToBottom();
+            }
+            const comment = $commentTextArea.value as string;
+            if (target.classList.contains('downvote-comment-submit')
+                || target.classList.contains('downvote-comment-skip')
+                || target.classList.contains('feedback-like')) {
+                if (target.classList.contains('downvote-comment-submit')) {
+                    if (!comment || !comment.trim()) {
+                        $commentTextArea.style.border = '1px solid red';
+                        return;
+                    }
+                }
+                const feedbackNumber = Number(feedback);
+                // $downvoteCommentWrapper.style.display = "none";
+                $downvoteCommentWrapper.classList.remove('d-flex');
+                $downvoteCommentWrapper.classList.add('d-none');
+                if (feedbackNumber === 0 && target.classList.contains('downvote-comment-submit')) {
+                    $messageBubble.querySelector('.active').querySelector('.final-label').innerText = 'Downvoted with comment';
+                    imiPreview._feedbackCB({txn, bot_message_id, comment}, feedbackNumber);
+                } else {
+                    imiPreview._feedbackCB({txn, bot_message_id}, feedbackNumber);
+                }
+            }
         }
 
         if (target.hasAttribute('data-payload')) {
@@ -300,7 +390,7 @@ function initEvents(imiPreview: ImiPreview) {
             let lang;
             if (target.classList.contains('lang-option-ar')) {
                 lang = 'ar';
-            }else {
+            } else {
                 lang = 'en';
             }
 
@@ -366,22 +456,29 @@ function getBotResponseByTxnId(txn) {
     return botResponses.find(res => res.transaction_id === txn)
 }
 
-export async function sendFeedbackHandler(resp: { txn: string, bot_message_id: string }, feedback: number) {
+export async function sendFeedbackHandler(resp: { txn: string, bot_message_id: string, comment: string }, feedback: number, imiPreview) {
     let parsedFeedback;
+    // showToaster("e.message");
     if (feedback === 0) {
         parsedFeedback = 'NEGATIVE'
     } else if (feedback === 1) {
         parsedFeedback = 'POSITIVE'
     }
+
     const res = getBotResponseByTxnId(resp.txn);
+    debugger;
     try {
         await sendFeedback({
             consumer_id: res.room.consumer_id,
             feedback: parsedFeedback,
-            bot_message_id: res.bot_message_id
+            bot_message_id: res.bot_message_id,
+            feedback_comment: resp.comment,
         });
     } catch (e) {
         /*todo: remove like from view*/
+        imiPreview.hideFeedbackPanelForTxnId(resp.bot_message_id);
+        debugger;
+        showToaster(e.message);
     }
 }
 
@@ -408,6 +505,7 @@ export function initEnvironment(botDetails: any = {}) {
     environment.bot_access_token = botDetails.bot_access_token;
     environment.logo = botDetails.logo;
     const root = getQueryStringValue('root');
+    debugger;
     if (root) {
         if (root === '.') {
             environment.root = "";
@@ -485,12 +583,13 @@ function getModelTemplate() {
 }
 
 //
-function getFullBodyExceptPhoneCover(isRtl) {
+function getFullBodyExceptPhoneCover(isRtl?) {
 
     return `
         <div class="imi-preview-grid-container">
+        <div id="snackbar"></div>
                         <div class="header" style="z-index: 1">
-                            <div class="bot-intro" id="botIntro" dir="${isRtl?'rtl':'ltr'}">
+                            <div class="bot-intro" id="botIntro" dir="${isRtl ? 'rtl' : 'ltr'}">
                                 <span class="bot-logo">
                                     <img id="bot-logo"
                                     onerror="this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'" 
@@ -560,11 +659,12 @@ function getFullBodyExceptPhoneCover(isRtl) {
 }
 
 
-function getPhoneCoverTemplate(isRtl) {
+function getPhoneCoverTemplate(isRtl?) {
     return `
     <div class="page1">
     <div class="page__content">
         <div class="phone">
+        <div id="snackbar"></div>
             <div class="phone__body">
                 <div class="phone__view">
                     <div id="phone-modal" class="modal1" style="">
@@ -582,7 +682,7 @@ function getPhoneCoverTemplate(isRtl) {
                     </div>
                     <div class="imi-preview-grid-container">
 
-                        <div class="header" dir="${isRtl?'rtl':'ltr'}" style="z-index: 1">
+                        <div class="header" dir="${isRtl ? 'rtl' : 'ltr'}" style="z-index: 1">
                             <div class="basel-bg"></div>
                             <div class="bot-intro" id="botIntro">
                                 <span class="bot-logo">
@@ -590,7 +690,7 @@ function getPhoneCoverTemplate(isRtl) {
                                     onerror="this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'" 
                                        alt="">
                                 </span>
-                                <div class="bot-details" style="margin-left: ${isRtl?'42px':'-42px'}">
+                                <div class="bot-details" style="margin-left: ${isRtl ? '42px' : '-42px'}">
                                     <div id="bot-title" style="text-align: center" ></div>
                                 </div>
                                
