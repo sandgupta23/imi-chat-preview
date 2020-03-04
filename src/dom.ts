@@ -16,6 +16,7 @@ import {AudioReply} from "./response-components/audio-reply";
 import {ImageReply} from "./response-components/image-reply";
 import {Feedback} from "./response-components/feedback";
 import {VideoReply} from "./response-components/video-reply";
+import {EmployeeReply} from "./response-components/employee";
 
 export let $chatInput;
 export let $chatInputIcon;
@@ -75,7 +76,7 @@ export function setOptions(intro: IBotDetailsApiResp) {
 }
 
 export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload, hideFeedback) {
-    
+    debugger;
     // if (botResponse) {
     //     if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
     //         AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null, true);
@@ -191,6 +192,12 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
                 }
             }
         });
+
+        if(botResponse && botResponse.room.df_state.emp_card){
+            const s = new EmployeeReply(botResponse.room.df_state.emp_card);
+            const employeeTemplate = s.getElement('', ESourceType.bot, ['small_card_description'], botResponse.transaction_id);
+            replies.push(employeeTemplate);
+        }
 
         let humanClass = messages[0].sourceType === ESourceType.human ? 'msg-bubble-human' : '';
         let time = themeOptions.time24HrFormat? getTimeIn24HrFormat(messages[0].time): getTimeInHHMM(messages[0].time);

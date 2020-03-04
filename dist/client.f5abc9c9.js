@@ -200,7 +200,6 @@ function makePutReq(reqObj) {
         if (xmlHttp.status == 200) {
           resolve(JSON.parse(xmlHttp.responseText));
         } else {
-          debugger;
           console.log(xmlHttp);
           reject(JSON.parse(xmlHttp.responseText));
         }
@@ -412,7 +411,7 @@ var TextReply = function () {
   function TextReply(message) {}
 
   TextReply.prototype.getTemplate = function (text, source) {
-    var htmlStr = "\n                <div class=\"message-wrapper " + (source === send_api_1.ESourceType.human ? 'message-wrapper-human' : '') + "\">\n                    <div class=\"content\">" + link_1.convertToLink(text, 'text-link') + "</div>\n                </div>\n            ";
+    var htmlStr = "\n                <div class=\"message-wrapper " + (source === send_api_1.ESourceType.human ? 'message-wrapper-human' : '') + "\">\n                    <div class=\"content\">" + link_1.convertToLink(text, 'text-link') + "</div>\n                </div>\n                \n            ";
     return htmlStr;
   };
 
@@ -643,7 +642,6 @@ var Feedback = function () {
       feedbackHtml = "";
     }
 
-    debugger;
     return "<div xmlns=\"http://www.w3.org/1999/xhtml\" data-txn=\"" + txnId + "\"  data-bot_message_id=\"" + bot_message_id + "\"\n             class=\"msg-bubble " + humanClass + "\" style=\"position:relative;\">\n            \n             <div class=\"msg-bot-logo\">\n                    <img \n                    src=\"" + (humanClass ? 'https://www.dewa.gov.ae/images/user.png' : environment_1.environment.logo) + "\"\n                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\"\n                     style=\"height: 100%; width: 100%\" />\n                </div>       \n                <div class=\"message-container\" data-id=\"" + randomNumber + "\">\n                  \n                    <div>\n                    " + (isLast && bot_message_id !== 0 && bot_message_id !== 'human' ? feedbackHtml : '') + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                    </div>\n                </div>\n                \n            </div>";
   };
 
@@ -677,6 +675,49 @@ var VideoReply = function () {
 }();
 
 exports.VideoReply = VideoReply;
+},{"../utility":"utility.ts"}],"response-components/employee.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var utility_1 = require("../utility");
+
+var EmployeeReply = function () {
+  function EmployeeReply(employee) {
+    this.employee = employee;
+  }
+
+  EmployeeReply.prototype.getRows = function (small_card_description) {
+    var rowHtmlStr = Object.keys(small_card_description).map(function (key) {
+      var val = small_card_description[key];
+      return "\n                <div class=\"row\">\n                    <div class=\"col-key\">\n                    <div>" + key + ":</div>\n</div>\n                    <div class=\"col-value\"><div>\n                    " + val + "\n</div></div>\n                </div>\n            ";
+    }).join('');
+    return "\n<!--            <div class=\"row-title\">Organization</div>-->\n            " + rowHtmlStr + "\n        ";
+  };
+
+  EmployeeReply.prototype.getTemplate = function (text, source, bodyKey, txn) {
+    var _this = this;
+
+    var employee = this.employee;
+    var isPhone = utility_1.getQueryStringValue('phonecasing');
+    debugger;
+    var htmlStr = "\n                <div class=\"employee-card shadow-theme " + (isPhone === 'true' ? 'view-phone' : '') + "\">\n                        <div class=\"employee-card-header\">\n                            <div class=\"pic\">\n                                <img src=\"https://imibot-dev.s3.amazonaws.com/default/defaultbotlogo.png\" alt=\"\">\n                            </div>\n                            <div class=\"header-info\">\n                                <div class=\"title\">" + employee.header.name + "</div>\n                                <div class=\"description\">" + employee.header.jobtitle + "</div>\n                            </div>\n                         </div>\n                        <div class=\"employee-card-body\">\n                            <div class=\"info\">\n                                    " + bodyKey.map(function (key) {
+      return _this.getRows(employee[key]);
+    }).join('') + "\n                            </div>\n                        </div>\n                        <div class=\"employee-card-footer\">\n                                <button data-txn=\"" + txn + "\" class=\"open-modal\" rel=\"modal:open\" class=\"open-modal\">More Info</button>\n                        </div>\n                    </div>\n                \n            ";
+    return htmlStr;
+  };
+
+  EmployeeReply.prototype.getElement = function (text, source, bodyKey, txn) {
+    var str = this.getTemplate(text, source, bodyKey, txn);
+    return utility_1.convertStringToDom(str);
+  };
+
+  return EmployeeReply;
+}();
+
+exports.EmployeeReply = EmployeeReply;
 },{"../utility":"utility.ts"}],"dom.ts":[function(require,module,exports) {
 "use strict";
 
@@ -703,6 +744,8 @@ var image_reply_1 = require("./response-components/image-reply");
 var feedback_1 = require("./response-components/feedback");
 
 var video_reply_1 = require("./response-components/video-reply");
+
+var employee_1 = require("./response-components/employee");
 
 exports.botResponses = [];
 
@@ -745,6 +788,7 @@ function setOptions(intro) {
 exports.setOptions = setOptions;
 
 function AppendMessageInChatBody(messages, botResponse, hideFeedback) {
+  debugger;
   var txnId = botResponse && botResponse.transaction_id || 'human';
   var bot_message_id = botResponse && botResponse.bot_message_id || 'human';
   var str = "";
@@ -845,6 +889,13 @@ function AppendMessageInChatBody(messages, botResponse, hideFeedback) {
         }
       }
     });
+
+    if (botResponse && botResponse.room.df_state.emp_card) {
+      var s = new employee_1.EmployeeReply(botResponse.room.df_state.emp_card);
+      var employeeTemplate = s.getElement('', send_api_1.ESourceType.bot, ['small_card_description'], botResponse.transaction_id);
+      replies.push(employeeTemplate);
+    }
+
     var humanClass = messages[0].sourceType === send_api_1.ESourceType.human ? 'msg-bubble-human' : '';
     var time = exports.themeOptions.time24HrFormat ? utility_1.getTimeIn24HrFormat(messages[0].time) : utility_1.getTimeInHHMM(messages[0].time);
     var feedbackSTr = "";
@@ -929,7 +980,7 @@ function AppendMessageInChatBody(messages, botResponse, hideFeedback) {
 }
 
 exports.AppendMessageInChatBody = AppendMessageInChatBody;
-},{"./typings/send-api":"typings/send-api.ts","./utility":"utility.ts","./response-components/text-reply":"response-components/text-reply.ts","./response-components/session-expiry":"response-components/session-expiry.ts","./response-components/quick-reply":"response-components/quick-reply.ts","./response-components/carousel-reply":"response-components/carousel-reply.ts","./response-components/audio-reply":"response-components/audio-reply.ts","./response-components/image-reply":"response-components/image-reply.ts","./response-components/feedback":"response-components/feedback.ts","./response-components/video-reply":"response-components/video-reply.ts"}],"send-api.ts":[function(require,module,exports) {
+},{"./typings/send-api":"typings/send-api.ts","./utility":"utility.ts","./response-components/text-reply":"response-components/text-reply.ts","./response-components/session-expiry":"response-components/session-expiry.ts","./response-components/quick-reply":"response-components/quick-reply.ts","./response-components/carousel-reply":"response-components/carousel-reply.ts","./response-components/audio-reply":"response-components/audio-reply.ts","./response-components/image-reply":"response-components/image-reply.ts","./response-components/feedback":"response-components/feedback.ts","./response-components/video-reply":"response-components/video-reply.ts","./response-components/employee":"response-components/employee.ts"}],"send-api.ts":[function(require,module,exports) {
 "use strict";
 
 var __assign = this && this.__assign || function () {
@@ -1954,6 +2005,8 @@ var send_api_2 = require("./typings/send-api");
 
 var utility_1 = require("./utility");
 
+var employee_1 = require("./response-components/employee");
+
 var isModelShown = false;
 var modes;
 
@@ -1987,8 +2040,6 @@ function initClientEvents(imiPreview) {
       $event.stopPropagation();
     });
     dom_1.$chatInput.addEventListener('keypress', function ($event) {
-      debugger;
-
       if ($event.key === 'Enter') {
         var humanMessage = dom_1.$chatInput.value;
 
@@ -2123,6 +2174,11 @@ function removeModal() {
   dom_1.$chatFooter.classList.remove('opacity-0');
 }
 
+function getEmployeeModal() {
+  var s = new employee_1.EmployeeReply();
+  return "\n        " + s.getTemplate('', send_api_2.ESourceType.bot, ['small_card_description', 'remaining_parameters']) + " \n    ";
+}
+
 function initEvents(imiPreview) {
   try {
     document.getElementById('close-modal1').addEventListener('click', function ($event) {
@@ -2151,6 +2207,14 @@ function initEvents(imiPreview) {
       }
     }
   }, dom_1.$chatBody.addEventListener('click', function ($event) {
+    if ($event.target.classList.contains('open-modal')) {
+      var target_1 = $event.target;
+      var txn = target_1.getAttribute('data-txn');
+      var res = getBotResponseByTxnId(txn);
+      var x = new employee_1.EmployeeReply(res.room.df_state.emp_card).getTemplate('', send_api_2.ESourceType.bot, ['small_card_description', 'remaining_parameters'], txn);
+      window.$(x).appendTo('body').modal();
+    }
+
     var target = $event.target;
 
     if (target.classList.contains('feedback-like') || target.classList.contains('feedback-dislike') || target.classList.contains('downvote-comment-submit') || target.classList.contains('downvote-comment-skip')) {
@@ -2212,8 +2276,6 @@ function initEvents(imiPreview) {
     }
 
     if (target.hasAttribute('data-payload')) {
-      debugger;
-
       imiPreview._cb(target.textContent, target.getAttribute('data-payload'));
 
       return;
@@ -2396,7 +2458,6 @@ function sendFeedbackHandler(resp, feedback, imiPreview) {
           }
 
           res = getBotResponseByTxnId(resp.txn);
-          debugger;
           _a.label = 1;
 
         case 1:
@@ -2417,7 +2478,6 @@ function sendFeedbackHandler(resp, feedback, imiPreview) {
         case 3:
           e_1 = _a.sent();
           imiPreview.hideFeedbackPanelForTxnId(resp.bot_message_id);
-          debugger;
           utility_1.showToaster(e_1.message);
           return [3, 4];
 
@@ -2455,7 +2515,6 @@ function initEnvironment(botDetails) {
   environment_1.environment.bot_access_token = botDetails.bot_access_token;
   environment_1.environment.logo = botDetails.logo;
   var root = utility_1.getQueryStringValue('root');
-  debugger;
 
   if (root) {
     if (root === '.') {
@@ -2521,7 +2580,7 @@ function getHeaderTemplate() {
 function getFooterTemplate() {
   return "\n    <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>";
 }
-},{"./dom":"dom.ts","regenerator-runtime/runtime":"../node_modules/regenerator-runtime/runtime.js","./send-api":"send-api.ts","./environment":"environment.ts","./typings/send-api":"typings/send-api.ts","./utility":"utility.ts"}],"../node_modules/@babel/runtime/helpers/esm/extends.js":[function(require,module,exports) {
+},{"./dom":"dom.ts","regenerator-runtime/runtime":"../node_modules/regenerator-runtime/runtime.js","./send-api":"send-api.ts","./environment":"environment.ts","./typings/send-api":"typings/send-api.ts","./utility":"utility.ts","./response-components/employee":"response-components/employee.ts"}],"../node_modules/@babel/runtime/helpers/esm/extends.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7536,7 +7595,6 @@ document.addEventListener('DOMContentLoaded', function () {
           imiPreview = new ImiPreview();
           imiPreviewTemp = imiPreview;
           imiPreview.setSendHumanMessageCallback(function (message, quickReplyPayload) {
-            debugger;
             main_1.humanMessageHandler(message, send_api_2.ESourceType.human, quickReplyPayload);
           });
           imiPreview.setSendFeedback(function (val, feedback) {
@@ -7630,7 +7688,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61909" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57035" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

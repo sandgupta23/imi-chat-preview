@@ -16,6 +16,7 @@
     <meta name="twitter:description" property="og:description" itemprop="description" content="The bot building platform for your enterprise">
     <link rel="icon" type="image/x-icon" href="https://dev.imibot.ai/static/favicon.ico">
     <link rel="stylesheet" href="/styles.164d45a1.css">
+    <link rel="stylesheet" href="/employee.d87ac99f.css">
     <link rel="stylesheet" href="/rammas.d513520c.css">
     <link rel="stylesheet" href="/rammas.d513520c.css">
 <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.slim.js"></script>-->
@@ -31,7 +32,14 @@
 <!--    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>-->
 <!--    <script src="https://unpkg.com/jss@10.0.4/dist/jss.js"></script>-->
     <script src="/jss.2d517eac.js"></script>
-<script src="/styles.164d45a1.js"></script><script src="/rammas.d513520c.js"></script><script src="/snackbar.60b70df1.js"></script><script src="/font-awesome.min.43525bf0.js"></script></head>
+    <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+
+    <!-- jQuery Modal -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css">
+<script src="/styles.164d45a1.js"></script><script src="/employee.d87ac99f.js"></script><script src="/rammas.d513520c.js"></script><script src="/snackbar.60b70df1.js"></script><script src="/font-awesome.min.43525bf0.js"></script></head>
 
 <style>@font-face {
         font-family: 'DUBAI-REGULAR';
@@ -314,6 +322,12 @@
     /*}*/</style>
 
 <body class="dewa-theme">
+
+<div id="ex1" class="modal">
+    <p>Thanks for clicking. That felt good.</p>
+    <a href="#" rel="modal:close">Close</a>
+</div>
+
 <!--snackbar for showing API erorrs. Styles are in snackbar.scss-->
     <div class="test-container" style="width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center">
         <div class="vertical-centered-box">

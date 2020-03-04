@@ -1,0 +1,120 @@
+.employee-card{
+  max-width: 250px;
+  border-radius: 8px;
+  padding: 0px !important;
+  overflow: hidden;
+  margin-top: 10px;
+  margin-bottom: 6px;
+  .employee-card-header{
+    display: flex;
+    align-items: center;
+    background: rgb(240, 240, 215);
+    .pic{
+      width: 32px;
+      height: 32px;
+      margin: 10px;
+      flex-grow: 0;
+      flex-shrink: 0;
+      img{
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .header-info{
+      flex-grow: 1;
+      margin: 10px 0;
+      .title{
+        width: 85%;
+        font-size: 14px;
+        height: 20px;
+        font-weight: 600;
+        overflow: hidden;
+        //margin-bottom: -3px;
+        //line-height: 15px;
+      }
+    }
+  }
+  .employee-card-body{
+    margin: 10px 10px 5px 10px;
+    .info{
+      max-height: 400px;
+      overflow: scroll;
+      .row-title{
+        background: rgba(0, 0, 0, 0.1);
+        color: rgba(0, 0, 0, 0.5);
+        font-weight: bold;
+        padding-left: 10px;
+      }
+      .row{
+        display: flex;
+        .col-key{
+          color: #a8a8a8;
+          width: 100px;
+          font-size: 11px;
+          flex-shrink: 0;
+        }
+        .col-value{
+          flex-shrink: 0;
+        }
+      }
+    }
+  }
+  .employee-card-footer{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 4px;
+    .open-modal{
+      background: transparent;
+      outline: none;
+      border: none;
+      cursor: pointer;
+      height: 25px;
+      padding: 0 8px;
+      font-size: 11px;
+      border-radius: 6px;
+      color: #a8a8a8;
+      &:hover{
+        color: #7e7e7e;
+      }
+    }
+  }
+}
+
+.modal{
+  &.employee-card{
+    margin-top: 0px;
+    .header-info{
+      //margin-top: 5px;
+    }
+    .employee-card-body{
+      .info{
+        padding-left: 16px
+      }
+    }
+    a.close-modal{
+      top: 14.5px;
+      right: 12.5px;
+      opacity: .1;
+      &:hover{
+        opacity: .3;
+        transition: all .5s;
+      }
+    }
+    .employee-card-footer{
+      display: none;
+    }
+  }
+}
+.jquery-modal{
+  z-index: 100000 !important;
+}
+
+.view-phone{
+  &.employee-card{
+    width: 245px;
+  }
+  .close-modal{
+    width: 17px !important;
+    height: 17px !important;
+  }
+}

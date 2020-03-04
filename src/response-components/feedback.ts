@@ -62,7 +62,7 @@ export class Feedback {
         if (hideFeedback) {
             feedbackHtml = ``;
         }
-        debugger;
+
 
         return `<div xmlns="http://www.w3.org/1999/xhtml" data-txn="${txnId}"  data-bot_message_id="${bot_message_id}"
              class="msg-bubble ${humanClass}" style="position:relative;">

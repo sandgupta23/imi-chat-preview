@@ -74,8 +74,8 @@ export interface ISendApiResp {
         "consumer_id": 51598,
         "created_at": 1567167585592,
         "cross_retention_period": false,
-        "data_store": {},
-        "df_state": {},
+        "data_store": {emp_card: any},
+        "df_state": {emp_card: any},
         "downvoted_message_count": 0,
         "error_message_count": 0,
         "feedback_count": {
@@ -196,7 +196,8 @@ export interface ISendApiResponsePayload {
         'cross_retention_period': false,
         'data_store': {},
         'df_state': {
-            'answer': 'hi', 'question': 'hi'
+            'answer': 'hi', 'question': 'hi',
+            emp_card:any
         },
         'id': number,
         'imichat_agent': {},

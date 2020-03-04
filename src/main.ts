@@ -1,24 +1,28 @@
 import {
-    $chatBody, $chatContainer,
+    $chatBody,
+    $chatContainer,
     $chatFooter,
     $chatInput,
     $chatInputIcon,
-    $envOptions, $knowMoreClose, $knowMoreContainer, $knowMoreOverlay,
+    $envOptions,
+    $knowMoreClose,
+    $knowMoreContainer,
+    $knowMoreOverlay,
     $langSelect,
     $langSubmit,
-    $loader,
     $phoneModel,
-    AppendMessageInChatBody, botResponses,
-    domInit, themeOptions,
-    setOptions
+    AppendMessageInChatBody,
+    botResponses,
+    domInit,
+    setOptions,
+    themeOptions
 } from "./dom";
-import {getBotDetails} from "./bot-details";
-import {IBotDetailsApiResp} from "./typings/bot-detaills-api";
 import 'regenerator-runtime/runtime'
 import {sendFeedback, sendMessageToBot, serializeGeneratedMessagesToPreviewMessages} from "./send-api";
 import {environment} from "./environment";
-import {ESourceType, ISendApiResp, ISendApiResponsePayload} from "./typings/send-api";
+import {ESourceType, ISendApiResponsePayload} from "./typings/send-api";
 import {getQueryStringValue, scrollBodyToBottom, showToaster, updateQueryStringParameter} from "./utility";
+import {EmployeeReply} from "./response-components/employee";
 
 let isModelShown = false;
 
@@ -56,7 +60,7 @@ export function initClientEvents(imiPreview) {
             $event.stopPropagation();
         });
         $chatInput.addEventListener('keypress', ($event) => {
-            debugger;
+
             if ($event.key === 'Enter') {
                 // const downvoteCommentWrapper = document.querySelectorAll('.downvote-comment.d-flex');
                 // Array.from(downvoteCommentWrapper).forEach((downvoteCommentBox: HTMLElement)=>{
@@ -197,6 +201,14 @@ function removeModal() {
 }
 
 
+function getEmployeeModal() {
+    const s = new EmployeeReply();
+    return `
+        ${s.getTemplate('', ESourceType.bot, ['small_card_description','remaining_parameters'])} 
+    `;
+}
+
+
 function initEvents(imiPreview: ImiPreview) {
 
     try {
@@ -208,6 +220,8 @@ function initEvents(imiPreview: ImiPreview) {
     }
 
     $chatBody.addEventListener('keyup', ($event) => {
+        //modal-1
+
         const target = $event.target as HTMLElement;
 
         if (target.classList.contains('downvote-comment-textarea')) {
@@ -227,6 +241,14 @@ function initEvents(imiPreview: ImiPreview) {
     }
 
     $chatBody.addEventListener('click', ($event) => {
+        if ($event.target.classList.contains('open-modal')) {
+            const target = $event.target;
+            const txn = target.getAttribute('data-txn');
+            const res = getBotResponseByTxnId(txn);
+            const x = new EmployeeReply(res.room.df_state.emp_card)
+                .getTemplate('', ESourceType.bot, ['small_card_description', 'remaining_parameters'], txn);
+            window.$(x).appendTo('body').modal();
+        }
         const target = $event.target as HTMLElement;
 
         if (target.classList.contains('feedback-like')
@@ -284,7 +306,7 @@ function initEvents(imiPreview: ImiPreview) {
         }
 
         if (target.hasAttribute('data-payload')) {
-            debugger;
+
             imiPreview._cb(target.textContent, target.getAttribute('data-payload'));
             return;
         }
@@ -428,7 +450,7 @@ function initEvents(imiPreview: ImiPreview) {
 
 }
 
-    export async function humanMessageHandler(humanMessage: string, sourceType?, payload?: string) {
+export async function humanMessageHandler(humanMessage: string, sourceType?, payload?: string) {
     // alert();
     AppendMessageInChatBody([{
         sourceType: sourceType || ESourceType.human,
@@ -436,7 +458,7 @@ function initEvents(imiPreview: ImiPreview) {
         time: Date.now()
     }]);
 
-    const botResponse = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, humanMessage,null, payload);
+    const botResponse = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, humanMessage, null, payload);
     // if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
     //     AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null);
     //     console.log(`previous room : ${environment.room}. new room ${botResponse.room.id}`);
@@ -466,7 +488,7 @@ export async function sendFeedbackHandler(resp: { txn: string, bot_message_id: s
     }
 
     const res = getBotResponseByTxnId(resp.txn);
-    debugger;
+
     try {
         await sendFeedback({
             consumer_id: res.room.consumer_id,
@@ -477,7 +499,7 @@ export async function sendFeedbackHandler(resp: { txn: string, bot_message_id: s
     } catch (e) {
         /*todo: remove like from view*/
         imiPreview.hideFeedbackPanelForTxnId(resp.bot_message_id);
-        debugger;
+
         showToaster(e.message);
     }
 }
@@ -505,7 +527,7 @@ export function initEnvironment(botDetails: any = {}) {
     environment.bot_access_token = botDetails.bot_access_token;
     environment.logo = botDetails.logo;
     const root = getQueryStringValue('root');
-    debugger;
+
     if (root) {
         if (root === '.') {
             environment.root = "";
