@@ -381,7 +381,9 @@ function convertToLink(inputText, className) {
     className = "text-link";
   }
 
-  if (inputText.includes('<') && inputText.includes('>')) {
+  var inputTextWithoutBr = inputText.split('<br>').join('');
+
+  if (inputTextWithoutBr.includes('<') && inputTextWithoutBr.includes('>')) {
     return inputText;
   }
 
@@ -7688,7 +7690,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57035" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60184" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
