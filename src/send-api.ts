@@ -25,18 +25,43 @@ export function sendMessageToBot(bot_access_token: string, enterprise_unique_nam
         "bot-access-token": bot_access_token
     };
     return makePostReq<ISendApiResp>({url, body, headerData})
+        .then((data) => {
+            environment.room = data.room;
+            return data;
+        })
 }
 
 
 export function sendFeedback(body: { "bot_message_id": number, "feedback": string, "consumer_id": number, feedback_comment?: string }): Promise<ISendApiResp> {
+    const useAirTableForFeedback = true;
+    let url, headerData: IHeaderData = {};
+    if (useAirTableForFeedback) {
+        url = `https://api.airtable.com/v0/app8sonGMEZ8VaGpj/Table%201`;//https://dev.imibot.ai/api/v1/message/feedback/
+        headerData = <any>{
+            // enterprise_unique_name: enterprise_unique_name,
+            // "bot-access-token": environment.bot_access_token,
+            // "Content-Type": "application/json",
+            'Authorization': 'Bearer keyXxUio5tZMzQJgx'
+        };
+        body = ({
+            "records": [{
+                "fields": {
+                    "comment": body.feedback_comment,
+                    "message_id": body.bot_message_id.toString(),
+                    "room_id": environment.room.id.toString(),
+                    "bot_unique_name": environment.bot_unique_name
+                }
+            }]
+        } as any)
+        return makePostReq<ISendApiResp>({url, body, headerData});
+    } else {
+        url = `https://${environment.root}imibot.ai/api/v1/message/feedback/`;//https://dev.imibot.ai/api/v1/message/feedback/
+        headerData = {
+            "bot-access-token": environment.bot_access_token,
+        };
+        return makePutReq<ISendApiResp>({url, body, headerData});
+    }
 
-    const url = `https://${environment.root}imibot.ai/api/v1/message/feedback/`;//https://dev.imibot.ai/api/v1/message/feedback/
-
-    const headerData: IHeaderData = {
-        // enterprise_unique_name: enterprise_unique_name,
-        "bot-access-token": environment.bot_access_token
-    };
-    return makePutReq<ISendApiResp>({url, body, headerData});
 }
 
 

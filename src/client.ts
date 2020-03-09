@@ -39,7 +39,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         humanMessageHandler(val);
     });
     imiPreview.setSendFeedback((val, feedback) => {
-        sendFeedbackHandler(val, feedback, imiPreview);
+        console.log(environment);
+        debugger;
+        sendFeedbackHandler(val, feedback, imiPreview, botDetails);
     });
 
     const fullBody = true;//getQueryStringValue('fullbody') === "true";
