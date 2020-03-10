@@ -237,7 +237,7 @@ function initEvents(imiPreview: ImiPreview) {
             if (parent && parent.classList.contains('active')) {
                 return;
             }
-            debugger;
+
             const $feedbackWrapper = findParentWithClass(target, 'msg-bubble-options-panel');
             const $feedbackWrapperParent = $feedbackWrapper.parentElement;
             const $commentTextArea: HTMLTextAreaElement = $feedbackWrapperParent.querySelector('.downvote-comment-textarea');
@@ -246,6 +246,10 @@ function initEvents(imiPreview: ImiPreview) {
             const oldFeedback = $feedbackWrapper.getAttribute('data-feedback');
             const $messageBubble = findParentWithClass(target, 'msg-bubble');
             const feedback = target.getAttribute('data-feedback-value');
+            const feedbackNumber = Number(feedback);
+            let x = $messageBubble.querySelector(`[data-feedback-value="${feedbackNumber}"]`);
+            let y = $messageBubble.querySelector(`[data-feedback-value="${feedbackNumber === 1 ? 0 : 1}"]`);
+            y && y.parentElement.removeChild(y);
             const txn = $messageBubble.getAttribute('data-txn');
             const bot_message_id = $messageBubble.getAttribute('data-bot_message_id');
             // target.parentElement.classList.add('active');//
@@ -267,14 +271,14 @@ function initEvents(imiPreview: ImiPreview) {
                     }
                 }
                 const feedbackNumber = Number(feedback);
-                let x;
-                x = $messageBubble.querySelector(`[data-feedback-value="${feedbackNumber}"]`);
+                // let x;
+                // x = $messageBubble.querySelector(`[data-feedback-value="${feedbackNumber}"]`);
                 $messageBubble.querySelector('.fa-spinner').classList.remove('d-none');
                 try {
                     if (feedbackNumber === 0 && target.classList.contains('downvote-comment-submit')) {
                         await imiPreview._feedbackCB({txn, bot_message_id, comment}, feedbackNumber);
                         x.querySelector('.final-label').innerText = 'Downvoted with comment';
-                        debugger;
+
                     } else {
                         await imiPreview._feedbackCB({txn, bot_message_id}, feedbackNumber);
                     }
