@@ -200,7 +200,6 @@ function makePutReq(reqObj) {
         if (xmlHttp.status == 200) {
           resolve(JSON.parse(xmlHttp.responseText));
         } else {
-          debugger;
           console.log(xmlHttp);
           reject(JSON.parse(xmlHttp.responseText));
         }
@@ -382,7 +381,9 @@ function convertToLink(inputText, className) {
     className = "text-link";
   }
 
-  if (inputText.includes('<') && inputText.includes('>')) {
+  var inputTextWithoutBr = inputText.split('<br>').join('');
+
+  if (inputTextWithoutBr.includes('<') && inputTextWithoutBr.includes('>')) {
     return inputText;
   }
 
@@ -634,13 +635,12 @@ var Feedback = function () {
         hideFeedback = _a.hideFeedback,
         feedback_comment = _a.feedback_comment;
     var askFeedbackClass = likeActive || disLikeActive ? '' : 'ask-feedback';
-    var feedbackHtml = "\n        <div class=\"msg-bubble-options-panel " + askFeedbackClass + "\" " + feedbackSTr + ">\n                    <div>\n                    <div style=\"display: flex\">\n                        <div class=\"feedback  " + likeActive + "\" data-feedback-value=\"1\" title=\"Helpful\">\n                             <i class=\"fa fa-thumbs-up feedback-like\" data-feedback-value=\"1\"></i>\n                             <span class=\"feedback-like ask-label\" data-feedback-value=\"1\">Upvote</span>\n                             <span class=\"feedback-like final-label\" data-feedback-value=\"1\">Upvoted</span>\n                        </div>\n                        <div class=\"feedback " + disLikeActive + "\" title=\"Not helpful\" data-feedback-value=\"0\">\n                            <i class=\"fa fa-thumbs-down feedback-dislike\" data-feedback-value=\"0\"></i>\n                            <span class=\"feedback-dislike ask-label\" data-feedback-value=\"0\">Downvote</span>\n                            <span class=\"feedback-dislike final-label\" data-feedback-value=\"0\">Downvoted " + (feedback_comment ? 'with comment' : '') + "</span>\n                        </div>\n                    </div>\n                    <div class=\"downvote-comment d-none feedback-form-diabled\"\n                     style=\"display: none; min-width: 200px; margin-top: 4px; border: 1px solid #d8d8d8; flex-direction: column; padding: 4px 10px; border-radius: 2px\">\n                        <div style=\"display: flex;height: 28px;align-items: center;\">\n                            <div class=\"feedback " + disLikeActive + "\" title=\"Not helpful\" data-feedback-value=\"0\">\n                                <i class=\"fa fa-thumbs-down feedback-dislike\" data-feedback-value=\"0\"></i>\n                            </div>\n                            <div style=\"margin-left: 6px\">Please leave feedback if any</div>\n                        </div>\n                        <div>\n                            <textarea  placeholder=\"Share your thoughts..\" class=\"downvote-comment-textarea\" style=\"border: 1px solid #d8d8d8;background: #f8f8f8;\n      height: 52px;\n      border-radius: 3px;\n      width: 210px;\n      padding: 4px;\"  rows=\"4\"></textarea>\n                             <span class=\"form-error\">Max limit is 2000</span>\n                        </div>\n                        <div style=\"display: flex\">\n                            <button style=\"width: 68px;\n                            border-color: #d8d8d8;\n        height: 28px; margin-right: 6px\" class=\"imi-button-primary downvote-comment-skip\">Skip</button>\n                            <button style=\"flex: 1;background: #00abd3;\n        height: 28px; border-color: #00abd3; color: white\" class=\"imi-button-primary downvote-comment-submit\">Submit</button>\n                        </div>\n                    </div>\n</div>\n                </div>\n                \n        ";
+    var feedbackHtml = "\n        <div class=\"msg-bubble-options-panel " + askFeedbackClass + "\" " + feedbackSTr + ">\n                    <div>\n                    <div style=\"display: flex; align-items: center\">\n                        <div class=\"feedback  " + likeActive + "\" data-feedback-value=\"1\" title=\"Helpful\">\n                             <i class=\"fa fa-thumbs-up feedback-like\" data-feedback-value=\"1\"></i>\n                             <span class=\"feedback-like ask-label\" data-feedback-value=\"1\">Upvote</span>\n                             <span class=\"feedback-like final-label\" data-feedback-value=\"1\">Upvoted</span>\n                        </div>\n                        <div class=\"feedback " + disLikeActive + "\" title=\"Not helpful\" data-feedback-value=\"0\">\n                            <i class=\"fa fa-thumbs-down feedback-dislike\" data-feedback-value=\"0\"></i>\n                            <span class=\"feedback-dislike ask-label\" data-feedback-value=\"0\">Downvote</span>\n                            <span class=\"feedback-dislike final-label\" data-feedback-value=\"0\">Downvoted " + (feedback_comment ? 'with comment' : '') + "</span>\n                        </div>\n                        <i class=\"fa fa-spinner fa-spin d-none\" style=\"opacity: 0.5; margin-left: 5px; font-size: 15px\"></i>\n                    </div>\n                    <div class=\"downvote-comment d-none feedback-form-diabled\"\n                     style=\"display: none; min-width: 200px; margin-top: 4px; border: 1px solid #d8d8d8; flex-direction: column; padding: 4px 10px; border-radius: 2px\">\n                        <div style=\"display: flex;height: 28px;align-items: center;\">\n                            <div class=\"" + disLikeActive + "\" title=\"Not helpful\" data-feedback-value=\"0\">\n                                <i class=\"fa fa-thumbs-down feedback-dislike\" data-feedback-value=\"0\"></i>\n                            </div>\n                            <div style=\"margin-left: 3px\">Please leave feedback if any</div>\n                        </div>\n                        <div>\n                            <textarea  placeholder=\"Share your thoughts..\" class=\"downvote-comment-textarea\" \n                            style=\"border: 1px solid #d8d8d8;background: #f8f8f8;\n      height: 52px;\n      border-radius: 3px;\n      width: 100%;\n      /*width: 210px;*/\n      padding: 4px;\"  rows=\"4\"></textarea>\n                             <span class=\"form-error\">Max limit is 2000</span>\n                        </div>\n                        <div style=\"display: flex\">\n                            <button style=\"width: 68px;\n                            border-color: #d8d8d8;\n        height: 28px; margin-right: 6px\" class=\"imi-button-primary downvote-comment-skip\">Skip</button>\n                            <button style=\"flex: 1;background: #00abd3;\n        height: 28px; border-color: #00abd3; color: white\" class=\"imi-button-primary downvote-comment-submit\">Submit</button>\n                        </div>\n                    </div>\n</div>\n                </div>\n                \n        ";
 
     if (hideFeedback) {
       feedbackHtml = "";
     }
 
-    debugger;
     return "<div xmlns=\"http://www.w3.org/1999/xhtml\" data-txn=\"" + txnId + "\"  data-bot_message_id=\"" + bot_message_id + "\"\n             class=\"msg-bubble " + humanClass + "\" style=\"position:relative;\">\n                \n                <div class=\"message-container\" data-id=\"" + randomNumber + "\">\n                  \n                    <div>\n                    " + (isLast && bot_message_id !== 0 && bot_message_id !== 'human' ? feedbackHtml : '') + "\n                    <div class=\"time\" style=\"font-size: 9px\">" + time + "</div>\n                    </div>\n                </div>\n            </div>";
   };
 
@@ -2119,6 +2119,8 @@ function removeModal() {
 }
 
 function initEvents(imiPreview) {
+  var _this = this;
+
   try {
     document.getElementById('close-modal1').addEventListener('click', function ($event) {
       removeModal();
@@ -2146,139 +2148,176 @@ function initEvents(imiPreview) {
       }
     }
   }, dom_1.$chatBody.addEventListener('click', function ($event) {
-    var target = $event.target;
+    return __awaiter(_this, void 0, void 0, function () {
+      var target, parent, $feedbackWrapper, $feedbackWrapperParent, $commentTextArea, $downvoteCommentWrapper, oldFeedback, $messageBubble, feedback, txn, bot_message_id, comment, feedbackNumber, x, e_1, img, modal_1, modalImg, captionText, span, itemInView, $carasalContainer_1, shouldMoveRight, $carasalInner, $carasalItemLength, dataStep, carasalContainerWidth, itemWidth, base;
+      return __generator(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            target = $event.target;
+            if (!(target.classList.contains('feedback-like') || target.classList.contains('feedback-dislike') || target.classList.contains('downvote-comment-submit') || target.classList.contains('downvote-comment-skip'))) return [3, 8];
+            parent = findParentWithClass(target, 'feedback');
 
-    if (target.classList.contains('feedback-like') || target.classList.contains('feedback-dislike') || target.classList.contains('downvote-comment-submit') || target.classList.contains('downvote-comment-skip')) {
-      var parent = findParentWithClass(target, 'feedback');
+            if (parent && parent.classList.contains('active')) {
+              return [2];
+            }
 
-      if (parent && parent.classList.contains('active')) {
-        return;
-      }
+            debugger;
+            $feedbackWrapper = findParentWithClass(target, 'msg-bubble-options-panel');
+            $feedbackWrapperParent = $feedbackWrapper.parentElement;
+            $commentTextArea = $feedbackWrapperParent.querySelector('.downvote-comment-textarea');
+            $downvoteCommentWrapper = $feedbackWrapperParent.querySelector('.downvote-comment');
+            oldFeedback = $feedbackWrapper.getAttribute('data-feedback');
+            $messageBubble = findParentWithClass(target, 'msg-bubble');
+            feedback = target.getAttribute('data-feedback-value');
+            txn = $messageBubble.getAttribute('data-txn');
+            bot_message_id = $messageBubble.getAttribute('data-bot_message_id');
 
-      var $feedbackWrapper = findParentWithClass(target, 'msg-bubble-options-panel');
-      var $feedbackWrapperParent = $feedbackWrapper.parentElement;
-      var $commentTextArea = $feedbackWrapperParent.querySelector('.downvote-comment-textarea');
-      var $downvoteCommentWrapper = $feedbackWrapperParent.querySelector('.downvote-comment');
-      $feedbackWrapper.classList.remove('ask-feedback');
-      var oldFeedback = $feedbackWrapper.getAttribute('data-feedback');
-      var $messageBubble = findParentWithClass(target, 'msg-bubble');
-      var feedback = target.getAttribute('data-feedback-value');
-      var txn = $messageBubble.getAttribute('data-txn');
-      var bot_message_id = $messageBubble.getAttribute('data-bot_message_id');
-      target.parentElement.classList.add('active');
+            if (target.classList.contains('feedback-dislike')) {
+              $downvoteCommentWrapper.classList.remove('d-none');
+              $downvoteCommentWrapper.classList.add('d-flex');
+              $commentTextArea.focus();
+              $feedbackWrapper.setAttribute('data-feedback', feedback);
+              utility_1.scrollBodyToBottom();
+            }
 
-      if (target.classList.contains('feedback-dislike')) {
-        $downvoteCommentWrapper.classList.remove('d-none');
-        $downvoteCommentWrapper.classList.add('d-flex');
-        $commentTextArea.focus();
-        $feedbackWrapper.setAttribute('data-feedback', feedback);
-        utility_1.scrollBodyToBottom();
-      }
+            comment = $commentTextArea.value;
+            if (!(target.classList.contains('downvote-comment-submit') || target.classList.contains('downvote-comment-skip') || target.classList.contains('feedback-like'))) return [3, 8];
 
-      var comment = $commentTextArea.value;
+            if (target.classList.contains('downvote-comment-submit')) {
+              if (!comment || !comment.trim()) {
+                $commentTextArea.style.border = '1px solid red';
+                return [2];
+              }
+            }
 
-      if (target.classList.contains('downvote-comment-submit') || target.classList.contains('downvote-comment-skip') || target.classList.contains('feedback-like')) {
-        if (target.classList.contains('downvote-comment-submit')) {
-          if (!comment || !comment.trim()) {
-            $commentTextArea.style.border = '1px solid red';
-            return;
-          }
+            feedbackNumber = Number(feedback);
+            x = void 0;
+            x = $messageBubble.querySelector("[data-feedback-value=\"" + feedbackNumber + "\"]");
+            $messageBubble.querySelector('.fa-spinner').classList.remove('d-none');
+            _a.label = 1;
+
+          case 1:
+            _a.trys.push([1, 6, 7, 8]);
+
+            if (!(feedbackNumber === 0 && target.classList.contains('downvote-comment-submit'))) return [3, 3];
+            return [4, imiPreview._feedbackCB({
+              txn: txn,
+              bot_message_id: bot_message_id,
+              comment: comment
+            }, feedbackNumber)];
+
+          case 2:
+            _a.sent();
+
+            x.querySelector('.final-label').innerText = 'Downvoted with comment';
+            debugger;
+            return [3, 5];
+
+          case 3:
+            return [4, imiPreview._feedbackCB({
+              txn: txn,
+              bot_message_id: bot_message_id
+            }, feedbackNumber)];
+
+          case 4:
+            _a.sent();
+
+            _a.label = 5;
+
+          case 5:
+            $feedbackWrapper.classList.remove('ask-feedback');
+            x.classList.add('active');
+            $downvoteCommentWrapper.classList.remove('d-flex');
+            $downvoteCommentWrapper.classList.add('d-none');
+            return [3, 8];
+
+          case 6:
+            e_1 = _a.sent();
+            return [3, 8];
+
+          case 7:
+            $messageBubble.querySelector('.fa-spinner').classList.add('d-none');
+            return [7];
+
+          case 8:
+            if (target.hasAttribute('data-payload')) {
+              imiPreview._cb(target.getAttribute('data-payload'));
+
+              return [2];
+            }
+
+            try {
+              removeModal();
+            } catch (e) {
+              console.log(e);
+            }
+
+            try {
+              img = $event.target;
+
+              if (img.classList.contains('click-to-zoom')) {
+                modal_1 = document.getElementById("myModal");
+                modalImg = document.getElementById("img01");
+                captionText = document.getElementById("caption");
+                modal_1.style.display = "block";
+                modalImg.src = img.src;
+                span = document.getElementsByClassName("close")[0];
+
+                span.onclick = function () {
+                  modal_1.style.display = "none";
+                };
+              }
+
+              if (img.classList) {}
+            } catch (e) {
+              console.log(e);
+            }
+
+            try {
+              if (target.classList.contains('control')) {
+                itemInView = 2;
+                $carasalContainer_1 = findParentWithClass(target, 'carousal-container');
+                shouldMoveRight = target.classList.contains('control-right');
+                $carasalInner = $carasalContainer_1.querySelector('.carousal-container-inner');
+                $carasalItemLength = $carasalContainer_1.querySelectorAll('.item').length;
+                dataStep = Number($carasalContainer_1.getAttribute('data-step'));
+                $carasalContainer_1.classList.remove('hide-left-control');
+                $carasalContainer_1.classList.remove('hide-right-control');
+
+                if (dataStep < $carasalItemLength - itemInView && shouldMoveRight) {
+                  dataStep++;
+
+                  if (dataStep === $carasalItemLength - itemInView) {
+                    setTimeout(function () {
+                      $carasalContainer_1.classList.add('hide-right-control');
+                    }, 350);
+                  }
+                } else if (dataStep > 0 && !shouldMoveRight) {
+                  dataStep--;
+
+                  if (dataStep === 0) {
+                    setTimeout(function () {
+                      $carasalContainer_1.classList.add('hide-left-control');
+                    }, 350);
+                  }
+                } else {
+                  return [2];
+                }
+
+                $carasalContainer_1.setAttribute('data-step', dataStep.toString());
+                carasalContainerWidth = $carasalContainer_1.offsetWidth;
+                itemWidth = $carasalInner.querySelector('.item').offsetWidth;
+                base = itemWidth * 100 / carasalContainerWidth;
+                $carasalInner.style.transform = "translateX(" + -1 * base * dataStep + "%)";
+              }
+            } catch (e) {
+              console.log(e);
+            }
+
+            return [2];
         }
-
-        var feedbackNumber = Number(feedback);
-        $downvoteCommentWrapper.classList.remove('d-flex');
-        $downvoteCommentWrapper.classList.add('d-none');
-
-        if (feedbackNumber === 0 && target.classList.contains('downvote-comment-submit')) {
-          $messageBubble.querySelector('.active').querySelector('.final-label').innerText = 'Downvoted with comment';
-
-          imiPreview._feedbackCB({
-            txn: txn,
-            bot_message_id: bot_message_id,
-            comment: comment
-          }, feedbackNumber);
-        } else {
-          imiPreview._feedbackCB({
-            txn: txn,
-            bot_message_id: bot_message_id
-          }, feedbackNumber);
-        }
-      }
-    }
-
-    if (target.hasAttribute('data-payload')) {
-      imiPreview._cb(target.getAttribute('data-payload'));
-
-      return;
-    }
-
-    try {
-      removeModal();
-    } catch (e) {
-      console.log(e);
-    }
-
-    try {
-      var img = $event.target;
-
-      if (img.classList.contains('click-to-zoom')) {
-        var modal_1 = document.getElementById("myModal");
-        var modalImg = document.getElementById("img01");
-        var captionText = document.getElementById("caption");
-        modal_1.style.display = "block";
-        modalImg.src = img.src;
-        var span = document.getElementsByClassName("close")[0];
-
-        span.onclick = function () {
-          modal_1.style.display = "none";
-        };
-      }
-
-      if (img.classList) {}
-    } catch (e) {
-      console.log(e);
-    }
-
-    try {
-      if (target.classList.contains('control')) {
-        var itemInView = 2;
-        var $carasalContainer_1 = findParentWithClass(target, 'carousal-container');
-        var shouldMoveRight = target.classList.contains('control-right');
-        var $carasalInner = $carasalContainer_1.querySelector('.carousal-container-inner');
-        var $carasalItemLength = $carasalContainer_1.querySelectorAll('.item').length;
-        var dataStep = Number($carasalContainer_1.getAttribute('data-step'));
-        $carasalContainer_1.classList.remove('hide-left-control');
-        $carasalContainer_1.classList.remove('hide-right-control');
-
-        if (dataStep < $carasalItemLength - itemInView && shouldMoveRight) {
-          dataStep++;
-
-          if (dataStep === $carasalItemLength - itemInView) {
-            setTimeout(function () {
-              $carasalContainer_1.classList.add('hide-right-control');
-            }, 350);
-          }
-        } else if (dataStep > 0 && !shouldMoveRight) {
-          dataStep--;
-
-          if (dataStep === 0) {
-            setTimeout(function () {
-              $carasalContainer_1.classList.add('hide-left-control');
-            }, 350);
-          }
-        } else {
-          return;
-        }
-
-        $carasalContainer_1.setAttribute('data-step', dataStep.toString());
-        var carasalContainerWidth = $carasalContainer_1.offsetWidth;
-        var itemWidth = $carasalInner.querySelector('.item').offsetWidth;
-        var base = itemWidth * 100 / carasalContainerWidth;
-        $carasalInner.style.transform = "translateX(" + -1 * base * dataStep + "%)";
-      }
-    } catch (e) {
-      console.log(e);
-    }
+      });
+    });
   }));
 
   try {
@@ -2379,7 +2418,7 @@ function getBotResponseByTxnId(txn) {
 
 function sendFeedbackHandler(resp, feedback, imiPreview) {
   return __awaiter(this, void 0, void 0, function () {
-    var parsedFeedback, res, e_1;
+    var parsedFeedback, res, p, e_2;
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
@@ -2390,11 +2429,10 @@ function sendFeedbackHandler(resp, feedback, imiPreview) {
           }
 
           res = getBotResponseByTxnId(resp.txn);
-          debugger;
           _a.label = 1;
 
         case 1:
-          _a.trys.push([1, 3,, 4]);
+          _a.trys.push([1, 3,, 5]);
 
           return [4, send_api_1.sendFeedback({
             consumer_id: res.room.consumer_id,
@@ -2404,19 +2442,21 @@ function sendFeedbackHandler(resp, feedback, imiPreview) {
           })];
 
         case 2:
-          _a.sent();
-
-          return [3, 4];
+          p = _a.sent();
+          return [3, 5];
 
         case 3:
-          e_1 = _a.sent();
-          imiPreview.hideFeedbackPanelForTxnId(resp.bot_message_id);
-          debugger;
-          utility_1.showToaster(e_1.message);
-          return [3, 4];
+          e_2 = _a.sent();
+          return [4, imiPreview.hideFeedbackPanelForTxnId(resp.bot_message_id)];
 
         case 4:
-          return [2];
+          _a.sent();
+
+          utility_1.showToaster(e_2.message);
+          return [3, 5];
+
+        case 5:
+          return [2, p];
       }
     });
   });
@@ -2450,7 +2490,6 @@ function initEnvironment(botDetails) {
   environment_1.environment.bot_access_token = botDetails.bot_access_token;
   environment_1.environment.logo = botDetails.logo;
   var root = utility_1.getQueryStringValue('root');
-  debugger;
 
   if (root) {
     if (root === '.') {
@@ -2696,6 +2735,9 @@ function changeFavicon(img) {
 document.addEventListener('DOMContentLoaded', function () {
   return __awaiter(this, void 0, void 0, function () {
     var botDetails, imiPreview, fullBody, phoneCasing, brandColor, $chatInput, theme, firstMessageData, data;
+
+    var _this = this;
+
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
@@ -2721,7 +2763,20 @@ document.addEventListener('DOMContentLoaded', function () {
             main_1.humanMessageHandler(val);
           });
           imiPreview.setSendFeedback(function (val, feedback) {
-            main_1.sendFeedbackHandler(val, feedback, imiPreview);
+            return __awaiter(_this, void 0, void 0, function () {
+              return __generator(this, function (_a) {
+                switch (_a.label) {
+                  case 0:
+                    console.log(environment_1.environment);
+                    return [4, main_1.sendFeedbackHandler(val, feedback, imiPreview, botDetails)];
+
+                  case 1:
+                    _a.sent();
+
+                    return [2];
+                }
+              });
+            });
           });
           fullBody = true;
           phoneCasing = utility_1.getQueryStringValue('phonecasing') === "true";
@@ -2814,7 +2869,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50985" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53463" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

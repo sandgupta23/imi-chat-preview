@@ -38,8 +38,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     imiPreview.setSendHumanMessageCallback((val) => {
         humanMessageHandler(val);
     });
-    imiPreview.setSendFeedback((val, feedback) => {
-        sendFeedbackHandler(val, feedback, imiPreview);
+    imiPreview.setSendFeedback(async (val, feedback) => {
+        console.log(environment);
+
+        await sendFeedbackHandler(val, feedback, imiPreview, botDetails);
     });
 
     const fullBody = true;//getQueryStringValue('fullbody') === "true";

@@ -43,7 +43,7 @@ export function makePutReq<T>(reqObj: IPostReq): Promise<T> {
                         resolve(JSON.parse(xmlHttp.responseText));
                 }
                 else{
-                    debugger;
+
                     console.log(xmlHttp);
                     reject(JSON.parse(xmlHttp.responseText));
                 }
