@@ -32,7 +32,7 @@ export function sendMessageToBot(bot_access_token: string, enterprise_unique_nam
 }
 
 
-export function sendFeedback(body: { "bot_message_id": number, "feedback": string, "consumer_id": number, feedback_comment?: string }): Promise<ISendApiResp> {
+export async function sendFeedback(body: { "bot_message_id": number, "feedback": string, "consumer_id": number, feedback_comment?: string }): Promise<ISendApiResp> {
     debugger;
     const useAirTableForFeedback = body.feedback_comment;
     let url, headerData: IHeaderData = {};
@@ -64,8 +64,8 @@ export function sendFeedback(body: { "bot_message_id": number, "feedback": strin
     };
     const p = makePutReq<ISendApiResp>({url, body, headerData});
     ajaxPromises.push(p);
-    return Promise.all(ajaxPromises) as any;
-
+    await Promise.all(ajaxPromises) as any;
+    return  p;
 }
 
 
