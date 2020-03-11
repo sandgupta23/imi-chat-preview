@@ -89,7 +89,8 @@ export function initClientEvents(imiPreview) {
                 return;
             }
             $chatInput.value = "";
-            humanMessageHandler(humanMessage);
+            // humanMessageHandler(humanMessage);
+            imiPreview._cb(humanMessage);
         });
     } catch (e) {
         console.log(e)
@@ -258,6 +259,7 @@ function initEvents(imiPreview: ImiPreview) {
                 $downvoteCommentWrapper.classList.add('d-flex');
                 $commentTextArea.focus();
                 $feedbackWrapper.setAttribute('data-feedback', feedback);
+                $feedbackWrapper.classList.remove('temp-div');
                 scrollBodyToBottom();
             }
             const comment = $commentTextArea.value as string;
@@ -282,11 +284,14 @@ function initEvents(imiPreview: ImiPreview) {
                     } else {
                         await imiPreview._feedbackCB({txn, bot_message_id}, feedbackNumber);
                     }
+                    debugger;
                     $feedbackWrapper.classList.remove('ask-feedback');
+                    $feedbackWrapper.classList.remove('temp-div');
                     (x).classList.add('active');
                     $downvoteCommentWrapper.classList.remove('d-flex');
                     $downvoteCommentWrapper.classList.add('d-none');
                 } catch (e) {
+                    $feedbackWrapper.parentElement.removeChild($feedbackWrapperParent);
                 } finally {
                     $messageBubble.querySelector('.fa-spinner').classList.add('d-none');
                 }
