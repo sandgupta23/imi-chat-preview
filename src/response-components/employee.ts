@@ -26,12 +26,15 @@ export class EmployeeReply {
         `
     }
 
-    getTemplate(text?, source?: ESourceType, bodyKey?: string[], txn?) {
-        const employee = this.employee;
+    getTemplate(text?, source?: ESourceType, bodyKey?: string[], txn?, employee?, isModal?) {
+        // let employee: any = this.employee;
+        // employee = {
+        //     ...employee,
+        //     ...employee.remaining_parameters
+        // };
         const isPhone = getQueryStringValue('phonecasing');
-        debugger;
         const htmlStr = `
-                <div class="employee-card shadow-theme ${isPhone === 'true'?'view-phone':''}">
+                <div class="employee-card shadow-theme ${isPhone === 'true' ? 'view-phone' : ''}" ${isModal === 'true' ? 'view-modal' : ''}">
                         <div class="employee-card-header">
                             <div class="pic">
                                 <img src="https://imibot-dev.s3.amazonaws.com/default/defaultbotlogo.png" alt="">
@@ -42,9 +45,7 @@ export class EmployeeReply {
                             </div>
                          </div>
                         <div class="employee-card-body">
-                            <div class="info">
-                                    ${bodyKey.map((key) => this.getRows(employee[key])).join('')}
-                            </div>
+                            ${bodyKey.map((key) => this.getModalBlockForKey(employee, key)).join('')}
                         </div>
                         <div class="employee-card-footer">
                                 <button data-txn="${txn}" class="open-modal" rel="modal:open" class="open-modal">More Info</button>
@@ -55,8 +56,15 @@ export class EmployeeReply {
         return htmlStr;
     }
 
-    getElement(text?, source?: ESourceType, bodyKey?: string[], txn) {
-        const str = this.getTemplate(text, source, bodyKey, txn);
+    getModalBlockForKey(employee, key) {
+        return `<div class="info">
+<h1 class="info-title" style="display: none">${key}</h1>
+                                        ${this.getRows(employee[key])}
+                                </div>`
+    }
+
+    getElement(text?, source?: ESourceType, bodyKey?: string[], txn, employee?, isModal) {
+        const str = this.getTemplate(text, source, bodyKey, txn, employee, isModal);
         return convertStringToDom(str);
     }
 }

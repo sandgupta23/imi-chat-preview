@@ -204,7 +204,7 @@ function removeModal() {
 function getEmployeeModal() {
     const s = new EmployeeReply();
     return `
-        ${s.getTemplate('', ESourceType.bot, ['small_card_description','remaining_parameters'])} 
+        ${s.getTemplate('', ESourceType.bot, ['general', 'profile'])} 
     `;
 }
 
@@ -245,8 +245,18 @@ function initEvents(imiPreview: ImiPreview) {
             const target = $event.target;
             const txn = target.getAttribute('data-txn');
             const res = getBotResponseByTxnId(txn);
-            const x = new EmployeeReply(res.room.df_state.emp_card)
-                .getTemplate('', ESourceType.bot, ['small_card_description', 'remaining_parameters'], txn);
+            const employee = res.room.df_state.emp_card;
+            const flattenEmployee = {
+                ...employee,
+                ...employee.remaining_parameters
+            };
+            flattenEmployee.general = {
+                ...flattenEmployee.general,
+                ...flattenEmployee.small_card_description
+            }
+            const isModal = true;
+            const x = new EmployeeReply(employee)
+                .getTemplate('', ESourceType.bot, ['general', 'profile'], txn, flattenEmployee, isModal);
             window.$(x).appendTo('body').modal();
         }
         const target = $event.target as HTMLElement;

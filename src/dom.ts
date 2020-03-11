@@ -76,7 +76,6 @@ export function setOptions(intro: IBotDetailsApiResp) {
 }
 
 export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload, hideFeedback) {
-    debugger;
     // if (botResponse) {
     //     if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
     //         AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null, true);
@@ -194,8 +193,13 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
         });
 
         if(botResponse && botResponse.room.df_state.emp_card){
+            const employee = botResponse.room.df_state.emp_card;
             const s = new EmployeeReply(botResponse.room.df_state.emp_card);
-            const employeeTemplate = s.getElement('', ESourceType.bot, ['small_card_description'], botResponse.transaction_id);
+            const flattenEmployee = {
+                ...employee,
+                ...employee.remaining_parameters
+            };
+            const employeeTemplate = s.getElement('', ESourceType.bot, ['small_card_description'], botResponse.transaction_id, flattenEmployee);
             replies.push(employeeTemplate);
         }
 
