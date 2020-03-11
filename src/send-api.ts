@@ -33,7 +33,7 @@ export function sendMessageToBot(bot_access_token: string, enterprise_unique_nam
 
 
 export function sendFeedback(body: { "bot_message_id": number, "feedback": string, "consumer_id": number, feedback_comment?: string }): Promise<ISendApiResp> {
-    const useAirTableForFeedback = true;
+    const useAirTableForFeedback = body.feedback_comment;
     let url, headerData: IHeaderData = {};
     if (useAirTableForFeedback) {
         url = `https://api.airtable.com/v0/app8sonGMEZ8VaGpj/Table%201`;//https://dev.imibot.ai/api/v1/message/feedback/
