@@ -89,7 +89,8 @@ export function initClientEvents(imiPreview) {
                 return;
             }
             $chatInput.value = "";
-            humanMessageHandler(humanMessage);
+            // humanMessageHandler(humanMessage);
+            imiPreview._cb(humanMessage);
         });
     } catch (e) {
         console.log(e)
@@ -225,7 +226,7 @@ function initEvents(imiPreview: ImiPreview) {
         }
     }
 
-    $chatBody.addEventListener('click', ($event) => {
+    $chatBody.addEventListener('click', async ($event) => {
         const target = $event.target as HTMLElement;
 
         if (target.classList.contains('feedback-like')
@@ -237,26 +238,28 @@ function initEvents(imiPreview: ImiPreview) {
             if (parent && parent.classList.contains('active')) {
                 return;
             }
+
             const $feedbackWrapper = findParentWithClass(target, 'msg-bubble-options-panel');
             const $feedbackWrapperParent = $feedbackWrapper.parentElement;
-
             const $commentTextArea: HTMLTextAreaElement = $feedbackWrapperParent.querySelector('.downvote-comment-textarea');
             const $downvoteCommentWrapper = $feedbackWrapperParent.querySelector('.downvote-comment');
-            $feedbackWrapper.classList.remove('ask-feedback');
+            // $feedbackWrapper.classList.remove('ask-feedback');
             const oldFeedback = $feedbackWrapper.getAttribute('data-feedback');
-            // if (oldFeedback != null) {
-            //     return;
-            // }
             const $messageBubble = findParentWithClass(target, 'msg-bubble');
             const feedback = target.getAttribute('data-feedback-value');
+            const feedbackNumber = Number(feedback);
+            let x = $messageBubble.querySelector(`[data-feedback-value="${feedbackNumber}"]`);
+            let y = $messageBubble.querySelector(`[data-feedback-value="${feedbackNumber === 1 ? 0 : 1}"]`);
+            y && y.parentElement.removeChild(y);
             const txn = $messageBubble.getAttribute('data-txn');
             const bot_message_id = $messageBubble.getAttribute('data-bot_message_id');
-            target.parentElement.classList.add('active');
+            // target.parentElement.classList.add('active');//
             if (target.classList.contains('feedback-dislike')) {
                 $downvoteCommentWrapper.classList.remove('d-none');
                 $downvoteCommentWrapper.classList.add('d-flex');
                 $commentTextArea.focus();
                 $feedbackWrapper.setAttribute('data-feedback', feedback);
+                $feedbackWrapper.classList.remove('temp-div');
                 scrollBodyToBottom();
             }
             const comment = $commentTextArea.value as string;
@@ -270,15 +273,29 @@ function initEvents(imiPreview: ImiPreview) {
                     }
                 }
                 const feedbackNumber = Number(feedback);
-                // $downvoteCommentWrapper.style.display = "none";
-                $downvoteCommentWrapper.classList.remove('d-flex');
-                $downvoteCommentWrapper.classList.add('d-none');
-                if (feedbackNumber === 0 && target.classList.contains('downvote-comment-submit')) {
-                    $messageBubble.querySelector('.active').querySelector('.final-label').innerText = 'Downvoted with comment';
-                    imiPreview._feedbackCB({txn, bot_message_id, comment}, feedbackNumber);
-                } else {
-                    imiPreview._feedbackCB({txn, bot_message_id}, feedbackNumber);
+                // let x;
+                // x = $messageBubble.querySelector(`[data-feedback-value="${feedbackNumber}"]`);
+                $messageBubble.querySelector('.fa-spinner').classList.remove('d-none');
+                try {
+                    if (feedbackNumber === 0 && target.classList.contains('downvote-comment-submit')) {
+                        await imiPreview._feedbackCB({txn, bot_message_id, comment}, feedbackNumber);
+                        x.querySelector('.final-label').innerText = 'Downvoted with comment';
+
+                    } else {
+                        await imiPreview._feedbackCB({txn, bot_message_id}, feedbackNumber);
+                    }
+                    debugger;
+                    $feedbackWrapper.classList.remove('ask-feedback');
+                    $feedbackWrapper.classList.remove('temp-div');
+                    (x).classList.add('active');
+                    $downvoteCommentWrapper.classList.remove('d-flex');
+                    $downvoteCommentWrapper.classList.add('d-none');
+                } catch (e) {
+                    $feedbackWrapper.parentElement.removeChild($feedbackWrapperParent);
+                } finally {
+                    $messageBubble.querySelector('.fa-spinner').classList.add('d-none');
                 }
+
             }
         }
         if (target.hasAttribute('data-payload')) {
@@ -465,9 +482,9 @@ export async function sendFeedbackHandler(resp: { txn: string, bot_message_id: s
     }
 
     const res = getBotResponseByTxnId(resp.txn);
-    debugger;
+    let p;
     try {
-        await sendFeedback({
+        p = await sendFeedback({
             consumer_id: res.room.consumer_id,
             feedback: parsedFeedback,
             bot_message_id: res.bot_message_id,
@@ -475,10 +492,11 @@ export async function sendFeedbackHandler(resp: { txn: string, bot_message_id: s
         });
     } catch (e) {
         /*todo: remove like from view*/
-        imiPreview.hideFeedbackPanelForTxnId(resp.bot_message_id);
-        debugger;
+        await imiPreview.hideFeedbackPanelForTxnId(resp.bot_message_id);
+
         showToaster(e.message);
     }
+    return p;
 }
 
 export function initEnvironment(botDetails: any = {}) {
@@ -503,7 +521,7 @@ export function initEnvironment(botDetails: any = {}) {
     environment.bot_access_token = botDetails.bot_access_token;
     environment.logo = botDetails.logo;
     const root = getQueryStringValue('root');
-    debugger;
+
     if (root) {
         if (root === '.') {
             environment.root = "";

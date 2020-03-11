@@ -21,13 +21,14 @@ export function makePostReq<T>(reqObj: IPostReq): Promise<T> {
     xmlHttp.send(JSON.stringify(reqObj.body));
     return new Promise((resolve, reject) => {
         xmlHttp.onreadystatechange = function () {
-            if (xmlHttp.readyState == 4 && xmlHttp.status == 200){
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
                 resolve(JSON.parse(xmlHttp.responseText));
             }
-                
+
         }
     })
 }
+
 export function makePutReq<T>(reqObj: IPostReq): Promise<T> {
     const xmlHttp = new XMLHttpRequest();
     xmlHttp.open("PUT", reqObj.url, true); // true for asynchronous
@@ -40,22 +41,25 @@ export function makePutReq<T>(reqObj: IPostReq): Promise<T> {
             // }
             if (xmlHttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
                 if (xmlHttp.status == 200) {
-                        resolve(JSON.parse(xmlHttp.responseText));
-                }
-                else{
-                    debugger;
-                    console.log(xmlHttp);
-                    reject(JSON.parse(xmlHttp.responseText));
+                    resolve(JSON.parse(xmlHttp.responseText));
+                } else {
+                    let error;
+                    try {
+                        error = JSON.parse(xmlHttp.responseText)
+                        reject(error);
+                    } catch (e) {
+                        reject();
+                    }
                 }
             }
-                
+
         }
     })
 }
 
 
 function setHeaders(xmlHttp: XMLHttpRequest, headerData: IHeaderData) {
-    if(!headerData){
+    if (!headerData) {
         return;
     }
     headerData = {
