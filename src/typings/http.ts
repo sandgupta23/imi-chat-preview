@@ -10,6 +10,7 @@ export interface IHeaderData {
     'api-key'?: string;
     'bot-access-token'?: string;
     'enterprise_unique_name'?: string;
+    'Authorization'?: string;
 }
 
 export interface IGetReq {
