@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     await loadJS('https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.2.5/polyfill.min.js');
     await loadJS('https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.slim.js');
     await loadCss('https://fonts.googleapis.com/css?family=IBM+Plex+Sans');
+    await loadCss('https://imi-chat-embed.netlify.com/global.css');
     await loadCss('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
     initEnvironment();
     const botDetails = await getBotDetails<IBotDetailsApiResp>();
