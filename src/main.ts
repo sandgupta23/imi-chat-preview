@@ -616,9 +616,7 @@ function getFullBodyExceptPhoneCover(isRtl?) {
                                     <div id="bot-title" ></div>
                                     <div id="bot-description">hello</div>
                                 </div>
-                                <div class="options"  id="env-options">
-                                    <i class="fa fa-ellipsis-v"></i>
-                                </div>
+                                
                             </div>
                         </div>
                         <!--chat body starts-->

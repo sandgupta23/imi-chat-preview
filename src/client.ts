@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         brandColor: brandColor || 'green',
         showMenu: false,
         feedbackEnabled: botDetails.allow_feedback,
-        showOptionsEllipsis: !phoneCasing,
+        showOptionsEllipsis: false,
         time24HrFormat: false
     };
 
