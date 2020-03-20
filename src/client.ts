@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const brandColor = getQueryStringValue('brandcolor') || "#2b4f70";
     brandColor = brandColor.replace('_', '#');
 
-    imiPreview.viewInit('.test-container', fullBody, phoneCasing);
+    imiPreview.viewInit('#embed-chat-container', fullBody, phoneCasing);
     const $chatInput = document.getElementById('chat-input') as HTMLInputElement;
     imiPreview.initAdditionalDom({$chatInput});
     // imiPreview.

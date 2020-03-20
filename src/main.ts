@@ -28,6 +28,10 @@ export enum modes {
 }
 
 export function initClientEvents(imiPreview) {
+    const $embedChatIcon = document.getElementById('embed-chat-icon');
+    $embedChatIcon.addEventListener('click', function ($event) {
+
+    });
 
     try {
 
@@ -103,6 +107,31 @@ async function initApp(imiPreview: ImiPreview) {
 }
 
 class ImiPreview {
+
+    constructor(props) {
+        document.body.innerHTML = document.body.innerHTML +
+            `
+            <div id="embed-chat-icon" style="border-radius: 50%;background: var(--color-brand);height:60px; width:60px;display: flex; justify-content: center;align-items: center; ;position: fixed; right: 15px; bottom: 15px; z-index: 100000000000000000000000000000000000; cursor: pointer">
+    <div style="position: absolute; height: 80vh;border: 1px solid #e0e0e0; width: 330px; bottom: 100%; right: 20px; margin-bottom: 10px; border-radius: 10px; overflow: hidden">
+        <div style="height: 100%; width: 100%; " id="embed-chat-container">
+            <div class="vertical-centered-box">
+                <div class="content">
+                    <div class="loader-circle"></div>
+                    <div class="loader-line-mask">
+                        <div class="loader-line"></div>
+                    </div>
+                    <img alt="Favicon" src="https://staging.imibot.ai/static/favicon.ico">
+                </div>
+            </div>
+        </div>
+    </div>
+    <i class="fa fa-comment-o" style="font-size: 30px; color: white"></i>
+</div>
+            
+            `
+
+    }
+
     _cb;
     _feedbackCB;
     _roomInactiveMap;
