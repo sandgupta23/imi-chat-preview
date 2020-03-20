@@ -52,7 +52,7 @@ export function convertStringToDom(str: string) {
 export function removeInActiveFeedbackPanel($chatbody: HTMLElement) {
 
     const askFeedbackPanels = $chatbody.querySelectorAll('.msg-bubble-options-panel.temp-div');
-    debugger;
+
     Array.from(askFeedbackPanels).forEach((panel: HTMLElement) => {
         // const isActive = panel && panel.querySelector('.feedback.active');
         // if (!isActive) {

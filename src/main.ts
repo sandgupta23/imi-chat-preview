@@ -51,7 +51,7 @@ export function initClientEvents(imiPreview) {
                 $knowMoreOverlay.style.display = 'none';
             }, 500);
         });
-        $envOptions.addEventListener('click', ($event) => {
+        $envOptions && $envOptions.addEventListener('click', ($event) => {
             $knowMoreOverlay.style.display = 'block';
             $knowMoreOverlay.style.opacity = 1;
             $knowMoreClose.style.display = 'block';
@@ -59,7 +59,7 @@ export function initClientEvents(imiPreview) {
         $knowMoreContainer && $knowMoreContainer.addEventListener('click', ($event) => {
             $event.stopPropagation();
         });
-        $chatInput.addEventListener('keypress', ($event) => {
+        $chatInput && $chatInput.addEventListener('keypress', ($event) => {
             if ($event.key === 'Enter') {
                 // const downvoteCommentWrapper = document.querySelectorAll('.downvote-comment.d-flex');
                 // Array.from(downvoteCommentWrapper).forEach((downvoteCommentBox: HTMLElement)=>{
@@ -131,7 +131,6 @@ class ImiPreview {
 </div>
             
             `;
-
 
         const embedChatIcon = document.getElementById('embed-chat-icon');
         const embedChatContainerWrapper = document.getElementById('embed-chat-container-wrapper');
@@ -269,10 +268,6 @@ function initEvents(imiPreview: ImiPreview) {
 
     $chatBody.addEventListener('click', async ($event) => {
 
-        if (target.classList.contains('feedback-like'){
-
-        }
-
         const target = $event.target as HTMLElement;
 
         if (target.classList.contains('feedback-like')
@@ -330,7 +325,7 @@ function initEvents(imiPreview: ImiPreview) {
                     } else {
                         await imiPreview._feedbackCB({txn, bot_message_id}, feedbackNumber);
                     }
-                    debugger;
+
                     $feedbackWrapper.classList.remove('ask-feedback');
                     $feedbackWrapper.classList.remove('temp-div');
                     (x).classList.add('active');
@@ -491,7 +486,6 @@ function initEvents(imiPreview: ImiPreview) {
 }
 
 export async function humanMessageHandler(humanMessage: string, sourceType?) {
-    // alert();
     AppendMessageInChatBody([{
         sourceType: sourceType || ESourceType.human,
         text: humanMessage,

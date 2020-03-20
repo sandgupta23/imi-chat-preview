@@ -33,7 +33,7 @@ export function sendMessageToBot(bot_access_token: string, enterprise_unique_nam
 
 
 export async function sendFeedback(body: { "bot_message_id": number, "feedback": string, "consumer_id": number, feedback_comment?: string }): Promise<ISendApiResp> {
-    debugger;
+
     const useAirTableForFeedback = body.feedback_comment;
     let url, headerData: IHeaderData = {};
     let ajaxPromises: Promise<any>[] = [];
