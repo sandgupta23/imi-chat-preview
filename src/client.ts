@@ -5,12 +5,14 @@ import {getQueryStringValue} from "./utility";
 import {sendMessageToBot, socketKey} from "./send-api";
 import {environment} from "./environment";
 import {ESourceType} from "./typings/send-api";
+import * as f from './main';
 import {humanMessageHandler, initClientEvents, initEnvironment, sendFeedbackHandler} from "./main";
 
 let socket;
 let imiPreviewTemp;
 
 function changeFavicon(img) {
+    console.log(f);
     (function () {
         var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
         link.type = 'image/x-icon';
@@ -19,7 +21,39 @@ function changeFavicon(img) {
         document.getElementsByTagName('head')[0].appendChild(link);
     })();
 }
+
+function loadCss(href) {
+    var link = document.createElement( "link" );
+    link.href = href;
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.media = "screen,print";
+
+    document.getElementsByTagName( "head" )[0].appendChild( link );
+}
+
+function loadJS(file) {
+    return new Promise((resolve, reject)=>{
+        // DOM: Create the script element
+        var jsElm = document.createElement("script");
+        // set the type attribute
+        jsElm.type = "application/javascript";
+        // make the script element load file
+        jsElm.src = file;
+        // finally insert the element to the body element in order to load the script
+        document.body.appendChild(jsElm);
+        jsElm.onload = function () {
+            resolve();
+        }
+    })
+}
+
 document.addEventListener('DOMContentLoaded', async function () {
+
+    await loadJS('https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.2.5/polyfill.min.js');
+    await loadJS('https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.slim.js');
+    await loadCss('https://fonts.googleapis.com/css?family=IBM+Plex+Sans');
+    await loadCss('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
     initEnvironment();
     const botDetails = await getBotDetails<IBotDetailsApiResp>();
     initEnvironment(botDetails);
