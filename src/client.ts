@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     initEnvironment();
     const botDetails = await getBotDetails<IBotDetailsApiResp>();
     initEnvironment(botDetails);
-    document.title = botDetails.name || 'IMIBot.ai';
-    changeFavicon(botDetails.logo);
+    // document.title = botDetails.name || 'IMIBot.ai';
+    // changeFavicon(botDetails.logo);
     // $chatFooter.classList.add('d-none');
     try {
         $loader && $loader.classList.add('d-none');

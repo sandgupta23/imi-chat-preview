@@ -112,7 +112,9 @@ class ImiPreview {
         document.body.innerHTML = document.body.innerHTML +
             `
             <div id="embed-chat-icon" style="border-radius: 50%;background: var(--color-brand);height:60px; width:60px;display: flex; justify-content: center;align-items: center; ;position: fixed; right: 15px; bottom: 15px; z-index: 100000000000000000000000000000000000; cursor: pointer">
-    <div style="position: absolute; height: 80vh;border: 1px solid #e0e0e0; width: 330px; bottom: 100%; right: 20px; margin-bottom: 10px; border-radius: 10px; overflow: hidden">
+    <div 
+    id="embed-chat-container-wrapper" class="d-none"
+    style="position: absolute; height: 80vh;border: 1px solid #e0e0e0; width: 330px; bottom: 100%; right: 20px; margin-bottom: 10px; border-radius: 10px; overflow: hidden">
         <div style="height: 100%; width: 100%; " id="embed-chat-container">
             <div class="vertical-centered-box">
                 <div class="content">
@@ -128,7 +130,17 @@ class ImiPreview {
     <i class="fa fa-comment-o" style="font-size: 30px; color: white"></i>
 </div>
             
-            `
+            `;
+
+
+        const embedChatIcon = document.getElementById('embed-chat-icon');
+        const embedChatContainerWrapper = document.getElementById('embed-chat-container-wrapper');
+        embedChatIcon.addEventListener('click', function () {
+            embedChatContainerWrapper.classList.toggle('d-none');
+        });
+        embedChatContainerWrapper.addEventListener('click', function ($event) {
+            $event.stopPropagation();
+        });
 
     }
 
@@ -256,6 +268,11 @@ function initEvents(imiPreview: ImiPreview) {
     }
 
     $chatBody.addEventListener('click', async ($event) => {
+
+        if (target.classList.contains('feedback-like'){
+
+        }
+
         const target = $event.target as HTMLElement;
 
         if (target.classList.contains('feedback-like')
@@ -645,9 +662,7 @@ function getFullBodyExceptPhoneCover(isRtl?) {
                                     <div id="bot-title" ></div>
                                     <div id="bot-description">hello</div>
                                 </div>
-                                <div class="options"  id="env-options">
-                                    <i class="fa fa-ellipsis-v"></i>
-                                </div>
+                                
                             </div>
                         </div>
                         <!--chat body starts-->
