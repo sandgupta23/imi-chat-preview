@@ -68,16 +68,24 @@ document.addEventListener('DOMContentLoaded', async function () {
         console.log(e);
     }
 
-    const imiPreview = new ImiPreview();
+    const imiPreview = new ImiPreview({bot: botDetails});
     imiPreviewTemp = imiPreview;
     imiPreview.setSendHumanMessageCallback((val) => {
         humanMessageHandler(val);
     });
     imiPreview.setSendFeedback(async (val, feedback) => {
         console.log(environment);
-
         await sendFeedbackHandler(val, feedback, imiPreview, botDetails);
     });
+    imiPreview.setResetChatCallback(async (val, feedback) => {
+        imiPreview.removeAllChatMessages();
+        const firstMessageData = await getFirstMessage();
+        imiPreview.appendMessageInChatBody(firstMessageData.generated_msg, null, true);
+    });
+
+    async function getFirstMessage(){
+        return await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, 'hi', ESourceType.bot);
+    }
 
     const fullBody = true;//getQueryStringValue('fullbody') === "true";
     const phoneCasing = getQueryStringValue('phonecasing') === "true";
@@ -100,7 +108,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     };
 
     imiPreview.setOptions(botDetails, theme);
-    const firstMessageData = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, 'hi', ESourceType.bot);
+    const firstMessageData = await getFirstMessage();
 
     imiPreview.appendMessageInChatBody(firstMessageData.generated_msg, null, true);
     initClientEvents(imiPreview);

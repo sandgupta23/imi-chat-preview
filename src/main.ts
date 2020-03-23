@@ -29,8 +29,13 @@ export enum modes {
 
 export function initClientEvents(imiPreview) {
     const $embedChatIcon = document.getElementById('embed-chat-icon');
+    const $startNewChat = document.getElementById('start-new-chat');
     $embedChatIcon.addEventListener('click', function ($event) {
 
+    });
+
+    $startNewChat && $startNewChat.addEventListener('click', ($event) => {
+        imiPreview._resetChatCallback();
     });
 
     try {
@@ -108,13 +113,13 @@ async function initApp(imiPreview: ImiPreview) {
 
 class ImiPreview {
 
-    constructor(props) {
+    constructor(private props) {
         document.body.innerHTML = document.body.innerHTML +
             `
             <div id="embed-chat-icon" style="border-radius: 50%;background: var(--color-brand);height:60px; width:60px;display: flex; justify-content: center;align-items: center; ;position: fixed; right: 15px; bottom: 15px; z-index: 100000000000000000000000000000000000; cursor: pointer">
     <div 
     id="embed-chat-container-wrapper" class="d-none"
-    style="position: absolute; height: 80vh;border: 1px solid #e0e0e0; width: 330px; bottom: 100%; right: 20px; margin-bottom: 10px; border-radius: 10px; overflow: hidden">
+    style="background:white;position: absolute; height: 80vh;; width: 330px; bottom: 100%; right: 20px; margin-bottom: 10px; border-radius: 10px; overflow: hidden">
         <div style="height: 100%; width: 100%; " id="embed-chat-container">
             <div class="vertical-centered-box">
                 <div class="content">
@@ -127,15 +132,18 @@ class ImiPreview {
             </div>
         </div>
     </div>
-    <i class="fa fa-comment-o" style="font-size: 30px; color: white"></i>
+    <i class="fa fa-comment-o toggle-chat-icon" style="font-size: 30px; color: white"></i>
 </div>
             
             `;
 
-        const embedChatIcon = document.getElementById('embed-chat-icon');
+        const embedChatIconWrapper = document.getElementById('embed-chat-icon');
         const embedChatContainerWrapper = document.getElementById('embed-chat-container-wrapper');
-        embedChatIcon.addEventListener('click', function () {
+        embedChatIconWrapper.addEventListener('click', function () {
             embedChatContainerWrapper.classList.toggle('d-none');
+            const $toggleChatIcon = embedChatIconWrapper.querySelector('.toggle-chat-icon');
+            $toggleChatIcon.classList.toggle('fa-comment-o');
+            $toggleChatIcon.classList.toggle('fa-window-minimize');
         });
         embedChatContainerWrapper.addEventListener('click', function ($event) {
             $event.stopPropagation();
@@ -145,11 +153,24 @@ class ImiPreview {
 
     _cb;
     _feedbackCB;
+    _resetChatCallback;
     _roomInactiveMap;
 
     viewInit(selector, fullBody = true, phoneCasing = true) {
         let mainParent = document.querySelector(selector) as HTMLElement;
-        mainParent.innerHTML = mainBodyTemplate(fullBody, phoneCasing);
+        mainParent.innerHTML = `
+            <div id="welcome-screen-wrapper" style="height: 100%">${getWelcomeScreen(this.props.bot)}</div>
+            <div id="main-body-template-wrapper" style="display: none; height: 100%">${mainBodyTemplate(fullBody, phoneCasing)}</div>
+        `;
+        mainParent.addEventListener('click', function ($event) {
+            const target = $event.target as HTMLElement;
+            if (target.classList.contains('ask-now')) {
+                const $welcomeScreenWraper = document.getElementById('welcome-screen-wrapper');
+                const mainBodyTemplateWrapper = document.getElementById('main-body-template-wrapper');
+                $welcomeScreenWraper.style.display = 'none';
+                mainBodyTemplateWrapper.style.display = 'block';
+            }
+        })
     }
 
     initAdditionalDom(dom) {
@@ -175,6 +196,10 @@ class ImiPreview {
 
     setSendFeedback(cb) {
         this._feedbackCB = cb;
+    }
+
+    setResetChatCallback(cb) {
+        this._resetChatCallback = cb;
     }
 
     setRoomInactiveMap(obj) {
@@ -595,6 +620,28 @@ function findParentWithClass($child, className) {
 //
 // }, 2000);
 
+function getWelcomeScreen(bot: IBotDetailsApiResp) {
+    return `
+        <div id="welcome-screen" style="height: 100%;display: flex; flex-direction: column; justify-content: center; align-items: center">
+            <div class="welcome-screen-header" style="width: 100%;display: flex;flex-direction: column ; justify-content: center; align-items: center; padding: 16px 0; background: var(--color-brand)">
+                <div style="height: 42px; width: 42px; overflow: hidden; border-radius: 50%; margin-bottom: 6px"><img style="height: 100%" src="${bot.logo}" alt=""></div>
+                <div style="color: white; font-size: 18px">
+                ${bot.name}
+                </div>
+            </div>
+            <div class="welcome-screen-body" style="padding: 16px">
+                <div class="welcome-screen-body-description shadow-theme" style="padding: 6px 12px; border-radius: 4px; color: black">
+                    ${bot.description}
+                </div>
+            </div>
+            <div class="welcome-screen-footer" style="margin-top: auto; padding-bottom: 10px;">
+                <div class="ask-button">
+                    <button class="imi-button-primary ask-now" style="background: var(--color-brand); color: white !important; border: 1px solid var(--color-brand)">Ask now</button>
+                </div>
+            </div>
+        </div>
+    `
+}
 
 function mainBodyTemplate(fullBody, phoneCasing) {
     let str = "";
@@ -654,8 +701,9 @@ function getFullBodyExceptPhoneCover(isRtl?) {
                                 </span>
                                 <div class="bot-details">
                                     <div id="bot-title" ></div>
-                                    <div id="bot-description">hello</div>
+<!--                                    <div id="bot-description">hello</div>-->
                                 </div>
+                                <div id="start-new-chat" style="margin-right: 10px"><i class="fa fa-refresh"></i></div>
                                 
                             </div>
                         </div>
