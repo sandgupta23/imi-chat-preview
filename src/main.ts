@@ -47,7 +47,7 @@ export function initClientEvents(imiPreview) {
                 $knowMoreOverlay.style.display = 'none';
             }, 500);
         });
-        $envOptions.addEventListener('click', ($event) => {
+        $envOptions && $envOptions.addEventListener('click', ($event) => {
             $knowMoreOverlay.style.display = 'block';
             $knowMoreOverlay.style.opacity = 1;
             $knowMoreClose.style.display = 'block';
@@ -55,7 +55,7 @@ export function initClientEvents(imiPreview) {
         $knowMoreContainer && $knowMoreContainer.addEventListener('click', ($event) => {
             $event.stopPropagation();
         });
-        $chatInput.addEventListener('keypress', ($event) => {
+        $chatInput && $chatInput.addEventListener('keypress', ($event) => {
             if ($event.key === 'Enter') {
                 // const downvoteCommentWrapper = document.querySelectorAll('.downvote-comment.d-flex');
                 // Array.from(downvoteCommentWrapper).forEach((downvoteCommentBox: HTMLElement)=>{
