@@ -1,7 +1,7 @@
 export const environment = {
         bot_access_token: null,
-        bot_unique_name: "LNWH_COVID-19_FAQ",
-        enterprise_unique_name: "demos",//"anirudh.t",//
+        bot_unique_name: "Covid-19_FAQs",
+        enterprise_unique_name: "3c_demo",//"anirudh.t",//
         root: "",
         consumer: {
             uid: Date.now().toString()
