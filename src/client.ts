@@ -10,7 +10,7 @@ import {humanMessageHandler, initClientEvents, initEnvironment, sendFeedbackHand
 
 let socket;
 let imiPreviewTemp;
-
+environment.scriptUrl = (document.currentScript as HTMLScriptElement).src;
 function changeFavicon(img) {
     console.log(f);
     (function () {
@@ -23,17 +23,17 @@ function changeFavicon(img) {
 }
 
 function loadCss(href) {
-    var link = document.createElement( "link" );
+    var link = document.createElement("link");
     link.href = href;
     link.type = "text/css";
     link.rel = "stylesheet";
     link.media = "screen,print";
 
-    document.getElementsByTagName( "head" )[0].appendChild( link );
+    document.getElementsByTagName("head")[0].appendChild(link);
 }
 
 function loadJS(file) {
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve, reject) => {
         // DOM: Create the script element
         var jsElm = document.createElement("script");
         // set the type attribute
@@ -49,11 +49,10 @@ function loadJS(file) {
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
-
     await loadJS('https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.2.5/polyfill.min.js');
     await loadJS('https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.slim.js');
     await loadCss('https://fonts.googleapis.com/css?family=IBM+Plex+Sans');
-    await loadCss('https://imi-chat-embed.netlify.com/global.css');
+    // await loadCss('https://imi-chat-embed.netlify.com/global.css');
     await loadCss('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
     initEnvironment();
     const botDetails = await getBotDetails<IBotDetailsApiResp>();
@@ -83,7 +82,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         imiPreview.appendMessageInChatBody(firstMessageData.generated_msg, null, true);
     });
 
-    async function getFirstMessage(){
+    async function getFirstMessage() {
         return await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, 'hi', ESourceType.bot);
     }
 
@@ -120,13 +119,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         },
         'imi_bot_middleware_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiVGhpcyBpcyBJTUkgQk9UIG1pZGRsZXdhcmUiLCJpYXQiOjE1Njc4ODc5MTAsImV4cCI6NDE1OTg4NzkxMH0.dYbMaf8HYMD5K532p7DpHN0cmru-JKMjst-WS9zi7u8'
     };
-    
+
     initializeSocketConnection(data);
 });
 
 let eventInit = false;
+
 function initializeSocketConnection(socketData) {
-    
+
     const url = 'https://rtm.imibot.ai';
     // const url = 'https://imi-bot-middleware.herokuapp.com';
     // const url = 'http://localhost:3000';
@@ -134,7 +134,7 @@ function initializeSocketConnection(socketData) {
     socket = window.io(url, {query: `data=${JSON.stringify(socketData)}`});
     socket.on('connect', () => {
         console.log('Client has CONNECTED to the server!');
-        if(eventInit === false){
+        if (eventInit === false) {
             initAllEvents();
             eventInit = true;
         }

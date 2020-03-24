@@ -116,10 +116,10 @@ class ImiPreview {
     constructor(private props) {
         document.body.innerHTML = document.body.innerHTML +
             `
-            <div id="embed-chat-icon" style="border-radius: 50%;background: var(--color-brand);height:60px; width:60px;display: flex; justify-content: center;align-items: center; ;position: fixed; right: 15px; bottom: 15px; z-index: 100000000000000000000000000000000000; cursor: pointer">
+            <div id="embed-chat-icon" style="border-radius: 50%;background: var(--color-brand);height:60px; width:60px;display: flex; justify-content: center;align-items: center; ;position: fixed; right: 15px; bottom: 15px; z-index: 100000000000000000000000000000000000; ">
     <div 
     id="embed-chat-container-wrapper" class="d-none"
-    style="background:white;position: absolute; height: 80vh;; width: 330px; bottom: 100%; right: 20px; margin-bottom: 10px; border-radius: 10px; overflow: hidden">
+    style="position: absolute; height: 80vh;; width: 330px; bottom: 100%; right: 20px; margin-bottom: 10px; border-radius: 10px; overflow: hidden">
         <div style="height: 100%; width: 100%; " id="embed-chat-container">
             <div class="vertical-centered-box">
                 <div class="content">
@@ -132,7 +132,7 @@ class ImiPreview {
             </div>
         </div>
     </div>
-    <i class="fa fa-comment-o toggle-chat-icon" style="font-size: 30px; color: white"></i>
+    <i class="fa fa-comment-o toggle-chat-icon" style="font-size: 30px; color: white; cursor: pointer"></i>
 </div>
             
             `;
@@ -143,7 +143,7 @@ class ImiPreview {
             embedChatContainerWrapper.classList.toggle('d-none');
             const $toggleChatIcon = embedChatIconWrapper.querySelector('.toggle-chat-icon');
             $toggleChatIcon.classList.toggle('fa-comment-o');
-            $toggleChatIcon.classList.toggle('fa-window-minimize');
+            $toggleChatIcon.classList.toggle('fa-times');
         });
         embedChatContainerWrapper.addEventListener('click', function ($event) {
             $event.stopPropagation();
@@ -622,7 +622,7 @@ function findParentWithClass($child, className) {
 
 function getWelcomeScreen(bot: IBotDetailsApiResp) {
     return `
-        <div id="welcome-screen" style="height: 100%;display: flex; flex-direction: column; justify-content: center; align-items: center">
+        <div id="welcome-screen" style="background: white;height: 100%;display: flex; flex-direction: column; justify-content: center; align-items: center">
             <div class="welcome-screen-header" style="width: 100%;display: flex;flex-direction: column ; justify-content: center; align-items: center; padding: 16px 0; background: var(--color-brand)">
                 <div style="height: 42px; width: 42px; overflow: hidden; border-radius: 50%; margin-bottom: 6px"><img style="height: 100%" src="${bot.logo}" alt=""></div>
                 <div style="color: white; font-size: 18px">
@@ -636,7 +636,7 @@ function getWelcomeScreen(bot: IBotDetailsApiResp) {
             </div>
             <div class="welcome-screen-footer" style="margin-top: auto; padding-bottom: 10px;">
                 <div class="ask-button">
-                    <button class="imi-button-primary ask-now" style="background: var(--color-brand); color: white !important; border: 1px solid var(--color-brand)">Ask now</button>
+                    <button class="imi-button-primary ask-now" style="background: var(--color-brand); color: white !important; border: 1px solid var(--color-brand); font-size: 16px">Ask now</button>
                 </div>
             </div>
         </div>
