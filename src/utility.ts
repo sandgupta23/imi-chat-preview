@@ -19,7 +19,7 @@ export function getTimeIn24HrFormat(timeMS) {
 }
 
 export function getQueryStringValue(key, url?) {
-    url = environment.scriptUrl || window.location.href;
+    url = url || environment.scriptUrl || window.location.href;
     const urlObj = new URL(url);
     return decodeURIComponent(urlObj.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
 }
