@@ -30,8 +30,9 @@ export enum modes {
 export function initClientEvents(imiPreview) {
     const $embedChatIcon = document.getElementById('embed-chat-icon');
     const $startNewChat = document.getElementById('start-new-chat');
-    $embedChatIcon.addEventListener('click', function ($event) {
-
+    const $toggleChatIconHeader = document.getElementById('toggle-chat-icon-header');
+    $toggleChatIconHeader.addEventListener('click', function ($event) {
+        imiPreview._minimizeChatCallback();
     });
 
     $startNewChat && $startNewChat.addEventListener('click', ($event) => {
@@ -112,6 +113,8 @@ async function initApp(imiPreview: ImiPreview) {
 }
 
 class ImiPreview {
+    embedChatIconWrapper;
+    embedChatContainerWrapper;
 
     constructor(private props) {
         document.body.innerHTML = document.body.innerHTML +
@@ -137,15 +140,18 @@ class ImiPreview {
             
             `;
 
-        const embedChatIconWrapper = document.getElementById('embed-chat-icon');
-        const embedChatContainerWrapper = document.getElementById('embed-chat-container-wrapper');
-        embedChatIconWrapper.addEventListener('click', function () {
-            embedChatContainerWrapper.classList.toggle('d-none');
-            const $toggleChatIcon = embedChatIconWrapper.querySelector('.toggle-chat-icon');
-            $toggleChatIcon.classList.toggle('fa-comment-o');
-            $toggleChatIcon.classList.toggle('fa-times');
+        this.embedChatIconWrapper = document.getElementById('embed-chat-icon');
+        const toggleChatIconHeader = document.getElementsByClassName('toggle-chat-icon-header')[0];
+        this.embedChatContainerWrapper = document.getElementById('embed-chat-container-wrapper');
+        this.embedChatIconWrapper.addEventListener('click',  () => {
+            // embedChatContainerWrapper.classList.toggle('d-none');
+            // const $toggleChatIcon = embedChatIconWrapper.querySelector('.toggle-chat-icon');
+            // $toggleChatIcon.classList.toggle('fa-comment-o');
+            // $toggleChatIcon.classList.toggle('fa-times');
+            this._minimizeChatCallback();
+
         });
-        embedChatContainerWrapper.addEventListener('click', function ($event) {
+        this.embedChatContainerWrapper.addEventListener('click', function ($event) {
             $event.stopPropagation();
         });
 
@@ -155,6 +161,12 @@ class ImiPreview {
     _feedbackCB;
     _resetChatCallback;
     _roomInactiveMap;
+    _minimizeChatCallback = () => {
+        this.embedChatContainerWrapper.classList.toggle('d-none');
+        const $toggleChatIcon = this.embedChatIconWrapper.querySelector('.toggle-chat-icon');
+        $toggleChatIcon.classList.toggle('fa-comment-o');
+        $toggleChatIcon.classList.toggle('fa-times');
+    };
 
     viewInit(selector, fullBody = true, phoneCasing = true) {
         let mainParent = document.querySelector(selector) as HTMLElement;
@@ -162,13 +174,17 @@ class ImiPreview {
             <div id="welcome-screen-wrapper" style="height: 100%">${getWelcomeScreen(this.props.bot)}</div>
             <div id="main-body-template-wrapper" style="display: none; height: 100%">${mainBodyTemplate(fullBody, phoneCasing)}</div>
         `;
-        mainParent.addEventListener('click', function ($event) {
+        mainParent.addEventListener('click',  ($event) => {
             const target = $event.target as HTMLElement;
             if (target.classList.contains('ask-now')) {
                 const $welcomeScreenWraper = document.getElementById('welcome-screen-wrapper');
                 const mainBodyTemplateWrapper = document.getElementById('main-body-template-wrapper');
                 $welcomeScreenWraper.style.display = 'none';
                 mainBodyTemplateWrapper.style.display = 'block';
+            }
+
+            if (findParentWithClass(target, 'toggle-chat-icon-header')) {
+                this._minimizeChatCallback();
             }
         })
     }
@@ -623,11 +639,23 @@ function findParentWithClass($child, className) {
 function getWelcomeScreen(bot: IBotDetailsApiResp) {
     return `
         <div id="welcome-screen" style="background: white;height: 100%;display: flex; flex-direction: column; justify-content: center; align-items: center">
-            <div class="welcome-screen-header" style="width: 100%;display: flex;flex-direction: column ; justify-content: center; align-items: center; padding: 16px 0; background: var(--color-brand)">
+            <div class="welcome-screen-header" style="position:relative;;width: 100%;display: flex;flex-direction: column ; justify-content: center; align-items: center; padding: 16px 0; background: var(--color-brand)">
                 <div style="height: 42px; width: 42px; overflow: hidden; border-radius: 50%; margin-bottom: 6px"><img style="height: 100%" src="${bot.logo}" alt=""></div>
                 <div style="color: white; font-size: 18px">
                 ${bot.name}
                 </div>
+                <div class="toggle-chat-icon-header" style="    background: white;
+    position: absolute;
+    right: 5%;
+    width: 17px;
+    height: 17px;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    top: 15%;">
+                        <i class="fa fa-times"></i>
+                    </div>
             </div>
             <div class="welcome-screen-body" style="padding: 16px">
                 <div class="welcome-screen-body-description shadow-theme" style="padding: 6px 12px; border-radius: 4px; color: black">
@@ -703,7 +731,8 @@ function getFullBodyExceptPhoneCover(isRtl?) {
                                     <div id="bot-title" ></div>
 <!--                                    <div id="bot-description">hello</div>-->
                                 </div>
-                                <div id="start-new-chat" style="margin-right: 10px"><i class="fa fa-refresh"></i></div>
+                                <div id="toggle-chat-icon-header" class="toggle-chat-icon-header" style="cursor: pointer;display: none;margin-right: 15px"><i class="fa fa-minus"></i></div>
+                                <div id="start-new-chat" style="cursor: pointer;margin-right: 10px"><i class="fa fa-refresh"></i></div>
                                 
                             </div>
                         </div>

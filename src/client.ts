@@ -12,7 +12,6 @@ let socket;
 let imiPreviewTemp;
 const currentScriptUrl = (document.currentScript as HTMLScriptElement).src;
 const use_params = getQueryStringValue('use_params', currentScriptUrl);
-debugger;
 environment.scriptUrl = use_params === 'true'? currentScriptUrl: window.location.href;
 function changeFavicon(img) {
     console.log(f);
