@@ -32,6 +32,7 @@ export function initClientEvents(imiPreview) {
     const $startNewChat = document.getElementById('start-new-chat');
     const $toggleChatIconHeader = document.getElementById('toggle-chat-icon-header');
     $toggleChatIconHeader.addEventListener('click', function ($event) {
+        debugger;
         imiPreview._minimizeChatCallback();
     });
 
@@ -183,7 +184,7 @@ class ImiPreview {
                 mainBodyTemplateWrapper.style.display = 'block';
             }
 
-            if (findParentWithClass(target, 'toggle-chat-icon-header')) {
+            if (findParentWithClass(target, 'toggle-chat-icon-welcome')) {
                 this._minimizeChatCallback();
             }
         })
@@ -644,7 +645,7 @@ function getWelcomeScreen(bot: IBotDetailsApiResp) {
                 <div style="color: white; font-size: 18px">
                 ${bot.name}
                 </div>
-                <div class="toggle-chat-icon-header" style="    background: white;
+                <div class="toggle-chat-icon-welcome" style="    background: white;
     position: absolute;
     right: 5%;
     width: 17px;
