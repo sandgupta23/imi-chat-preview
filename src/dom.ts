@@ -75,7 +75,7 @@ export function setOptions(intro: IBotDetailsApiResp) {
 }
 
 export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload, hideFeedback) {
-    
+
     // if (botResponse) {
     //     if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
     //         AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null, true);
@@ -193,7 +193,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
         });
 
         let humanClass = messages[0].sourceType === ESourceType.human ? 'msg-bubble-human' : '';
-        let time = themeOptions.time24HrFormat? getTimeIn24HrFormat(messages[0].time): getTimeInHHMM(messages[0].time);
+        let time = themeOptions.time24HrFormat ? getTimeIn24HrFormat(messages[0].time) : getTimeInHHMM(messages[0].time);
 
         let feedbackSTr = "";
         const messageWithFeedback = messages.find((message) => message.feedback != null);
@@ -230,10 +230,13 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
 
 
     // const el = getElementsFromHtmlStr(str) as HTMLElement;
-    const el = document.createElement('template');
     // const el = document.createElement('DIV');
-    el.innerHTML = str;
-    const carousal = el.content.querySelector('.carousal-container') as HTMLElement;
+    let carousal;
+    if (str) {
+        const el = document.createElement('template');
+        el.innerHTML = str;
+        carousal = el.content.querySelector('.carousal-container') as HTMLElement;
+    }
 
     replies.forEach((children: HTMLElement[]) => {
         Array.from(children).forEach((child) => {

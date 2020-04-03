@@ -42,17 +42,17 @@ export function scrollBodyToBottom() {
 
 export function convertStringToDom(str: string) {
 
-    const el = document.createElement('template');
-    // const el = document.createElement('DIV');
-    el.innerHTML = str;
-    let x = el.content.children;
-    return x;
+    var div = document.createElement('div');
+    div.innerHTML = str.trim();
+
+    // Change this to div.childNodes to support multiple top-level nodes
+    return [div.firstChild];
 }
 
 export function removeInActiveFeedbackPanel($chatbody: HTMLElement) {
 
     const askFeedbackPanels = $chatbody.querySelectorAll('.msg-bubble-options-panel.temp-div');
-    debugger;
+
     Array.from(askFeedbackPanels).forEach((panel: HTMLElement) => {
         // const isActive = panel && panel.querySelector('.feedback.active');
         // if (!isActive) {

@@ -9,7 +9,8 @@ export class Feedback {
 
     getElement(obj, source?: ESourceType) {
         const str = this.getTemplate(obj);
-        return convertStringToDom(str);
+        let x =  convertStringToDom(str);
+        return x;
     }
 
     getTemplate({txnId, bot_message_id, humanClass, isLast, feedbackSTr, likeActive, disLikeActive, time, str, randomNumber, hideFeedback, feedback_comment}) {

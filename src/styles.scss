@@ -5,11 +5,22 @@
 
 $color-brand: #34b233;
 
+//:root {
+//  --color-brand: #34b233;
+//}
+
 :root {
-  --color-brand: #34b233;
+  --primary: map-get($vars, primary);
 }
 
+$vars: (
+        color-brand: #2b4f70,
+);
 
+@mixin var($property, $varName) {
+  #{$property}: map-get($vars, $varName);
+  #{$property}: var(--#{$varName});
+}
 
 
 body {
@@ -150,7 +161,9 @@ ul, li {
     height: 60px;
     flex-shrink: 0;
     flex-grow: 0;
-    background: var(--color-brand);
+    @include var(background-color, color-brand); //hello
+    //background: red;
+    //background: var(--color-brand);
     //grid-area: header;
     border-bottom: 1px solid #e0e0e0;
     //padding: 10px;
@@ -229,7 +242,8 @@ ul, li {
       height: 32px;
       width: 32px;
       display: flex;
-      background: var(--color-brand);
+      //background: var(--color-brand);
+      @include var(background-color, color-brand);
       justify-content: center;
       align-items: center;
       cursor: pointer;
@@ -269,7 +283,8 @@ ul, li {
 }
 
 .chat-body {
-  color: var(--color-brand);;
+  //color: var(--color-brand);
+  @include var(color, color-brand); //hello
   flex-grow: 1;
   overflow-y: auto;
   overflow-x: hidden;
@@ -290,7 +305,8 @@ ul, li {
 
     button {
       //background: #00abd3;
-      background: var(--color-brand);;
+      //background: var(--color-brand);
+      @include var(background-color, color-brand); //hello
       box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, .15);
       color: white;
       max-width: 100%;
@@ -422,13 +438,14 @@ ul, li {
     }
 
     .message-wrapper {
+      //width: 100%;
       .content {
         position: relative;
         border-top-left-radius: 0 !important;
         background: white;
         filter: drop-shadow(-1px 0px 2px rgba(0, 0, 0, 0.02));
+
         &::after {
-          background: white;
           content: "";
           width: 9px;
           height: 15px;
@@ -436,6 +453,18 @@ ul, li {
           top: 0px;
           left: -6px;
           clip-path: polygon(0 0, 100% 100%, 100% 0);
+          @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+            /* IE10+ CSS1.1 here */
+            display: none !important;
+          }
+
+          @supports (-ms-ime-align: auto) {
+            //& {
+            //  display: none !important;
+            //}
+            display: none !important;
+          }
+
           z-index: -14;
           border-top-left-radius: 4px;
           border-top-right-radius: 0;
@@ -463,7 +492,8 @@ ul, li {
 
       .message-wrapper {
         .content {
-          background: var(--color-brand);
+          //background: var(--color-brand);
+          @include var(background-color, color-brand); //hello
           color: white;
           position: relative;
           border-top-right-radius: 0 !important;
@@ -471,7 +501,8 @@ ul, li {
 
           &::after {
             content: "";
-            background: var(--color-brand);
+            //background: var(--color-brand);
+            @include var(background-color, color-brand); //hello
             width: 9px;
             height: 15px;
             position: absolute;
@@ -479,6 +510,16 @@ ul, li {
             left: unset;
             right: -6px;
             clip-path: polygon(0 0, 0% 100%, 100% 0) !important;
+            @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+              /* IE10+ CSS2.1 here */
+              display: none !important;
+            }
+            @supports (-ms-ime-align: auto) {
+              //& {
+              //  display: none !important;
+              //}
+              display: none !important;
+            }
             z-index: -14;
 
             border-top-right-radius: 4px;
@@ -508,6 +549,10 @@ ul, li {
 
     .message-container {
       //flex-shrink: 0;
+      @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+        /* IE10+ CSS1.1 here */
+        word-break: break-all;
+      }
       margin-bottom: 8px;
       display: flex;
       flex-direction: column;
@@ -517,7 +562,11 @@ ul, li {
 
       .message-wrapper {
         flex-shrink: 0;
-        //max-width: 90%;
+        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+          /* IE10+ CSS1.1 here */
+          word-break: break-word;
+          max-width: 90%;
+        }
         margin-bottom: 8px;
         //display: inline-block;
         display: flex;
@@ -555,7 +604,8 @@ ul, li {
         margin-left: auto;
 
         .content {
-          background: var(--color-brand);
+          //background: var(--color-brand);
+          @include var(background-color, color-brand); //hello
           color: white;
         }
       }
@@ -564,7 +614,6 @@ ul, li {
 
   }
 }
-
 
 .dewa-theme {
   display: flex;
@@ -575,7 +624,8 @@ ul, li {
     position: relative;
 
     .basel-bg {
-      background: var(--color-brand);
+      //background: var(--color-brand);
+      @include var(background-color, color-brand); //hello
       position: absolute;
       //top: -100px;
       left: -100px;
@@ -588,7 +638,8 @@ ul, li {
 
     .bot-intro {
       z-index: 1;
-      background: var(--color-brand);
+      //background: var(--color-brand);
+      @include var(background-color, color-brand); //hello
       //margin-top: 6px;
     }
   }
@@ -639,7 +690,8 @@ ul, li {
 
     .header {
       padding: 0 10px !important;
-      background: var(--color-brand);
+      //background: var(--color-brand);
+      @include var(background-color, color-brand); //hello
     }
   }
 
@@ -750,12 +802,13 @@ ul, li {
   }
 }
 
-.feedback-form-diabled{
-    .downvote-comment-submit{
+.feedback-form-diabled {
+  .downvote-comment-submit {
     pointer-events: none;
     opacity: .5;
   }
-  .form-error{
+
+  .form-error {
     display: none;
     font-size: 9px;
     color: red;
@@ -764,21 +817,24 @@ ul, li {
 }
 
 // .downvote-comment-textarea{
-  // width: 210px !important;
+// width: 210px !important;
 // }
 
-.msg-bubble{
-  a{
-    color: var(--color-brand);
+.msg-bubble {
+  a {
+    //color: var(--color-brand);
+    @include var(color, color-brand); //hello
     text-decoration: none;
+
     &:hover {
       cursor: pointer;
       text-decoration: underline;
     }
   }
 }
-.msg-bubble-human{
-  a{
+
+.msg-bubble-human {
+  a {
     color: white !important;
   }
 }
