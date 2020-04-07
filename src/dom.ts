@@ -122,6 +122,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
                 // str = str + getBotMessageTemplateForSessionExpiry(message.text, message.sourceType);
             }
             if (message.quick_reply) {
+                debugger;
                 const reply = new QuickReply(messages[0]);
 
                 // str = str + reply.getTemplate(message.quick_reply, message.sourceType);

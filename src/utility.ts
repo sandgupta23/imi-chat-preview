@@ -7,7 +7,7 @@ export function getTimeInHHMM(timeMS) {
     var ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0'+minutes : minutes;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
     var strTime = hours + ':' + minutes + ' ' + ampm;
     return strTime;
 }
@@ -44,9 +44,13 @@ export function convertStringToDom(str: string) {
 
     var div = document.createElement('div');
     div.innerHTML = str.trim();
-
+    debugger;
     // Change this to div.childNodes to support multiple top-level nodes
-    return [div.firstChild];
+    // if (div.children.length === 0) {
+    //     return [div.firstChild];
+    // }else {
+        return div.children;
+    // }
 }
 
 export function removeInActiveFeedbackPanel($chatbody: HTMLElement) {
@@ -56,7 +60,7 @@ export function removeInActiveFeedbackPanel($chatbody: HTMLElement) {
     Array.from(askFeedbackPanels).forEach((panel: HTMLElement) => {
         // const isActive = panel && panel.querySelector('.feedback.active');
         // if (!isActive) {
-            panel && panel.parentElement.removeChild(panel);
+        panel && panel.parentElement.removeChild(panel);
         // }
     })
 }
@@ -68,5 +72,7 @@ export function showToaster(message) {
     // Add the "show" class to DIV
     x.className = "show";
     // After 3 seconds, remove the show class from DIV
-    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    setTimeout(function () {
+        x.className = x.className.replace("show", "");
+    }, 3000);
 }
