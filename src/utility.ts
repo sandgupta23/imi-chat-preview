@@ -44,7 +44,7 @@ export function convertStringToDom(str: string) {
 
     var div = document.createElement('div');
     div.innerHTML = str.trim();
-    debugger;
+
     // Change this to div.childNodes to support multiple top-level nodes
     // if (div.children.length === 0) {
     //     return [div.firstChild];

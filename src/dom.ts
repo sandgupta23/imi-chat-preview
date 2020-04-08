@@ -122,7 +122,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
                 // str = str + getBotMessageTemplateForSessionExpiry(message.text, message.sourceType);
             }
             if (message.quick_reply) {
-                debugger;
+
                 const reply = new QuickReply(messages[0]);
 
                 // str = str + reply.getTemplate(message.quick_reply, message.sourceType);
@@ -240,9 +240,18 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
     }
 
     replies.forEach((children: HTMLElement[]) => {
-        Array.from(children).forEach((child) => {
-            frag.appendChild(child);
-        })
+        try {
+            Array.from(children).forEach((child) => {
+                try {
+                    frag.appendChild(child);
+                }catch (e) {
+                    debugger;
+                    console.log(e);
+                }
+            })
+        }catch (e) {
+            console.log(e);
+        }
     });
     let location;
     location = wrapper.querySelector(`[data-id="${randomNumber}"]`) as HTMLElement;

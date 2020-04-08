@@ -583,16 +583,18 @@ ul, li {
           word-break: break-word;
         }
 
-        .msg-img, .msg-audio, .msg-video {
-          //max-width: 90%;
-          //max-height: 200px;
-          //padding: 10px;
+        audio {
+          outline: none!important;
+        }
+
+        .msg-img, .msg-video {
           background: #eaeaea;
           box-sizing: content-box;
           @include msg-shadow();
+          outline: none !important;
         }
 
-        .msg-audio, .msg-video {
+        .msg-video {
           max-width: 90%;
           max-height: 200px;
           padding: 10px;
