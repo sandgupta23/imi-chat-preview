@@ -551,7 +551,7 @@ ul, li {
       //flex-shrink: 0;
       @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
         /* IE10+ CSS1.1 here */
-        word-break: break-all;
+        //word-break: break-all;
       }
       margin-bottom: 8px;
       display: flex;
@@ -577,6 +577,7 @@ ul, li {
         .content {
           padding: 8px;
           border-radius: 8px;
+          overflow: hidden;
           //color: var(--color-brand);;
           @include msg-shadow();
           text-align: left;
