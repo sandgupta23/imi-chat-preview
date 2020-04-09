@@ -7,11 +7,8 @@
 body::-webkit-scrollbar { display: none;  }
 body{
   .phone{
-    @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-      /* IE10+ CSS1.1 here */
+    //-ms-overflow-style: -ms-autohiding-scrollbar;
       -ms-overflow-style: none;
-      //display: none !important;
-    }
   }
 }
 
