@@ -590,6 +590,7 @@ ul, li {
         }
 
         .msg-img, .msg-video {
+          height: 100%;
           background: #eaeaea;
           box-sizing: content-box;
           @include msg-shadow();
