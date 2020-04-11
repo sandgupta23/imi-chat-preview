@@ -16,6 +16,7 @@ import {AudioReply} from "./response-components/audio-reply";
 import {ImageReply} from "./response-components/image-reply";
 import {Feedback} from "./response-components/feedback";
 import {VideoReply} from "./response-components/video-reply";
+import {HighChart} from "./response-components/high-chart";
 
 export let $chatInput;
 export let $chatInputIcon;
@@ -107,12 +108,23 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
             return;
         }
         messages.forEach((message) => {
+
             if (message.text) {
-                // str = str + getBotMessageTemplateForText(message.text, message.sourceType);
-                const reply = new TextReply(message);
-                // str = str + textReply.getTemplate(message.text, message.sourceType);
-                const el = reply.getElement(message);
-                replies.push(el);
+                if (message.text.includes('__')) {
+                    const chartReply = new HighChart(message, message.text);
+                    const chartReplyArr = chartReply.getElement(message);
+                    const chartReplyEl = chartReplyArr[0];
+                    setTimeout(() => {
+                        /*in settime out because: dimention of chart are not set untill this point*/
+                        chartReply.runScript(chartReplyEl);
+                    }, 0);
+
+                    replies.push(chartReplyArr);
+                } else {
+                    const reply = new TextReply(message);
+                    const el = reply.getElement(message);
+                    replies.push(el);
+                }
             }
             if (message.SESSION_EXPIRY) {
                 const reply = new SessionExpiry(messages[0]);
@@ -244,12 +256,12 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
             Array.from(children).forEach((child) => {
                 try {
                     frag.appendChild(child);
-                }catch (e) {
-                    debugger;
+                } catch (e) {
+
                     console.log(e);
                 }
             })
-        }catch (e) {
+        } catch (e) {
             console.log(e);
         }
     });
@@ -298,7 +310,9 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
     //     lastMsgVid.innerHTML = videoStr;
     // }
     // resetChatInput();
-    scrollBodyToBottom();
+    setTimeout(() => {
+        scrollBodyToBottom();
+    })
 }
 
 

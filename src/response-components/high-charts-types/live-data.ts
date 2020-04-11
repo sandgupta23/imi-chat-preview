@@ -1,0 +1,65 @@
+import {ESourceType} from "../../typings/send-api";
+
+export class LiveData {
+    getTemplate(source) {
+        const htmlStr =
+
+            `
+
+ 
+ `
+        ;
+        return htmlStr;
+    }
+
+    runScript(el) {
+
+        var defaultData = 'https://demo-live-data.highcharts.com/time-data.csv';
+        var urlInput = document.getElementById('fetchURL');
+        var pollingCheckbox = document.getElementById('enablePolling');
+        var pollingInput = document.getElementById('pollingTime');
+
+        function createChart() {
+            debugger;
+            Highcharts.chart('container', {
+                chart: {
+                    type: 'spline'
+                },
+                title: {
+                    text: 'Live Data'
+                },
+                accessibility: {
+                    announceNewData: {
+                        enabled: true,
+                        minAnnounceInterval: 15000,
+                        announcementFormatter: function (allSeries, newSeries, newPoint) {
+                            if (newPoint) {
+                                return 'New point added. Value: ' + newPoint.y;
+                            }
+                            return false;
+                        }
+                    }
+                },
+                data: {
+                    csvURL: urlInput.value,
+                    enablePolling: pollingCheckbox.checked === true,
+                    dataRefreshRate: parseInt(pollingInput.value, 10)
+                }
+            });
+
+            if (pollingInput.value < 1 || !pollingInput.value) {
+                pollingInput.value = 1;
+            }
+        }
+
+        urlInput.value = defaultData;
+
+// We recreate instead of using chart update to make sure the loaded CSV
+// and such is completely gone.
+        pollingCheckbox.onchange = urlInput.onchange = pollingInput.onchange = createChart;
+
+// Create the chart
+        createChart(el);
+
+    }
+}
