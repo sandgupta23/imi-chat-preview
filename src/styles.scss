@@ -230,7 +230,8 @@ ul, li {
     #chat-input {
       flex-grow: 1;
       //width: 90%; //flex-grow: 1; is causing overflow???
-      font-size: 16px;
+      font-size: 13px;
+      font-family: 'IBM Plex Sans', sans-serif;
       outline: none;
       border: none;
       color: #696969;
