@@ -106,6 +106,6 @@ function initializeSocketConnection(socketData) {
 function initAllEvents() {
     socket.on('preview', (data) => {
         console.log('preview event preview :-)', data);
-        imiPreviewTemp.appendMessageInChatBody(data.generated_msg, null, false);
+        imiPreviewTemp.appendMessageInChatBody(data.generated_msg, data, false);
     });
 }

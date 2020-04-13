@@ -204,7 +204,7 @@ function initEvents(imiPreview: ImiPreview) {
             removeModal();
         });
     } catch (e) {
-        console.log(e);
+        // console.log(e);
     }
 
     $chatBody.addEventListener('keyup', ($event) => {
@@ -284,7 +284,7 @@ function initEvents(imiPreview: ImiPreview) {
                     } else {
                         await imiPreview._feedbackCB({txn, bot_message_id}, feedbackNumber);
                     }
-                    debugger;
+
                     $feedbackWrapper.classList.remove('ask-feedback');
                     $feedbackWrapper.classList.remove('temp-div');
                     (x).classList.add('active');

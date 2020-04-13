@@ -33,6 +33,7 @@
   }
 
   position: relative;
+  -ms-overflow-style: none;
   overflow: auto;
   //width: calc(100% - 45px);
   width: calc(100%);
@@ -63,7 +64,7 @@
     height: 25px;
     transform: translateY(-50%);
     font-size: 16px;
-    color: var(--color-brand);//rgba(0, 0, 0, .125);
+    color: var(--color-brand); //rgba(0, 0, 0, .125);
     border-radius: 50%;
     cursor: pointer;
 
@@ -111,7 +112,11 @@
   }
 
   .action, .title {
-    min-height: 44px;
+    min-height: 45px;
+    @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+      /* IE10+ CSS1.1 here */
+      height: 45px;
+    }
     background: white;
     width: 100%;
     display: flex;
