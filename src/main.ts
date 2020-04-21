@@ -121,8 +121,12 @@ class ImiPreview {
         document.body.innerHTML = document.body.innerHTML +
             `
             <div id="embed-chat-icon" style="border-radius: 50%;background: var(--color-brand);height:60px; width:60px;display: flex; justify-content: center;align-items: center; ;position: fixed; right: 15px; bottom: 15px; z-index: 100000000000000000000000000000000000; ">
-    <div 
-    id="embed-chat-container-wrapper" class="d-none"
+            <style>
+                .d-none{
+                    display: none !important;
+                }
+            </style>
+    <div id="embed-chat-container-wrapper" class="d-none"
     style="position: absolute; height: 80vh;; width: 330px; bottom: 100%; right: 20px; margin-bottom: 10px; border-radius: 10px; overflow: hidden">
         <div style="height: 100%; width: 100%; " id="embed-chat-container">
             <div class="vertical-centered-box">
