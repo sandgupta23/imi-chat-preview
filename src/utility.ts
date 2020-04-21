@@ -45,11 +45,15 @@ export function scrollBodyToBottom() {
 
 export function convertStringToDom(str: string) {
 
-    const el = document.createElement('template');
-    // const el = document.createElement('DIV');
-    el.innerHTML = str;
-    let x = el.content.children;
-    return x;
+    var div = document.createElement('div');
+    div.innerHTML = str.trim();
+
+    // Change this to div.childNodes to support multiple top-level nodes
+    // if (div.children.length === 0) {
+    //     return [div.firstChild];
+    // }else {
+        return div.children;
+    // }
 }
 
 export function removeInActiveFeedbackPanel($chatbody: HTMLElement) {

@@ -7,7 +7,7 @@ export class ImageReply {
     getTemplate(url) {
         url = encodeUrlForDomParser(url);
         const htmlStr = `
-                <div class="message-wrapper message-wrapper-bot msg-shadow" style="max-width: 357px; border-radius: 8px; overflow: hidden">
+                <div class="message-wrapper message-wrapper-bot msg-shadow" style="max-width: 357px; width: 100%; border-radius: 8px; overflow: hidden">
                     <img 
                     style="width: 100%" 
                     class="msg-img click-to-zoom" src="${url}" alt=""/>

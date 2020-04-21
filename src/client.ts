@@ -10,7 +10,7 @@ import {humanMessageHandler, initClientEvents, initEnvironment, sendFeedbackHand
 
 let socket;
 let imiPreviewTemp;
-const currentScriptUrl = (document.currentScript as HTMLScriptElement).src;
+const currentScriptUrl = document.currentScript && ((document.currentScript as HTMLScriptElement).src);
 const use_params = getQueryStringValue('use_params', currentScriptUrl);
 environment.scriptUrl = use_params === 'true'? currentScriptUrl: window.location.href;
 function changeFavicon(img) {
@@ -151,6 +151,6 @@ function initializeSocketConnection(socketData) {
 function initAllEvents() {
     socket.on('preview', (data) => {
         console.log('preview event preview :-)', data);
-        imiPreviewTemp.appendMessageInChatBody(data.generated_msg, null, false);
+        imiPreviewTemp.appendMessageInChatBody(data.generated_msg, data, false);
     });
 }

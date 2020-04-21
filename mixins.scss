@@ -1,0 +1,9 @@
+$vars: (
+        color-brand: #2b4f70,
+);
+
+
+@mixin var($property, $varName) {
+  #{$property}: map-get($vars, $varName);
+  #{$property}: var(--#{$varName});
+}

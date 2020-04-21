@@ -1,7 +1,15 @@
 /* width */
 ::-webkit-scrollbar {
-  width: 0px;
+  width: 5px;
   height: 0;
+}
+
+body::-webkit-scrollbar { display: none;  }
+body{
+  .phone{
+    //-ms-overflow-style: -ms-autohiding-scrollbar;
+      -ms-overflow-style: none;
+  }
 }
 
 /* Track */

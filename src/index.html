@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--styles.scss:: following file is to be loaded only for local. In prod, client.ts will load css file dynamically-->
     <link rel="stylesheet" href="styles.scss">
+    <style>
+        body { /*just for testing*/
+            background: black;
+        }
+    </style>
 </head>
-<style>
-    body { /*just for testing*/
-        background: black;
-    }
-</style>
 <body>
-<script src="client.ts?bot_unique_name=sandeepqwq312312&enterprise_unique_name=ayeshreddy.k&root=dev&use_params=true"></script>
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+<script src="client.ts?bot_unique_name=sandeepqwq312312&enterprise_unique_name=ayeshreddy.k&root=dev&use_params=false"></script>
 </body>
 </html>
 

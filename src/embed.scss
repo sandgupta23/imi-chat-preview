@@ -1,0 +1,60 @@
+@import "mixins";
+
+#welcome-screen {
+  background: white;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .welcome-screen-header {
+    position: relative;;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 16px 0;
+    background: var(--color-brand);
+    @include var(background-color, color-brand);
+
+    .toggle-chat-icon-welcome {
+      background: white;
+      position: absolute;
+      right: 5%;
+      width: 17px;
+      height: 17px;
+      display: flex !important;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      top: 15%;
+    }
+  }
+
+  .welcome-screen-body {
+    padding: 16px;
+
+    .welcome-screen-body-description {
+      padding: 6px 12px;
+      border-radius: 4px;
+      color: black
+    }
+  }
+
+  .welcome-screen-footer {
+    margin-top: auto !important;
+    padding-bottom: 10px;
+
+    .ask-button {
+      button {
+        //background: var(--color-brand);
+        @include var(background-color, color-brand);
+        color: white !important;
+        border: 1px solid var(--color-brand);
+        font-size: 16px;
+        width: 100px;
+      }
+    }
+  }
+}

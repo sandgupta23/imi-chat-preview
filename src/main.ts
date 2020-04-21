@@ -32,7 +32,7 @@ export function initClientEvents(imiPreview) {
     const $startNewChat = document.getElementById('start-new-chat');
     const $toggleChatIconHeader = document.getElementById('toggle-chat-icon-header');
     $toggleChatIconHeader.addEventListener('click', function ($event) {
-        debugger;
+
         imiPreview._minimizeChatCallback();
     });
 
@@ -286,7 +286,7 @@ function initEvents(imiPreview: ImiPreview) {
             removeModal();
         });
     } catch (e) {
-        console.log(e);
+        // console.log(e);
     }
 
     $chatBody.addEventListener('keyup', ($event) => {
@@ -639,33 +639,24 @@ function findParentWithClass($child, className) {
 
 function getWelcomeScreen(bot: IBotDetailsApiResp) {
     return `
-        <div id="welcome-screen" style="background: white;height: 100%;display: flex; flex-direction: column; justify-content: center; align-items: center">
-            <div class="welcome-screen-header" style="position:relative;;width: 100%;display: flex;flex-direction: column ; justify-content: center; align-items: center; padding: 16px 0; background: var(--color-brand)">
+        <div id="welcome-screen">
+            <div class="welcome-screen-header"">
                 <div style="height: 42px; width: 42px; overflow: hidden; border-radius: 50%; margin-bottom: 6px"><img style="height: 100%" src="${bot.logo}" alt=""></div>
                 <div style="color: white; font-size: 18px">
                 ${bot.name}
                 </div>
-                <div class="toggle-chat-icon-welcome" style="    background: white;
-    position: absolute;
-    right: 5%;
-    width: 17px;
-    height: 17px;
-    display: flex !important;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    top: 15%;">
+                <div class="toggle-chat-icon-welcome" >
                         <i class="fa fa-times"></i>
                     </div>
             </div>
             <div class="welcome-screen-body" style="padding: 16px">
-                <div class="welcome-screen-body-description shadow-theme" style="padding: 6px 12px; border-radius: 4px; color: black">
+                <div class="welcome-screen-body-description shadow-theme">
                     ${bot.description}
                 </div>
             </div>
             <div class="welcome-screen-footer" style="margin-top: auto; padding-bottom: 10px;">
                 <div class="ask-button">
-                    <button class="imi-button-primary ask-now" style="background: var(--color-brand); color: white !important; border: 1px solid var(--color-brand); font-size: 16px">Ask now</button>
+                    <button class="imi-button-primary ask-now">Ask now</button>
                 </div>
             </div>
         </div>
