@@ -290,7 +290,8 @@ ul, li {
 
 .chat-body {
   //color: var(--color-brand);
-  @include var(color, color-brand); //hello
+  //@include var(color, color-brand); //hello
+  background: white;
   flex-grow: 1;
   overflow-y: auto;
   overflow-x: hidden;
