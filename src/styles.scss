@@ -285,6 +285,10 @@ ul, li {
 }
 
 .chat-body {
+  background-image: url("/assets/hul.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
   //color: var(--color-brand);
   @include var(color, color-brand); //hello
   flex-grow: 1;

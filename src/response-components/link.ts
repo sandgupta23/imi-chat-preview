@@ -8,7 +8,7 @@ export function convertToLink(inputText, className = "text-link") {
     }
 
     let replacedText, replacePattern1, replacePattern2;
-
+        debugger;
     // URLs starting with http://, https://, or ftp://
     replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
     replacedText = inputText.replace(replacePattern1, `<a href="$1" target="_blank" class="${className}">$1</a>`);
