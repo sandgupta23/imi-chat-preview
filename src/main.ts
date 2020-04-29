@@ -186,6 +186,7 @@ class ImiPreview {
                 const mainBodyTemplateWrapper = document.getElementById('main-body-template-wrapper');
                 $welcomeScreenWraper.style.display = 'none';
                 mainBodyTemplateWrapper.style.display = 'block';
+                this._resetChatCallback()
             }
 
             if (findParentWithClass(target, 'toggle-chat-icon-welcome')) {

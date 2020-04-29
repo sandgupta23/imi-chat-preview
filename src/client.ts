@@ -110,9 +110,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     };
 
     imiPreview.setOptions(botDetails, theme);
-    const firstMessageData = await getFirstMessage();
+    // const firstMessageData = await getFirstMessage();
 
-    imiPreview.appendMessageInChatBody(firstMessageData.generated_msg, null, true);
+    // imiPreview.appendMessageInChatBody(firstMessageData.generated_msg, null, true);
     initClientEvents(imiPreview);
     const data = {
         'connectionConfig': {

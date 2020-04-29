@@ -6,6 +6,7 @@ import {EBotMessageMediaType, ESourceType, IGeneratedMessageItem, IMessageData, 
 export const socketKey = createRandomString(15);
 
 export function sendMessageToBot(bot_access_token: string, enterprise_unique_name: string, humanMessage: string, sourceType: ESourceType): Promise<ISendApiResp> {
+    debugger;
     const url = `https://${environment.root}imibot.ai/api/v1/webhook/web/`;
     const body = {
         "consumer": {
