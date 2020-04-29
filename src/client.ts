@@ -80,6 +80,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
     imiPreview.setResetChatCallback(async (val, feedback) => {
         imiPreview.removeAllChatMessages();
+        environment.consumer.uid = Date.now().toString();
         const firstMessageData = await getFirstMessage();
         imiPreview.appendMessageInChatBody(firstMessageData.generated_msg, null, true);
     });
