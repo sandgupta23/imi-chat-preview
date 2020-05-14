@@ -227,6 +227,31 @@ ul, li {
     align-items: center;
     padding: 0 16px;
 
+    .recording-panel {
+      display: none;
+      align-items: center;
+      justify-content: space-around;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      background: white;
+      .fa-times-circle{
+        font-size: 30px;
+        color: red;
+      }
+      .fa-check-circle{
+        font-size: 30px;
+        color: greenyellow;
+      }
+      .stt-panel{
+        position: absolute;
+        bottom: 100%;
+        padding: 2px;
+      }
+    }
+
     #chat-input {
       flex-grow: 1;
       //width: 90%; //flex-grow: 1; is causing overflow???
@@ -251,9 +276,12 @@ ul, li {
       cursor: pointer;
       flex-shrink: 0;
 
-      .fa {
+      .fa-send {
         transform: rotate(45deg);
         transition-duration: .3s;
+      }
+
+      .fa {
         cursor: pointer;
         color: #fff;
       }

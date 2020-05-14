@@ -18,7 +18,13 @@ import 'regenerator-runtime/runtime'
 import {sendFeedback, sendMessageToBot, serializeGeneratedMessagesToPreviewMessages} from "./send-api";
 import {environment} from "./environment";
 import {ESourceType, ISendApiResp, ISendApiResponsePayload} from "./typings/send-api";
-import {getQueryStringValue, scrollBodyToBottom, showToaster, updateQueryStringParameter} from "./utility";
+import {
+    getQueryStringValue,
+    scrollBodyToBottom,
+    showToaster,
+    startRecording,
+    updateQueryStringParameter
+} from "./utility";
 
 let isModelShown = false;
 
@@ -55,7 +61,19 @@ export function initClientEvents(imiPreview) {
         $knowMoreContainer && $knowMoreContainer.addEventListener('click', ($event) => {
             $event.stopPropagation();
         });
-        $chatInput.addEventListener('keypress', ($event) => {
+        $chatInput.addEventListener('keydown', ($event) => {
+            setTimeout(() => {
+                debugger;
+                const faSend = $chatInputIcon.querySelector('.fa-send') as HTMLElement;
+                const faMicrophone = $chatInputIcon.querySelector('.fa-microphone') as HTMLElement;
+                if ($chatInput.value.trim()) {
+                    faSend.style.display = "inline-block";
+                    faMicrophone.style.display = "none";
+                } else {
+                    faSend.style.display = "none";
+                    faMicrophone.style.display = "inline-block";
+                }
+            })
             if ($event.key === 'Enter') {
                 // const downvoteCommentWrapper = document.querySelectorAll('.downvote-comment.d-flex');
                 // Array.from(downvoteCommentWrapper).forEach((downvoteCommentBox: HTMLElement)=>{
@@ -81,6 +99,44 @@ export function initClientEvents(imiPreview) {
     } catch (e) {
         console.log(e)
     }
+
+    const $microphoneStarter = document.getElementById('microphone-starter');
+    const $footer = document.getElementById('footer');
+    $microphoneStarter.addEventListener('click', () => {
+        $microphoneStarter.style.display = "none";
+        const recordingPanel = document.getElementsByClassName('recording-panel')[0] as HTMLElement;
+        recordingPanel.style.display = "flex";
+    });
+
+    let sttText = "";
+    $footer.addEventListener('click', function ($event) {
+        const target = event.target as HTMLElement;
+        const sttPanel = $footer.querySelector('.stt-panel') as HTMLElement;
+        if (target.classList.contains('fa-microphone')) {
+            startRecording((text) => {
+                sttPanel.innerHTML = text;
+                sttText = text;
+                console.log(text);
+            });
+        }
+        if (target.classList.contains('fa-check-circle')) {
+            sttPanel.innerHTML = "";
+            const recordingPanel = document.getElementsByClassName('recording-panel')[0] as HTMLElement;
+            const microphone = document.getElementsByClassName('fa-microphone')[0] as HTMLElement;
+            recordingPanel.style.display = "none";
+            microphone.style.display = "inline-flex";
+            humanMessageHandler(sttText);
+        }
+
+        if (target.classList.contains('fa-times-circle')) {
+            sttPanel.innerHTML = "";
+            const recordingPanel = document.getElementsByClassName('recording-panel')[0] as HTMLElement;
+            const microphone = document.getElementsByClassName('fa-microphone')[0] as HTMLElement;
+            microphone.style.display = "inline-flex";
+            recordingPanel.style.display = "none";
+            // humanMessageHandler(sttText);
+        }
+    });
 
     try {
         $chatInputIcon.addEventListener('click', () => {
@@ -718,11 +774,28 @@ function getPhoneCoverTemplate(isRtl?) {
 
                         </div>
                         <!--chat body ends-->
-                        <div class="footer">
+                        <div class="footer" id="footer" style="position: relative">
+                        <div class="recording-panel" ">
+                            <span class="fa fa-times-circle"></span>
+                            <span class="record-text">Listening ...</span>
+                            <span class="fa fa-check-circle"></span>
+                            <div class="stt-panel"></div>
+                        </div>
                             <input placeholder="Type a message" id="chat-input" dir="ltr" autocomplete="off" autofocus
                                    type="text">
                             <span class="icon" id="chat-input-icon">
-                                <span class="fa fa-send"></span>
+                                <span style="display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;" class="fa fa-send"></span>
+                                <span id="microphone-starter"
+                                 style="display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;"
+                                 class="fa fa-microphone"></span>
                             </span>
                         </div>
                     </div>
