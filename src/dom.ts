@@ -74,7 +74,7 @@ export function setOptions(intro: IBotDetailsApiResp) {
     }
 }
 
-export function AppendMessageInChatBody(messages: IMessageData[], botResponse: ISendApiResponsePayload, hideFeedback) {
+export function AppendMessageInChatBody(messages?: IMessageData[], botResponse?: ISendApiResponsePayload, hideFeedback?) {
 
     // if (botResponse) {
     //     if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
@@ -245,7 +245,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
                 try {
                     frag.appendChild(child);
                 }catch (e) {
-                    debugger;
+
                     console.log(e);
                 }
             })

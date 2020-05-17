@@ -6,6 +6,7 @@ import {sendMessageToBot, socketKey} from "./send-api";
 import {environment} from "./environment";
 import {ESourceType} from "./typings/send-api";
 import {humanMessageHandler, initClientEvents, initEnvironment, sendFeedbackHandler} from "./main";
+import {initializeIMIConnect} from "./imiclient";
 
 let socket;
 let imiPreviewTemp;
@@ -22,6 +23,7 @@ function changeFavicon(img) {
 document.addEventListener('DOMContentLoaded', async function () {
     initEnvironment();
     const botDetails = await getBotDetails<IBotDetailsApiResp>();
+    environment.bot = botDetails;
     initEnvironment(botDetails);
     document.title = botDetails.name || 'IMIBot.ai';
     changeFavicon(botDetails.logo);
@@ -66,7 +68,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     imiPreview.setOptions(botDetails, theme);
     const firstMessageData = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, 'hi', ESourceType.bot);
-
     imiPreview.appendMessageInChatBody(firstMessageData.generated_msg, null, true);
     initClientEvents(imiPreview);
     const data = {
@@ -78,7 +79,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         'imi_bot_middleware_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiVGhpcyBpcyBJTUkgQk9UIG1pZGRsZXdhcmUiLCJpYXQiOjE1Njc4ODc5MTAsImV4cCI6NDE1OTg4NzkxMH0.dYbMaf8HYMD5K532p7DpHN0cmru-JKMjst-WS9zi7u8'
     };
     
-    initializeSocketConnection(data);
+    // initializeSocketConnection(data);
+    initializeIMIConnect(environment.bot as any, environment.room as any, {consumerDetails: environment.consumer});
 });
 
 let eventInit = false;

@@ -19,6 +19,7 @@ import {sendFeedback, sendMessageToBot, serializeGeneratedMessagesToPreviewMessa
 import {environment} from "./environment";
 import {ESourceType, ISendApiResp, ISendApiResponsePayload} from "./typings/send-api";
 import {getQueryStringValue, scrollBodyToBottom, showToaster, updateQueryStringParameter} from "./utility";
+import {sendHumanMessageViaImiConnect} from "./imiclient";
 
 let isModelShown = false;
 
@@ -395,7 +396,7 @@ function initEvents(imiPreview: ImiPreview) {
             }
         });
     } catch (e) {
-        console.log(e)
+        // console.log(e)
     }
 
     try {
@@ -445,7 +446,7 @@ function initEvents(imiPreview: ImiPreview) {
 }
 
 export async function humanMessageHandler(humanMessage: string, sourceType?) {
-    // alert();
+
     AppendMessageInChatBody([{
         sourceType: sourceType || ESourceType.human,
         text: humanMessage,
@@ -453,18 +454,12 @@ export async function humanMessageHandler(humanMessage: string, sourceType?) {
     }]);
 
     const botResponse = await sendMessageToBot(environment.bot_access_token, environment.enterprise_unique_name, humanMessage);
-    // if (environment.room && environment.room.id && botResponse.room.id !== environment.room.id) {
-    //     AppendMessageInChatBody(<any>[{SESSION_EXPIRY: true}], null);
-    //     console.log(`previous room : ${environment.room}. new room ${botResponse.room.id}`);
-    // }
-    // console.log(environment.room, botResponse.room);
-    // environment.room = botResponse.room;
     botResponses.push(botResponse);
-
     let messageData: any[] = serializeGeneratedMessagesToPreviewMessages(botResponse.generated_msg);
     messageData.forEach((message) => {
         AppendMessageInChatBody([message], botResponse);
     });
+    sendHumanMessageViaImiConnect(environment.room, environment.bot, humanMessage);
 
 }
 

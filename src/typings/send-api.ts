@@ -5,7 +5,7 @@ export interface ISendApiReq {
     "type": "human" | "bot",
     "msg": string,
     "platform": "web",
-    "is_test": false
+    "is_test": boolean
 }
 
 export interface ISendApiResp {
@@ -86,7 +86,7 @@ export interface ISendApiResp {
         "imichat_agent": {},
         "imiconnect_conversation_id": "",
         "is_anonymized": false,
-        "is_test": true,
+        "is_test": boolean,
         "last_message_time": "2019-08-30T12:20:04.972483",
         "last_updated_job_id": "5d6914745d2301cf1b2f3e22",
         "manager_bot_room_id": 0,
