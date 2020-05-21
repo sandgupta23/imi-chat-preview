@@ -49,7 +49,7 @@ export function convertStringToDom(str: string) {
     // if (div.children.length === 0) {
     //     return [div.firstChild];
     // }else {
-        return div.children;
+    return div.children;
     // }
 }
 

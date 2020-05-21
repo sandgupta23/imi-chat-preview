@@ -2,8 +2,9 @@ import {IGeneratedMessageItem, IMessageData} from "./typings/send-api";
 
 declare var IMI: any;
 import {IBotDetailsApiResp} from "./typings/bot-detaills-api";
+import {serializeGeneratedMessagesToPreviewMessages} from "./send-api";
 
-export function initializeIMIConnect(previewBot: IBotDetailsApiResp, currentRoomId: number, startNewChatData: any) {
+export function initializeIMIConnect(previewBot: IBotDetailsApiResp, currentRoomId: number, startNewChatData: any, imiPreview) {
 
     try {
         IMI.IMIconnect.shutdown();
@@ -46,6 +47,7 @@ export function initializeIMIConnect(previewBot: IBotDetailsApiResp, currentRoom
 
 
     const prepareMessage = (messageObj) => {
+        debugger;
         console.info('============================message from IMICONNECT Has been recieved============================', messageObj);
         const generatedMessagesStr = messageObj.message;
         let generatedMessages: IGeneratedMessageItem[];
@@ -55,8 +57,12 @@ export function initializeIMIConnect(previewBot: IBotDetailsApiResp, currentRoom
             console.error('Unable to parse json from IMIConnect callback', generatedMessagesStr);
             console.error('Assuming its a string');
             generatedMessages = [{text: generatedMessagesStr, bot_message_id: null}];
+            if(!generatedMessagesStr){
+                return;
+            }
         }
-        const serializedMessages: IMessageData[] = this.utilityService.serializeGeneratedMessagesToPreviewMessages(generatedMessages, null);
+        const serializedMessages: IMessageData[] = serializeGeneratedMessagesToPreviewMessages(generatedMessages, null);
+        imiPreview.appendMessageInChatBody(serializedMessages);
         // this.store.dispatch([
         //     new AddMessagesToRoomByRoomId({
         //         id: currentRoomId,
@@ -151,6 +157,11 @@ export function initializeIMIConnect(previewBot: IBotDetailsApiResp, currentRoom
     this.messaging = messaging;
 }
 
+/**
+ * There are two methods used:
+ * 1. initializeIMIConnect: to create connection (when page loads)
+ * 2. sendHumanMessageViaImiConnect: to send message when user types keyword and presses enter
+ * */
 
 export function sendHumanMessageViaImiConnect(currentRoom, currentBot: IBot, messageByHuman: string) {
 

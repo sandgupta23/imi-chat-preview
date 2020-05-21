@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     };
     
     // initializeSocketConnection(data);
-    initializeIMIConnect(environment.bot as any, environment.room as any, {consumerDetails: environment.consumer});
+    initializeIMIConnect(environment.bot as any, environment.room as any, {consumerDetails: environment.consumer}, imiPreview);
 });
 
 let eventInit = false;
