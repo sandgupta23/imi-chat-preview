@@ -3,6 +3,7 @@ import {IGeneratedMessageItem, IMessageData} from "./typings/send-api";
 declare var IMI: any;
 import {IBotDetailsApiResp} from "./typings/bot-detaills-api";
 import {serializeGeneratedMessagesToPreviewMessages} from "./send-api";
+import {environment} from "./environment";
 
 export function initializeIMIConnect(previewBot: IBotDetailsApiResp, currentRoomId: number, startNewChatData: any, imiPreview) {
 
@@ -29,7 +30,7 @@ export function initializeIMIConnect(previewBot: IBotDetailsApiResp, currentRoom
     // var streamName = "bot";
     const serviceKey = imiConnectIntegrationDetails.serviceKey; // '3b8f6470-5e56-11e8-bf0b-0213261164bb';//'f6e50f7b-2bfd-11e8-bf0b-0213261164bb';
     // let userId = currentRoomId + '_hellothisissandeep1231312';
-    let userId = startNewChatData.consumerDetails.uid;
+    let userId = environment.imiconnectUserId;
     if (startNewChatData && startNewChatData.consumerDetails) {
         userId = startNewChatData.consumerDetails.uid;
     }
