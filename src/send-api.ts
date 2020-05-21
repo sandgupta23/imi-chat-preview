@@ -11,7 +11,7 @@ export function sendMessageToBot(bot_access_token: string, enterprise_unique_nam
         "consumer": {
             ...(environment.consumer || {}),
             "extra_params": {
-                "socket_key": socketKey
+                // "socket_key": socketKey
             }
         },
         "type": sourceType || ESourceType.human,
@@ -24,6 +24,7 @@ export function sendMessageToBot(bot_access_token: string, enterprise_unique_nam
         // enterprise_unique_name: enterprise_unique_name,
         "bot-access-token": bot_access_token
     };
+    debugger;
     return makePostReq<ISendApiResp>({url, body, headerData})
         .then((data) => {
             environment.room = data.room;
