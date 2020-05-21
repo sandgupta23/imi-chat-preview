@@ -12,6 +12,7 @@ export function initializeIMIConnect(previewBot: IBotDetailsApiResp, currentRoom
     } catch (e) {
         console.log(e);
     }
+
     // this.currentPreviewBot = previewBot;
     /*TODO: make initialization happen only once*/
     let imiConnectIntegrationDetails;
@@ -22,7 +23,6 @@ export function initializeIMIConnect(previewBot: IBotDetailsApiResp, currentRoom
             return;
         }
     } catch (e) {
-
         return;
     }
     const appId = imiConnectIntegrationDetails.appId; // 'GS23064017';
@@ -30,14 +30,15 @@ export function initializeIMIConnect(previewBot: IBotDetailsApiResp, currentRoom
     // var streamName = "bot";
     const serviceKey = imiConnectIntegrationDetails.serviceKey; // '3b8f6470-5e56-11e8-bf0b-0213261164bb';//'f6e50f7b-2bfd-11e8-bf0b-0213261164bb';
     // let userId = currentRoomId + '_hellothisissandeep1231312';
-    let userId = environment.imiconnectUserId;
-    // if (startNewChatData && startNewChatData.consumerDetails) {
-    //     userId = startNewChatData.consumerDetails.uid;
-    // }
+    let userId;
+    if (startNewChatData && startNewChatData.consumerDetails) {
+        userId = startNewChatData.consumerDetails.uid;
+    }
 
     // startNewChatData.consumerDetails.uid
     const config = new IMI.ICConfig(appId, appSecret);
     const messaging = IMI.ICMessaging.getInstance();
+    window.messaging = messaging;
 
     console.info('========initializing connection with imiconnect with following details');
     console.log(
@@ -58,7 +59,7 @@ export function initializeIMIConnect(previewBot: IBotDetailsApiResp, currentRoom
             console.error('Unable to parse json from IMIConnect callback', generatedMessagesStr);
             console.error('Assuming its a string');
             generatedMessages = [{text: generatedMessagesStr, bot_message_id: null}];
-            if(!generatedMessagesStr){
+            if (!generatedMessagesStr) {
                 return;
             }
         }
@@ -98,17 +99,17 @@ export function initializeIMIConnect(previewBot: IBotDetailsApiResp, currentRoom
             }
         }
     };
-
-
     messaging.setICMessagingReceiver(msgCallBack);
     const deviceId = IMI.ICDeviceProfile.getDefaultDeviceId();
     IMI.IMIconnect.startup(config);
+    // unregister();
     IMI.IMIconnect.registerListener(
         {
             onFailure: function () {
                 console.log('token got expired...');
             }
         });
+
 
 
     const regcallback = {
@@ -127,6 +128,7 @@ export function initializeIMIConnect(previewBot: IBotDetailsApiResp, currentRoom
 
         }
     };
+    unregister();
     const deviceProfile = new IMI.ICDeviceProfile(deviceId, userId);
     console.log('IMI.IMIconnect.isRegistered()' + IMI.IMIconnect.isRegistered());
     IMI.IMIconnect.register(deviceProfile, regcallback);
@@ -156,6 +158,16 @@ export function initializeIMIConnect(previewBot: IBotDetailsApiResp, currentRoom
     //     messaging.publishMessage(message, pubcallback);
 
     this.messaging = messaging;
+}
+
+function unregister() {
+    try {
+        IMI.IMIconnect.unregister((data) => {
+            console.log("IMI.IMIconnect.unregister", data);
+        });
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 /**
