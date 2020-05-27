@@ -111,7 +111,6 @@ export function initializeIMIConnect(previewBot: IBotDetailsApiResp, currentRoom
         });
 
 
-
     const regcallback = {
         onSuccess: function (msg) {
 
@@ -131,44 +130,24 @@ export function initializeIMIConnect(previewBot: IBotDetailsApiResp, currentRoom
     unregister();
     const deviceProfile = new IMI.ICDeviceProfile(deviceId, userId);
     console.log('IMI.IMIconnect.isRegistered()' + IMI.IMIconnect.isRegistered());
-    IMI.IMIconnect.register(deviceProfile, regcallback);
-
-
-    // //send message
-    //     var pubcallback = {
-    //       onSuccess: function () {
-    //         console.log("message sent");
-    //
-    //       },
-    //       onFailure: function (errormsg) {
-    //         console.log("failed to send message");
-    //       }
-    //
-    //     };
-    //
-    //     var message = new IMI.ICMessage();
-    //     message.setMessage("Hello this is sample message");
-    //
-    //     var thread = new IMI.ICThread();
-    //     thread.setId("bot");
-    //     thread.setTitle("bot");
-    //     thread.setStreamName(streamName);
-    //
-    //     message.setThread(thread);
-    //     messaging.publishMessage(message, pubcallback);
-
-    this.messaging = messaging;
+    setTimeout(()=>{
+        IMI.IMIconnect.register(deviceProfile, regcallback);
+        this.messaging = messaging;
+    }, 1000);
 }
 
-function unregister() {
-    try {
-        IMI.IMIconnect.unregister((data) => {
-            console.log("IMI.IMIconnect.unregister", data);
-        });
-    } catch (e) {
-        console.log(e);
+    function unregister() {
+    localStorage.clear()
+        try {
+            if (IMI.IMIconnect.isRegistered()) {
+                IMI.IMIconnect.unregister((data) => {
+                    console.log("IMI.IMIconnect.unregister", data);
+                });
+            }
+        } catch (e) {
+            console.log(e);
+        }
     }
-}
 
 /**
  * There are two methods used:
