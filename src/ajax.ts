@@ -21,10 +21,13 @@ export function makePostReq<T>(reqObj: IPostReq): Promise<T> {
     xmlHttp.send(JSON.stringify(reqObj.body));
     return new Promise((resolve, reject) => {
         xmlHttp.onreadystatechange = function () {
-            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                resolve(JSON.parse(xmlHttp.responseText));
+            if (xmlHttp.readyState == 4) {
+                if (xmlHttp.status == 200) {
+                    resolve(JSON.parse(xmlHttp.responseText));
+                }else{
+                    reject(xmlHttp.statusText);
+                }
             }
-
         }
     })
 }

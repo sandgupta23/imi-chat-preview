@@ -1,0 +1,79 @@
+.bottomcontainer {
+	display: table;
+	position: fixed;
+	bottom: 0%;
+	left: 0%;
+	width: 100%;
+	height: 10%;
+	text-align: center;
+	background-color: rgba(128,128,200,0.7);
+}
+
+.buttons {
+display: table-cell;
+vertical-align: middle;
+padding: 0.5em;
+float:left;
+margin-top:0.5%
+}
+
+button {
+	width: 7em;
+
+}
+#transcripts{
+position:absolute;
+top:10%;
+width:100%;
+margin:0.5% 0%;
+max-height:77%;
+overflow:auto;
+}
+#setbutton{
+background-color:#eeffff;
+}
+#platformurl{
+overflow-y:auto;
+background-color:#eeffff;
+font:1.0em  Calibri;
+border:2px inset #eeffff;
+}
+#bottoken{
+overflow-y:auto;
+background-color:#eeffff;
+font:1.0em  Calibri;
+border:2px inset #eeffff;
+}
+.form-inline{
+float:right;
+position:relative;
+top:20%;
+}
+#topcontainer{
+position:fixed;
+top:0%;
+left:0%;
+width:100%;
+height:10%;
+background-color:rgba(128,128,200,0.7);
+}
+body{
+width:99%;
+background-color:#eeffff;
+}
+#trans{
+float:left;
+width:95%;
+overflow:auto;
+background-color:#eeffff;
+margin:0.5%;
+padding:1%;
+border:2px #ccdddd inset;
+border-radius:25px;
+}
+#buttonToggleListening{
+width:auto;
+font-size:2em;
+color:green;
+background-color:#eeffff;
+}

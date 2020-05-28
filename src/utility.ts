@@ -1,4 +1,5 @@
 import {$chatBody} from "./dom";
+import {languageDetection, transliteration} from "./recording-api";
 
 export function getTimeInHHMM(timeMS) {
     const time = timeMS ? new Date(timeMS) : new Date();
@@ -49,7 +50,7 @@ export function convertStringToDom(str: string) {
     // if (div.children.length === 0) {
     //     return [div.firstChild];
     // }else {
-        return div.children;
+    return div.children;
     // }
 }
 
@@ -77,12 +78,14 @@ export function showToaster(message) {
     }, 3000);
 }
 
-export function stopRecording (cb) {
+export function stopRecording(cb) {
 
 }
-export function startRecording (cb) {
-/*https://codepen.io/Nishith/pen/ZxGBew*/
-    if('webkitSpeechRecognition' in window) {
+
+export async function startRecording(cb) {
+    debugger;
+    /*https://codepen.io/Nishith/pen/ZxGBew*/
+    if (false && 'webkitSpeechRecognition' in window) {
         var speechRecognizer = new webkitSpeechRecognition();
         speechRecognizer.continuous = true;
         speechRecognizer.interimResults = true;
@@ -91,15 +94,15 @@ export function startRecording (cb) {
 
         var finalTranscripts = '';
 
-        speechRecognizer.onresult = function(event) {
+        speechRecognizer.onresult = function (event) {
             console.log(event);
             var interimTranscripts = '';
-            for(var i = event.resultIndex; i < event.results.length; i++){
+            for (var i = event.resultIndex; i < event.results.length; i++) {
                 var transcript = event.results[i][0].transcript;
                 transcript.replace("\n", "<br>");
-                if(event.results[i].isFinal) {
+                if (event.results[i].isFinal) {
                     finalTranscripts += transcript;
-                }else{
+                } else {
                     interimTranscripts += transcript;
                 }
             }
@@ -109,8 +112,21 @@ export function startRecording (cb) {
         speechRecognizer.onerror = function (event) {
 
         };
-    }else {
+    } /*else {
         const innerHTML = 'Your browser is not supported. Please download Google chrome or Update your Google chrome!!';
         alert(innerHTML);
+    }*/
+    else {
+        const x = await languageDetection({
+            "msg_type": "text",
+            "msg": "mujhe kya chahiye"
+        });
+        debugger;
+        const y = await transliteration({
+            "source_lang": "eng",
+            "target_lang": "hin",
+            "input": "mujhe kya chahiye"
+        });
+        debugger;
     }
 }

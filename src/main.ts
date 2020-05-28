@@ -67,11 +67,11 @@ export function initClientEvents(imiPreview) {
                 const faSend = $chatInputIcon.querySelector('.fa-send') as HTMLElement;
                 const faMicrophone = $chatInputIcon.querySelector('.fa-microphone') as HTMLElement;
                 if ($chatInput.value.trim()) {
-                    faSend.style.display = "inline-block";
+                    faSend.style.display = "flex";
                     faMicrophone.style.display = "none";
                 } else {
                     faSend.style.display = "none";
-                    faMicrophone.style.display = "inline-block";
+                    faMicrophone.style.display = "flex";
                 }
             })
             if ($event.key === 'Enter') {
@@ -109,23 +109,24 @@ export function initClientEvents(imiPreview) {
     });
 
     let sttText = "";
-    $footer.addEventListener('click', function ($event) {
+    $footer.addEventListener('click', async function ($event) {
         const target = event.target as HTMLElement;
         const sttPanel = $footer.querySelector('.stt-panel') as HTMLElement;
         if (target.classList.contains('fa-microphone')) {
-            startRecording((text) => {
-                sttPanel.innerHTML = text;
-                sttText = text;
-                console.log(text);
-            });
+            try {
+                debugger;
+                await startRecording((text) => {
+                    sttPanel.innerHTML = text;
+                    sttText = text;
+                    console.log(text);
+                });
+            } catch (e) {
+                /*reset */
+                resetMicPanel(sttPanel, sttText);
+            }
         }
         if (target.classList.contains('fa-check-circle')) {
-            sttPanel.innerHTML = "";
-            const recordingPanel = document.getElementsByClassName('recording-panel')[0] as HTMLElement;
-            const microphone = document.getElementsByClassName('fa-microphone')[0] as HTMLElement;
-            recordingPanel.style.display = "none";
-            microphone.style.display = "inline-flex";
-            humanMessageHandler(sttText);
+            resetMicPanel(sttPanel, sttText);
         }
 
         if (target.classList.contains('fa-times-circle')) {
@@ -151,6 +152,15 @@ export function initClientEvents(imiPreview) {
     } catch (e) {
         console.log(e)
     }
+}
+
+function resetMicPanel(sttPanel, sttText) {
+    sttPanel.innerHTML = "";
+    const recordingPanel = document.getElementsByClassName('recording-panel')[0] as HTMLElement;
+    const microphone = document.getElementsByClassName('fa-microphone')[0] as HTMLElement;
+    recordingPanel.style.display = "none";
+    microphone.style.display = "inline-flex";
+    humanMessageHandler(sttText);
 }
 
 async function initApp(imiPreview: ImiPreview) {
