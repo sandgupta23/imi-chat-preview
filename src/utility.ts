@@ -83,7 +83,22 @@ export function stopRecording(cb) {
 }
 
 export async function startRecording(cb) {
-    debugger;
+    const startCB = async function (data) {
+        const x = await languageDetection({
+            "msg_type": "text",
+            "msg": "mujhe kya chahiye"
+        });
+        debugger;
+        const y = await transliteration({
+            "source_lang": "eng",
+            "target_lang": "hin",
+            "input": "mujhe kya chahiye"
+        });
+    }
+    const endCB = function () {
+
+    }
+    window.dictate.init(startCB, endCB);
     /*https://codepen.io/Nishith/pen/ZxGBew*/
     if (false && 'webkitSpeechRecognition' in window) {
         var speechRecognizer = new webkitSpeechRecognition();
@@ -117,16 +132,7 @@ export async function startRecording(cb) {
         alert(innerHTML);
     }*/
     else {
-        const x = await languageDetection({
-            "msg_type": "text",
-            "msg": "mujhe kya chahiye"
-        });
-        debugger;
-        const y = await transliteration({
-            "source_lang": "eng",
-            "target_lang": "hin",
-            "input": "mujhe kya chahiye"
-        });
+
         debugger;
     }
 }

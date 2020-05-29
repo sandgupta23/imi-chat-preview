@@ -103,9 +103,7 @@ export function initClientEvents(imiPreview) {
     const $microphoneStarter = document.getElementById('microphone-starter');
     const $footer = document.getElementById('footer');
     $microphoneStarter.addEventListener('click', () => {
-        $microphoneStarter.style.display = "none";
-        const recordingPanel = document.getElementsByClassName('recording-panel')[0] as HTMLElement;
-        recordingPanel.style.display = "flex";
+
     });
 
     let sttText = "";
@@ -114,7 +112,9 @@ export function initClientEvents(imiPreview) {
         const sttPanel = $footer.querySelector('.stt-panel') as HTMLElement;
         if (target.classList.contains('fa-microphone')) {
             try {
-                debugger;
+                $microphoneStarter.style.display = "none";
+                const recordingPanel = document.getElementsByClassName('recording-panel')[0] as HTMLElement;
+                recordingPanel.style.display = "flex";
                 await startRecording((text) => {
                     sttPanel.innerHTML = text;
                     sttText = text;
