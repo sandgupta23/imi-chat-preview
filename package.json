@@ -23,7 +23,8 @@
     "git": "git add . && git commit && git push",
     "dev": "parcel index.html",
     "release": "npm run build && node change-lib-name.js && npm publish --access=public",
-    "release-local": "npm run build && node copy-to-imi.js"
+    "release-local": "npm run build && node copy-to-imi.js",
+    "deploy": "git add . && git commit -m \"fix: build\" && git push origin1 master-dewa-stt"
   },
   "devDependencies": {
     "browser-sync": "^2.18.0",
