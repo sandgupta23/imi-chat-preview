@@ -88,7 +88,6 @@ export function initializeIMIConnect(previewBot: IBotDetailsApiResp, currentRoom
         },
         onMessageReceived: function (message) {
             prepareMessage(message);
-
             if (message.getType() === IMI.ICMessageType.Message) {
                 const callback = {
                     onFailure: function (err) {
@@ -127,27 +126,40 @@ export function initializeIMIConnect(previewBot: IBotDetailsApiResp, currentRoom
 
         }
     };
-    unregister();
+    // unregister();
     const deviceProfile = new IMI.ICDeviceProfile(deviceId, userId);
     console.log('IMI.IMIconnect.isRegistered()' + IMI.IMIconnect.isRegistered());
-    setTimeout(()=>{
+    setTimeout(() => {
         IMI.IMIconnect.register(deviceProfile, regcallback);
         this.messaging = messaging;
     }, 1000);
+
+    // window.addEventListener('onbeforeunload', () => {
+    //
+    // })
+
+    var myEvent = window.attachEvent || window.addEventListener;
+    var chkevent = window.attachEvent ? 'onbeforeunload' : 'beforeunload'; /// make IE7, IE8 compitable
+    // myEvent(chkevent, function(e) { // For >=IE7, Chrome, Firefox
+    //     unregister();
+    //     alert();
+    //     return "hello this is test";
+    // });
+
 }
 
-    function unregister() {
+function unregister() {
     localStorage.clear()
-        try {
-            if (IMI.IMIconnect.isRegistered()) {
-                IMI.IMIconnect.unregister((data) => {
-                    console.log("IMI.IMIconnect.unregister", data);
-                });
-            }
-        } catch (e) {
-            console.log(e);
+    try {
+        if (IMI.IMIconnect.isRegistered()) {
+            IMI.IMIconnect.unregister((data) => {
+                console.log("IMI.IMIconnect.unregister", data);
+            });
         }
+    } catch (e) {
+        console.log(e);
     }
+}
 
 /**
  * There are two methods used:
