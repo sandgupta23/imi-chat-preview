@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "parcel build --no-content-hash src/styles.scss src/main.ts src/index.html  --no-source-maps",
+    "build": "parcel build --no-content-hash src/styles.scss src/main.ts src/index.html  --no-source-maps && node copy-to-assets.js",
     "git": "git add . && git commit && git push",
     "dev": "parcel index.html",
     "release": "npm run build && node change-lib-name.js && npm publish --access=public",
