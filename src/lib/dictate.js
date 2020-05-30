@@ -1,9 +1,9 @@
 (function (window) {
 
 
-    var SERVER = "wss://asr.dev-frontend-1093425665.us-east-1.elb.amazonaws.com:8080/client/ws/speech";
-    var SERVER_STATUS = "wss://asr.dev-frontend-1093425665.us-east-1.elb.amazonaws.com:8080/client/ws/status";
-    var REFERENCE_HANDLER = "wss://asr.dev-frontend-1093425665.us-east-1.elb.amazonaws.com:8080/client/dynamic/reference";
+    var SERVER = "wss://dev-frontend-1093425665.us-east-1.elb.amazonaws.com/client/ws/speech";
+    var SERVER_STATUS = "wss://dev-frontend-1093425665.us-east-1.elb.amazonaws.com/client/ws/status";
+    var REFERENCE_HANDLER = "wss://dev-frontend-1093425665.us-east-1.elb.amazonaws.com/client/dynamic/reference";
     var CONTENT_TYPE = "content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1";
     // Send blocks 4 x per second
     var INTERVAL = 250;

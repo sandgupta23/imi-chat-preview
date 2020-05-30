@@ -55,8 +55,8 @@ function prettyfyHyp(text, doCapFirst, doPrependSpace) {
 
 
 var dictate = window.dictate = new Dictate({
-    server: 'wss://asr.dev-frontend-1093425665.us-east-1.elb.amazonaws.com:8080/client/ws/speech',
-    serverStatus: 'wss://asr.dev-frontend-1093425665.us-east-1.elb.amazonaws.com:8080/client/ws/status',
+    server: 'wss://dev-frontend-1093425665.us-east-1.elb.amazonaws.com/client/ws/speech',
+    serverStatus: 'wss://dev-frontend-1093425665.us-east-1.elb.amazonaws.com/client/ws/status',
     recorderWorkerPath: 'recorderWorker.js',
     //model_name : model_name,
     //lang_local : lang_local,
