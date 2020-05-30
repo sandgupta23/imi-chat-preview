@@ -1,6 +1,6 @@
 const fs = require('fs');
 var path = require('path');
-var filename1 = path.join('src','lib','','recorderWorker.js');
+var filename1 = path.join('src','lib','recorderWorker.js');
 var filename2 = path.basename('dist', 'recorderWorker.js');
 // destination.txt will be created or overwritten by default.
 fs.copyFile(filename1, filename2, (err) => {
