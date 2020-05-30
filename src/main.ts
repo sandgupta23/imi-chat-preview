@@ -22,7 +22,7 @@ import {
     getQueryStringValue,
     scrollBodyToBottom,
     showToaster,
-    startRecording,
+    startRecording, stopRecording,
     updateQueryStringParameter
 } from "./utility";
 
@@ -63,7 +63,7 @@ export function initClientEvents(imiPreview) {
         });
         $chatInput.addEventListener('keydown', ($event) => {
             setTimeout(() => {
-                debugger;
+
                 const faSend = $chatInputIcon.querySelector('.fa-send') as HTMLElement;
                 const faMicrophone = $chatInputIcon.querySelector('.fa-microphone') as HTMLElement;
                 if ($chatInput.value.trim()) {
@@ -126,6 +126,7 @@ export function initClientEvents(imiPreview) {
             }
         }
         if (target.classList.contains('fa-check-circle')) {
+            stopRecording(sttPanel);
             resetMicPanel(sttPanel, sttText);
         }
 

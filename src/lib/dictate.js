@@ -86,7 +86,7 @@
         // Initializes audioContext
         // Can be called multiple times.
         // TODO: call something on success (MSG_INIT_RECORDER is currently called)
-        this.init = function (startCB, endCB) {
+        this.init = (startCB, endCB) => {
             this.startCB = startCB;
             this.endCB = endCB;
             var audioSourceConstraints = {};
@@ -119,7 +119,7 @@
 
         // Start recording and transcribing
         this.startListening = function (startCB) {
-            debugger;
+
             if (!recorder) {
                 config.onError(ERR_AUDIO, "Recorder undefined");
                 return;
@@ -264,7 +264,7 @@
         }
 
 
-        function createWebSocket(startCB) {
+        createWebSocket  = (startCB) => {
 
             var url = config.server + '?' + config.contentType;
             if (config["user_id"]) {
@@ -288,9 +288,9 @@
             //console.log("first try")
             var ws = new WebSocket(url);
 
-            ws.onmessage = function (e) {
+            ws.onmessage =  (e) => {
                 var data = e.data;
-                startCB(data);
+                this.startCB(data);
                 console.log(data);
                 config.onEvent(MSG_WEB_SOCKET, data);
                 if (data instanceof Object && !(data instanceof Blob)) {
@@ -302,9 +302,12 @@
                     if (res.status == 0) {
                         if (res.result) {
                             if (res.result.final) {
-                                config.onResults(res.result.hypotheses);
+                                console.log('==============================end');
+                                // config.onResults(res.result.hypotheses);
+                                this.endCB(res.result.hypotheses);
                             } else {
-                                config.onPartialResults(res.result.hypotheses);
+                                this.startCB(res.result.hypotheses);
+                                // config.onPartialResults(res.result.hypotheses);
                             }
                         }
                     } else {

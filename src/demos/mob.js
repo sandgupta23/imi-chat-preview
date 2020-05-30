@@ -164,7 +164,7 @@ function __updateTranscript(text) {
 
 
 window.toggleListening1 = function toggleListening1(startCB, endCB) {
-    debugger;
+
     if (isConnected) {
         dictate.stopListening(endCB);
         console.log("dictate.stopListening();");
