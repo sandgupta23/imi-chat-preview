@@ -79,9 +79,6 @@ export function showToaster(message) {
 }
 
 export async function checkForTransliteration(input: string) {
-    const $recordText = document.querySelector('.record-text');
-    $recordText.innerHTML = "Speak now";
-
     let finalInput = input;
     const x = await languageDetection({
         "msg_type": "text",
@@ -98,24 +95,25 @@ export async function checkForTransliteration(input: string) {
     }
     return finalInput;
 }
+
 export async function stopRecording() {
 
-        window.dictate.cancel();
-        window.dictate.stopListening();
-        debugger;
-        const stream = window.stream;
-        stream.getTracks().forEach(function (track) {
-            track.stop();
-        });
+    window.dictate.cancel();
+    window.dictate.stopListening();
+    debugger;
+    const stream = window.stream;
+    stream.getTracks().forEach(function (track) {
+        track.stop();
+    });
 }
 
 export async function startRecording(cb) {
     const $check = document.querySelector('.stt-panel-check');
     const $recordText = document.querySelector('.record-text');
+    $check.classList.add('custom-disable');
     setTimeout(() => {
         $recordText.innerHTML = `<div class="record-text-listening">Listening...</div>`;
     }, 1.5 * 1000)
-    $check.classList.add('custom-disable');
 
     const startCB = async function (data) {
         if (data[0].transcript) {
