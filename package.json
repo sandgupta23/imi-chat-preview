@@ -39,6 +39,7 @@
     "typescript": "^3.6.2"
   },
   "dependencies": {
+    "fs-extra": "^9.0.0",
     "regenerator-runtime": "^0.13.3"
   }
 }
