@@ -135,7 +135,7 @@ export function initClientEvents(imiPreview) {
         }
         if (target.classList.contains('stt-panel-check')) {
 
-            sttPanel.innerHTML = await stopRecording(sttPanel.innerHTML);
+            stopRecording();
             resetMicPanel(sttPanel, sttPanel.innerHTML);
         }
 

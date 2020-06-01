@@ -78,7 +78,7 @@ export function showToaster(message) {
     }, 3000);
 }
 
-export async function stopRecording(input: string) {
+export async function checkForTransliteration(input: string) {
     const $recordText = document.querySelector('.record-text');
     $recordText.innerHTML = "Speak now";
 
@@ -95,19 +95,18 @@ export async function stopRecording(input: string) {
             "input": input
         });
         finalInput = y.transliterated_text;
-
     }
-
-
-    console.log(x, y);
-    window.dictate.cancel();
-    window.dictate.stopListening();
-    debugger;
-    const stream = window.stream;
-    stream.getTracks().forEach(function (track) {
-        track.stop();
-    });
     return finalInput;
+}
+export async function stopRecording() {
+
+        window.dictate.cancel();
+        window.dictate.stopListening();
+        debugger;
+        const stream = window.stream;
+        stream.getTracks().forEach(function (track) {
+            track.stop();
+        });
 }
 
 export async function startRecording(cb) {
@@ -124,7 +123,14 @@ export async function startRecording(cb) {
             cb(data[0].transcript);
         }
     }
-    const endCB = startCB;
+    const endCB = async function (data) {
+        if (data[0].transcript) {
+            $check.classList.remove('custom-disable');
+            cb(data[0].transcript);
+            const sttPanel = document.querySelector('.stt-panel') as HTMLElement;
+            sttPanel.innerHTML = await checkForTransliteration(data[0].transcript);
+        }
+    }
     // window.dictate.init();
 
     window.dictate.init(startCB, endCB);
