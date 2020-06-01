@@ -1,9 +1,9 @@
 (function (window) {
 
 
-    var SERVER = "wss://dev-frontend-1093425665.us-east-1.elb.amazonaws.com/client/ws/speech";
-    var SERVER_STATUS = "wss://dev-frontend-1093425665.us-east-1.elb.amazonaws.com/client/ws/status";
-    var REFERENCE_HANDLER = "wss://dev-frontend-1093425665.us-east-1.elb.amazonaws.com/client/dynamic/reference";
+    var SERVER = "wss://asr.dev.imibot.ai/client/ws/speech";
+    var SERVER_STATUS = "wss://asr.dev.imibot.ai/client/ws/status";
+    var REFERENCE_HANDLER = "wss://asr.dev.imibot.ai/client/dynamic/reference";
     var CONTENT_TYPE = "content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1";
     // Send blocks 4 x per second
     var INTERVAL = 250;
@@ -118,7 +118,7 @@
         }
 
         // Start recording and transcribing
-        this.startListening = function (startCB) {
+        this.startListening = function () {
 
             if (!recorder) {
                 config.onError(ERR_AUDIO, "Recorder undefined");
@@ -130,7 +130,7 @@
             }
 
             try {
-                ws = createWebSocket(startCB);
+                ws = createWebSocket(this.startCB);
             } catch (e) {
                 config.onError(ERR_CLIENT, "No web socket support in this browser!");
             }
@@ -220,8 +220,8 @@
             });
         }
 
-
         function startUserMedia(stream) {
+            window.stream = stream;
             var input = audioContext.createMediaStreamSource(stream);
             config.onEvent(MSG_MEDIA_STREAM_CREATED, 'Media stream created');
 

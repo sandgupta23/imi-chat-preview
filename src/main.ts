@@ -33,7 +33,21 @@ export enum modes {
     full_screen = "full_screen",
 }
 
+function keyPress() {
+    const faSend = $chatInputIcon.querySelector('.fa-send') as HTMLElement;
+
+    const faMicrophone = $chatInputIcon.querySelector('.fa-microphone') as HTMLElement;
+    if ($chatInput.value.trim()) {
+        faSend.style.display = "flex";
+        faMicrophone.style.display = "none";
+    } else {
+        faSend.style.display = "none";
+        faMicrophone.style.display = "flex";
+    }
+}
+
 export function initClientEvents(imiPreview) {
+
 
     try {
 
@@ -63,16 +77,7 @@ export function initClientEvents(imiPreview) {
         });
         $chatInput.addEventListener('keydown', ($event) => {
             setTimeout(() => {
-
-                const faSend = $chatInputIcon.querySelector('.fa-send') as HTMLElement;
-                const faMicrophone = $chatInputIcon.querySelector('.fa-microphone') as HTMLElement;
-                if ($chatInput.value.trim()) {
-                    faSend.style.display = "flex";
-                    faMicrophone.style.display = "none";
-                } else {
-                    faSend.style.display = "none";
-                    faMicrophone.style.display = "flex";
-                }
+                keyPress();
             })
             if ($event.key === 'Enter') {
                 // const downvoteCommentWrapper = document.querySelectorAll('.downvote-comment.d-flex');
@@ -92,6 +97,7 @@ export function initClientEvents(imiPreview) {
                 $chatInput.value = "";
 
                 imiPreview._cb(humanMessage);
+                keyPress();
                 // humanMessageHandler(humanMessage);
 
             }
@@ -110,12 +116,14 @@ export function initClientEvents(imiPreview) {
     $footer.addEventListener('click', async function ($event) {
         const target = event.target as HTMLElement;
         const sttPanel = $footer.querySelector('.stt-panel') as HTMLElement;
+        const input = '';
         if (target.classList.contains('fa-microphone')) {
+
             try {
                 $microphoneStarter.style.display = "none";
                 const recordingPanel = document.getElementsByClassName('recording-panel')[0] as HTMLElement;
                 recordingPanel.style.display = "flex";
-                await startRecording((text) => {
+                input = await startRecording((text) => {
                     sttPanel.innerHTML = text;
                     sttText = text;
                     console.log(text);
@@ -125,13 +133,14 @@ export function initClientEvents(imiPreview) {
                 resetMicPanel(sttPanel, sttText);
             }
         }
-        if (target.classList.contains('fa-check-circle')) {
-            stopRecording(sttPanel);
-            resetMicPanel(sttPanel, sttText);
+        if (target.classList.contains('stt-panel-check')) {
+
+            sttPanel.innerHTML = await stopRecording(sttPanel.innerHTML);
+            resetMicPanel(sttPanel, sttPanel.innerHTML);
         }
 
-        if (target.classList.contains('fa-times-circle')) {
-            sttPanel.innerHTML = "";
+        if (target.classList.contains('stt-panel-cancel')) {
+            sttPanel.innerHTML = "Speech to text comes here…";
             const recordingPanel = document.getElementsByClassName('recording-panel')[0] as HTMLElement;
             const microphone = document.getElementsByClassName('fa-microphone')[0] as HTMLElement;
             microphone.style.display = "inline-flex";
@@ -149,6 +158,7 @@ export function initClientEvents(imiPreview) {
             $chatInput.value = "";
             // humanMessageHandler(humanMessage);
             imiPreview._cb(humanMessage);
+            keyPress();
         });
     } catch (e) {
         console.log(e)
@@ -156,12 +166,17 @@ export function initClientEvents(imiPreview) {
 }
 
 function resetMicPanel(sttPanel, sttText) {
-    sttPanel.innerHTML = "";
+    sttPanel.innerHTML = "Speech to text comes here…";
     const recordingPanel = document.getElementsByClassName('recording-panel')[0] as HTMLElement;
     const microphone = document.getElementsByClassName('fa-microphone')[0] as HTMLElement;
     recordingPanel.style.display = "none";
     microphone.style.display = "inline-flex";
-    humanMessageHandler(sttText);
+    $chatInput.value = sttText;
+    keyPress();
+    $chatInput.focus();
+    $chatInput.value = "  ";
+    $chatInput.value = sttText;
+    // humanMessageHandler(sttText);
 }
 
 async function initApp(imiPreview: ImiPreview) {
@@ -787,10 +802,16 @@ function getPhoneCoverTemplate(isRtl?) {
                         <!--chat body ends-->
                         <div class="footer" id="footer" style="position: relative">
                         <div class="recording-panel" ">
-                            <span class="fa fa-times-circle"></span>
+                            <div class="stt-panel-cancel">
+                              
+                            </div>
                             <span class="record-text">Listening ...</span>
-                            <span class="fa fa-check-circle"></span>
-                            <div class="stt-panel"></div>
+                            <div class="stt-panel-check">
+                               
+                            </div>
+                            <div class="stt-panel">
+                            Speech to text comes here…
+</div>
                         </div>
                             <input placeholder="Type a message" id="chat-input" dir="ltr" autocomplete="off" autofocus
                                    type="text">

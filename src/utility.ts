@@ -78,24 +78,38 @@ export function showToaster(message) {
     }, 3000);
 }
 
-export async function stopRecording(cb) {
+export async function stopRecording(input: string) {
+    let finalInput = input;
     const x = await languageDetection({
         "msg_type": "text",
-        "msg": "mujhe kya chahiye"
+        "msg": input
     });
+    let y;
+    if (x.inputParams.language === 'hi') {
+        y = await transliteration({
+            "source_lang": "eng",
+            "target_lang": "hin",
+            "input": input
+        });
+        finalInput = y.transliterated_text;
+    }
 
-    const y = await transliteration({
-        "source_lang": "eng",
-        "target_lang": "hin",
-        "input": "mujhe kya chahiye"
-    });
-    debugger;
+
     console.log(x, y);
+    window.dictate.cancel();
+    window.dictate.stopListening();
+    debugger;
+    const stream = window.stream;
+    stream.getTracks().forEach(function (track) { track.stop(); });
+    return finalInput;
 }
 
 export async function startRecording(cb) {
+    const $check = document.querySelector('.stt-panel-check');
+    $check.classList.add('custom-disable');
     const startCB = async function (data) {
         if (data[0].transcript) {
+            $check.classList.remove('custom-disable');
             cb(data[0].transcript);
         }
     }

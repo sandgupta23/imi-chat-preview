@@ -16,6 +16,11 @@ $color-brand: #34b233;
 $vars: (
         color-brand: #2b4f70,
 );
+.custom-disable{
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+}
 
 @mixin var($property, $varName) {
   #{$property}: map-get($vars, $varName);
@@ -235,20 +240,51 @@ ul, li {
       left: 0;
       right: 0;
       bottom: 0;
-      top: 0;
+      top: 1px;
       background: white;
-      .fa-times-circle{
+
+      .fa-times-circle {
         font-size: 30px;
         color: red;
       }
-      .fa-check-circle{
-        font-size: 30px;
-        color: greenyellow;
-      }
-      .stt-panel{
+
+      .stt-panel {
+        padding: 6px 10px;
+        background: white;
+        margin-bottom: 2px;
+        border-top: 1px solid #e0e0e0;
         position: absolute;
         bottom: 100%;
-        padding: 2px;
+        width: 100%;
+      }
+
+      .stt-panel-cancel {
+        background-image: url("./assets/cancel-empty.svg");
+        background-repeat: no-repeat;
+        background-size: contain;
+        height: 32px;
+        width: 32px;
+        cursor: pointer;
+        &:hover {
+          background-image: url("./assets/cancel-filled.svg");
+        }
+      }
+
+      .stt-panel-check {
+        background-image: url("assets/check-empty.svg");
+        background-repeat: no-repeat;
+        background-size: contain;
+        height: 32px;
+        width: 32px;
+        cursor: pointer;
+        &:hover {
+          background-image: url("assets/check.svg");
+        }
+      }
+
+      .fa-angle-times::before {
+        content: "\F105\F104";
+        letter-spacing: -0.15em;
       }
     }
 

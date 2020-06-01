@@ -55,8 +55,8 @@ function prettyfyHyp(text, doCapFirst, doPrependSpace) {
 
 
 var dictate = window.dictate = new Dictate({
-    server: 'wss://dev-frontend-1093425665.us-east-1.elb.amazonaws.com/client/ws/speech',
-    serverStatus: 'wss://dev-frontend-1093425665.us-east-1.elb.amazonaws.com/client/ws/status',
+    server: 'wss://asr.dev.imibot.ai/client/ws/speech',
+    serverStatus: 'wss://asr.dev.imibot.ai/client/ws/status',
     recorderWorkerPath: 'recorderWorker.js',
     //model_name : model_name,
     //lang_local : lang_local,
@@ -163,14 +163,14 @@ function __updateTranscript(text) {
 }
 
 
-window.toggleListening1 = function toggleListening1(startCB, endCB) {
+window.toggleListening1 = function toggleListening1() {
 
     if (isConnected) {
-        dictate.stopListening(endCB);
+        dictate.stopListening();
         console.log("dictate.stopListening();");
     } else {
         // dictate.init();
-        dictate.startListening(startCB);
+        dictate.startListening();
         console.log("dictate.startListening()");
         console.log(dictate.startListening);
     }
