@@ -9,7 +9,7 @@ var filename2 = path.join('dist', 'recorderWorker.js');
 const data = fs.readFileSync(filename1).toString()
 fs.appendFileSync(filename2, data, { flag: 'w' });
 
-fse.copySync('src/assets', 'dist/assets', function (err) {
+fse.copySync('src/assets1', 'dist/assets1', function (err) {
     if (err) return console.error(err)
     console.log('success!')
 });

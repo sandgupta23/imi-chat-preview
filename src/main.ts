@@ -140,11 +140,12 @@ export function initClientEvents(imiPreview) {
         }
 
         if (target.classList.contains('stt-panel-cancel')) {
-            sttPanel.innerHTML = "Speech to text comes here…";
-            const recordingPanel = document.getElementsByClassName('recording-panel')[0] as HTMLElement;
-            const microphone = document.getElementsByClassName('fa-microphone')[0] as HTMLElement;
-            microphone.style.display = "inline-flex";
-            recordingPanel.style.display = "none";
+            resetMicPanel(sttPanel, '');
+            // sttPanel.innerHTML = "Speech to text comes here…";
+            // const recordingPanel = document.getElementsByClassName('recording-panel')[0] as HTMLElement;
+            // const microphone = document.getElementsByClassName('fa-microphone')[0] as HTMLElement;
+            // microphone.style.display = "inline-flex";
+            // recordingPanel.style.display = "none";
             // humanMessageHandler(sttText);
         }
     });
@@ -176,6 +177,8 @@ function resetMicPanel(sttPanel, sttText) {
     $chatInput.focus();
     $chatInput.value = "  ";
     $chatInput.value = sttText;
+    const $recordText = document.querySelector('.record-text');
+    $recordText.innerHTML = "Speak now";
     // humanMessageHandler(sttText);
 }
 
@@ -805,7 +808,7 @@ function getPhoneCoverTemplate(isRtl?) {
                             <div class="stt-panel-cancel">
                               
                             </div>
-                            <span class="record-text">Listening ...</span>
+                            <span class="record-text">Speak now</span>
                             <div class="stt-panel-check">
                                
                             </div>

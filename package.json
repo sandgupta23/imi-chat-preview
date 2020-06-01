@@ -34,12 +34,12 @@
     "npm-run-all": "^4.0.0",
     "onchange": "^3.2.0",
     "parcel": "^1.12.3",
-    "parcel-plugin-custom-dist-structure": "^1.1.12",
     "sass": "^1.23.0",
     "typescript": "^3.6.2"
   },
   "dependencies": {
     "fs-extra": "^9.0.0",
-    "regenerator-runtime": "^0.13.3"
+    "regenerator-runtime": "^0.13.3",
+    "v8-compile-cache": "^2.1.1"
   }
 }

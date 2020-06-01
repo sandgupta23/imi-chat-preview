@@ -16,6 +16,16 @@ $color-brand: #34b233;
 $vars: (
         color-brand: #2b4f70,
 );
+
+.record-text-listening{
+  animation: blinker 1.5s infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
 .custom-disable{
   cursor: not-allowed;
   opacity: 0.5;
@@ -259,26 +269,26 @@ ul, li {
       }
 
       .stt-panel-cancel {
-        background-image: url("./assets/cancel-empty.svg");
+        background-image: url("assets1/cancel-empty.svg");
         background-repeat: no-repeat;
         background-size: contain;
         height: 32px;
         width: 32px;
         cursor: pointer;
         &:hover {
-          background-image: url("./assets/cancel-filled.svg");
+          background-image: url("assets1/cancel-filled.svg");
         }
       }
 
       .stt-panel-check {
-        background-image: url("assets/check-empty.svg");
+        background-image: url("assets1/check-empty.svg");
         background-repeat: no-repeat;
         background-size: contain;
         height: 32px;
         width: 32px;
         cursor: pointer;
         &:hover {
-          background-image: url("assets/check.svg");
+          background-image: url("assets1/check.svg");
         }
       }
 

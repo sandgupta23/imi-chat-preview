@@ -15,7 +15,7 @@ export async function transliteration(body) {
 
 export async function languageDetection(body) {
 
-    const url = 'https://imibot.ai/api/v1/webhook/intelligent/';
+    const url = 'https://prod.imibot.ai/api/v1/webhook/intelligent/';
     const headerData: IHeaderData = {
         "content-type": 'application/json',
         "bot-access-token": environment.bot_access_token
