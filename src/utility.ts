@@ -100,7 +100,7 @@ export async function stopRecording() {
 
     window.dictate.cancel();
     window.dictate.stopListening();
-    debugger;
+
     const stream = window.stream;
     stream.getTracks().forEach(function (track) {
         track.stop();
@@ -126,7 +126,12 @@ export async function startRecording(cb) {
             $check.classList.remove('custom-disable');
             cb(data[0].transcript);
             const sttPanel = document.querySelector('.stt-panel') as HTMLElement;
-            sttPanel.innerHTML = await checkForTransliteration(data[0].transcript);
+            const x = await checkForTransliteration(data[0].transcript);
+            if (sttPanel.tagName === "INPUT") {
+                sttPanel.value = x;
+            } else {
+                sttPanel.innerHTML = x;
+            }
         }
     }
     // window.dictate.init();

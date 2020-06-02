@@ -117,6 +117,7 @@ export function initClientEvents(imiPreview) {
         const target = event.target as HTMLElement;
         const sttPanel = $footer.querySelector('.stt-panel') as HTMLElement;
         const input = '';
+
         if (target.classList.contains('fa-microphone')) {
 
             try {
@@ -124,7 +125,12 @@ export function initClientEvents(imiPreview) {
                 const recordingPanel = document.getElementsByClassName('recording-panel')[0] as HTMLElement;
                 recordingPanel.style.display = "flex";
                 input = await startRecording((text) => {
-                    sttPanel.innerHTML = text;
+                    if (sttPanel.tagName === "INPUT") {
+                        sttPanel.value = text;
+                        (sttPanel as HTMLInputElement).placeholder = 'Speech to text comes here…';
+                    } else {
+                        sttPanel.innerHTML = text;
+                    }
                     sttText = text;
                     console.log(text);
                 });
@@ -136,7 +142,7 @@ export function initClientEvents(imiPreview) {
         if (target.classList.contains('stt-panel-check')) {
 
             stopRecording();
-            resetMicPanel(sttPanel, sttPanel.innerHTML);
+            resetMicPanel(sttPanel, sttPanel.innerHTML || sttPanel.value);
         }
 
         if (target.classList.contains('stt-panel-cancel')) {
@@ -179,6 +185,9 @@ function resetMicPanel(sttPanel, sttText) {
     $chatInput.value = sttText;
     const $recordText = document.querySelector('.record-text');
     $recordText.innerHTML = "Speak now";
+    if (sttPanel.tagName === "INPUT") {
+        (sttPanel as HTMLInputElement).placeholder = 'Type a message';
+    }
     // humanMessageHandler(sttText);
 }
 
@@ -712,11 +721,31 @@ function getFullBodyExceptPhoneCover(isRtl?) {
 
                         </div>
                         <!--chat body ends-->
-                        <div class="footer">
-                            <input placeholder="Type a message" id="chat-input" dir="ltr" autocomplete="off" autofocus
+                        <div class="footer" id="footer" style="position: relative">
+                            <div class="recording-panel" style="left: initial; margin-right: 15px">
+                                <div class="stt-panel-cancel" style="margin-right: 30px">
+                                  
+                                </div>
+                                <span class="record-text" style="display: none">Speak now</span>
+                                <div class="stt-panel-check">
+                                </div>
+                                
+                            </div>
+                            <input class="stt-panel" placeholder="Type a message" id="chat-input" dir="ltr" autocomplete="off" autofocus
                                    type="text">
                             <span class="icon" id="chat-input-icon">
-                                <span class="fa fa-send"></span>
+                                <span style="display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;" class="fa fa-send"></span>
+                                <span id="microphone-starter"
+                                 style="display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;"
+                                 class="fa fa-microphone"></span>
                             </span>
                         </div>
                     </div>
@@ -813,8 +842,8 @@ function getPhoneCoverTemplate(isRtl?) {
                                
                             </div>
                             <div class="stt-panel">
-                            Speech to text comes here…
-</div>
+                                Speech to text comes here…
+                            </div>
                         </div>
                             <input placeholder="Type a message" id="chat-input" dir="ltr" autocomplete="off" autofocus
                                    type="text">
