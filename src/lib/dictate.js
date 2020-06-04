@@ -317,7 +317,7 @@
             }
 
             // Start recording only if the socket becomes open
-            ws.onopen = function (e) {
+            ws.onopen = (e) => {
                 intervalKey = setInterval(function () {
                     recorder.export16kMono(function (blob) {
                         socketSend(blob);
@@ -326,6 +326,8 @@
                 }, config.interval);
                 // Start recording
                 recorder.record();
+                debugger;
+                this.startCB('', 'connect');
                 // config.onReadyForSpeech();
                 config.onEvent(MSG_WEB_SOCKET_OPEN, e);
             };

@@ -107,16 +107,21 @@ export async function stopRecording() {
     });
 }
 
-export async function startRecording(cb) {
+export async function startRecording(cb, connectionOpenForFirstTimeCB) {
     const $check = document.querySelector('.stt-panel-check');
     const $recordText = document.querySelector('.record-text');
     $check.classList.add('custom-disable');
-    setTimeout(() => {
-        $recordText.innerHTML = `<div class="record-text-listening">Listening...</div>`;
-    }, 1.5 * 1000)
+    $recordText.innerHTML = `Connecting...`;
 
-    const startCB = async function (data) {
-        if (data[0].transcript) {
+    const startCB = async function (data, connectionOpenForFirstTime) {
+        if (connectionOpenForFirstTime) {
+            $recordText.innerHTML = `Speak now`;
+            setTimeout(() => {
+                $recordText.innerHTML = `<div class="record-text-listening">Listening...</div>`;
+            }, 1.5 * 1000)
+            connectionOpenForFirstTimeCB();
+        }
+        if (data && data[0].transcript) {
             $check.classList.remove('custom-disable');
             cb(data[0].transcript);
         }

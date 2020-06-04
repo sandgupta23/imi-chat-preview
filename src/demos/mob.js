@@ -58,6 +58,7 @@ var dictate = window.dictate = new Dictate({
     server: 'wss://asr.dev.imibot.ai/client/ws/speech',
     serverStatus: 'wss://asr.dev.imibot.ai/client/ws/status',
     recorderWorkerPath: 'recorderWorker.js',
+    interval:'150',
     //model_name : model_name,
     //lang_local : lang_local,
     //alt_lang : alt_lang,

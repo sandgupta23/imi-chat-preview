@@ -124,6 +124,7 @@ export function initClientEvents(imiPreview) {
                 $microphoneStarter.style.display = "none";
                 const recordingPanel = document.getElementsByClassName('recording-panel')[0] as HTMLElement;
                 recordingPanel.style.display = "flex";
+                (sttPanel as HTMLInputElement).placeholder = 'Connecting...';
                 input = await startRecording((text) => {
                     if (sttPanel.tagName === "INPUT") {
                         sttPanel.value = text;
@@ -133,6 +134,20 @@ export function initClientEvents(imiPreview) {
                     }
                     sttText = text;
                     console.log(text);
+                    debugger;
+                    if (sttPanel.tagName === "INPUT") {
+                        (sttPanel as HTMLInputElement).placeholder = 'Listening...';
+                    }
+                }, ()=>{
+                    if (sttPanel.tagName === "INPUT") {
+                        // sttPanel.value = text;
+                        (sttPanel as HTMLInputElement).placeholder = 'Speak now';
+                        setTimeout(() => {
+                            (sttPanel as HTMLInputElement).placeholder = 'Listening...';
+                        }, 1.5 * 1000)
+                    } else {
+                        // sttPanel.innerHTML = text;
+                    }
                 });
             } catch (e) {
                 /*reset */
