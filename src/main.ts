@@ -408,7 +408,8 @@ function initEvents(imiPreview: ImiPreview) {
             }
         }
         if (target.hasAttribute('data-payload')) {
-            imiPreview._cb(target.getAttribute('data-payload'));
+            debugger;
+            imiPreview._cb(target.textContent);
             return;
         }
 
