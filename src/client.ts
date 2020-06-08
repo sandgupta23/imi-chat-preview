@@ -35,8 +35,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const imiPreview = new ImiPreview();
     imiPreviewTemp = imiPreview;
-    imiPreview.setSendHumanMessageCallback((val) => {
-        humanMessageHandler(val);
+    imiPreview.setSendHumanMessageCallback((val, val1) => {
+        humanMessageHandler(val, ESourceType.human, val1);
     });
     imiPreview.setSendFeedback(async (val, feedback) => {
         console.log(environment);
@@ -77,13 +77,13 @@ document.addEventListener('DOMContentLoaded', async function () {
         },
         'imi_bot_middleware_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiVGhpcyBpcyBJTUkgQk9UIG1pZGRsZXdhcmUiLCJpYXQiOjE1Njc4ODc5MTAsImV4cCI6NDE1OTg4NzkxMH0.dYbMaf8HYMD5K532p7DpHN0cmru-JKMjst-WS9zi7u8'
     };
-    
+
     initializeSocketConnection(data);
 });
 
 let eventInit = false;
 function initializeSocketConnection(socketData) {
-    
+
     const url = 'https://rtm.imibot.ai';
     // const url = 'https://imi-bot-middleware.herokuapp.com';
     // const url = 'http://localhost:3000';

@@ -228,7 +228,7 @@ class ImiPreview {
 
     setSendHumanMessageCallback(cb) {
 
-        this._cb = (humanMessage) => {
+        this._cb = (humanMessage, humanMessage1) => {
             try {
                 const downvoteCommentWrapper = document.querySelectorAll('.downvote-comment.d-flex');
                 Array.from(downvoteCommentWrapper).forEach((downvoteCommentBox: HTMLElement) => {
@@ -238,7 +238,7 @@ class ImiPreview {
             } catch (e) {
 
             }
-            cb(humanMessage);
+            cb(humanMessage, humanMessage1);
         }
     }
 
@@ -409,7 +409,7 @@ function initEvents(imiPreview: ImiPreview) {
         }
         if (target.hasAttribute('data-payload')) {
             debugger;
-            imiPreview._cb(target.textContent);
+            imiPreview._cb(target.getAttribute('data-payload'), target.textContent);
             return;
         }
 
@@ -554,11 +554,11 @@ function initEvents(imiPreview: ImiPreview) {
 
 }
 
-export async function humanMessageHandler(humanMessage: string, sourceType?) {
+export async function humanMessageHandler(humanMessage: string, sourceType?, humanMessage1?: string,) {
     // alert();
     AppendMessageInChatBody([{
         sourceType: sourceType || ESourceType.human,
-        text: humanMessage,
+        text: humanMessage1 || humanMessage,
         time: Date.now()
     }]);
 
