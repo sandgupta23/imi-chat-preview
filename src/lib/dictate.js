@@ -158,6 +158,7 @@
 
         // Cancel everything without waiting on the server
         this.cancel = function () {
+            debugger;
             // Stop the regular sending of audio (if present)
             clearInterval(intervalKey);
             if (recorder) {
@@ -326,7 +327,7 @@
                 }, config.interval);
                 // Start recording
                 recorder.record();
-                debugger;
+
                 this.startCB('', 'connect');
                 // config.onReadyForSpeech();
                 config.onEvent(MSG_WEB_SOCKET_OPEN, e);

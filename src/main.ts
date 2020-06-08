@@ -134,7 +134,7 @@ export function initClientEvents(imiPreview) {
                     }
                     sttText = text;
                     console.log(text);
-                    debugger;
+
                     if (sttPanel.tagName === "INPUT") {
                         (sttPanel as HTMLInputElement).placeholder = 'Listening...';
                     }
@@ -162,6 +162,7 @@ export function initClientEvents(imiPreview) {
 
         if (target.classList.contains('stt-panel-cancel')) {
             resetMicPanel(sttPanel, '');
+            stopRecording();
             // sttPanel.innerHTML = "Speech to text comes here…";
             // const recordingPanel = document.getElementsByClassName('recording-panel')[0] as HTMLElement;
             // const microphone = document.getElementsByClassName('fa-microphone')[0] as HTMLElement;
@@ -408,7 +409,7 @@ function initEvents(imiPreview: ImiPreview) {
             }
         }
         if (target.hasAttribute('data-payload')) {
-            debugger;
+
             imiPreview._cb(target.getAttribute('data-payload'), target.textContent);
             return;
         }
