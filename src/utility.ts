@@ -85,7 +85,7 @@ export async function checkForTransliteration(input: string) {
         "msg": input
     });
     let y;
-    if (x.inputParams.language === 'hi') {
+    if (x.inputParams.language !== 'en') {
         y = await transliteration({
             "source_lang": "eng",
             "target_lang": "hin",
