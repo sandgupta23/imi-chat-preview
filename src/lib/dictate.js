@@ -265,7 +265,7 @@
         }
 
 
-        createWebSocket  = (startCB) => {
+        createWebSocket = (startCB) => {
 
             var url = config.server + '?' + config.contentType;
             if (config["user_id"]) {
@@ -289,7 +289,7 @@
             //console.log("first try")
             var ws = new WebSocket(url);
 
-            ws.onmessage =  (e) => {
+            ws.onmessage = (e) => {
                 var data = e.data;
                 this.startCB(data);
                 console.log(data);
@@ -303,11 +303,20 @@
                     if (res.status == 0) {
                         if (res.result) {
                             if (res.result.final) {
-                                console.log('==============================end');
+                                console.log('============================== FINAL CALLED', res.result.hypotheses);
                                 // config.onResults(res.result.hypotheses);
-                                this.endCB(res.result.hypotheses);
+                                window.finalMessage = res.result.hypotheses
+                                this.endCB(window.finalMessage);
+                                window.isFinalDone = true;
                             } else {
-                                this.startCB(res.result.hypotheses);
+                                if (window.isFinalDone) {
+                                    res.result.hypotheses[0].transcript += (window.finalMessage && window.finalMessage[0].transcript) || '';
+                                    window.finalMessage = res.result.hypotheses;
+                                    console.log('============================== APPENDING', res.result.hypotheses);
+                                } else {
+                                    window.finalMessage = res.result.hypotheses
+                                }
+                                this.startCB(window.finalMessage);
                                 // config.onPartialResults(res.result.hypotheses);
                             }
                         }

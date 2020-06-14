@@ -98,7 +98,7 @@ export async function checkForTransliteration(input: string) {
 
 export async function stopRecording() {
 
-    window.dictate.cancel();
+    // window.dictate.cancel();
     window.dictate.stopListening();
 
     const stream = window.stream;
@@ -108,6 +108,8 @@ export async function stopRecording() {
 }
 
 export async function startRecording(cb, connectionOpenForFirstTimeCB) {
+    window.isFinalDone = false;
+    window.finalMessage = null;
     const $check = document.querySelector('.stt-panel-check');
     const $recordText = document.querySelector('.record-text');
     $check.classList.add('custom-disable');
