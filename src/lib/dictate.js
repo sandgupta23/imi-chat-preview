@@ -158,7 +158,7 @@
 
         // Cancel everything without waiting on the server
         this.cancel = function () {
-            debugger;
+
             // Stop the regular sending of audio (if present)
             clearInterval(intervalKey);
             if (recorder) {
@@ -300,23 +300,32 @@
                     config.onError(ERR_SERVER, 'WebSocket: got Blob');
                 } else {
                     var res = JSON.parse(data);
-                    if (res.status == 0) {
+                    if (res.status == 0) {/*everytime message comes*/
                         if (res.result) {
                             if (res.result.final) {
                                 console.log('============================== FINAL CALLED', res.result.hypotheses);
                                 // config.onResults(res.result.hypotheses);
-                                window.finalMessage = res.result.hypotheses
+                                // window.finalMessage = res.result.hypotheses
+                                if (!window.finalMessage) {
+                                    window.finalMessage = res.result.hypotheses;
+                                } else {
+                                    window.finalMessage[0].transcript =
+                                        window.finalMessage[0].transcript + ' ' +
+                                        (res.result.hypotheses && res.result.hypotheses[0].transcript || '');
+                                }
                                 this.endCB(window.finalMessage);
                                 window.isFinalDone = true;
                             } else {
                                 if (window.isFinalDone) {
-                                    res.result.hypotheses[0].transcript += (window.finalMessage && window.finalMessage[0].transcript) || '';
-                                    window.finalMessage = res.result.hypotheses;
+                                    res.result.hypotheses[0].transcript =
+                                        (window.finalMessage && window.finalMessage[0].transcript)
+                                        + ' ' + res.result.hypotheses[0].transcript;
+                                    this.startCB(res.result.hypotheses);
                                     console.log('============================== APPENDING', res.result.hypotheses);
                                 } else {
-                                    window.finalMessage = res.result.hypotheses
+                                    // window.finalMessage = res.result.hypotheses
+                                    this.startCB(res.result.hypotheses);
                                 }
-                                this.startCB(window.finalMessage);
                                 // config.onPartialResults(res.result.hypotheses);
                             }
                         }

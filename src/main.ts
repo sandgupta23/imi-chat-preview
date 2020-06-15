@@ -158,6 +158,7 @@ export function initClientEvents(imiPreview) {
 
             stopRecording();
             resetMicPanel(sttPanel, sttPanel.innerHTML || sttPanel.value);
+            return;
         }
 
         if (target.classList.contains('stt-panel-cancel')) {
@@ -189,6 +190,7 @@ export function initClientEvents(imiPreview) {
 }
 
 function resetMicPanel(sttPanel, sttText) {
+
     sttPanel.innerHTML = "Speech to text comes here…";
     const recordingPanel = document.getElementsByClassName('recording-panel')[0] as HTMLElement;
     const microphone = document.getElementsByClassName('fa-microphone')[0] as HTMLElement;
