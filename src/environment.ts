@@ -9,6 +9,7 @@ export const environment = {
         room: {
             id: null
         },
-        logo: ""
+        logo: "",
+        use_lang_detection: false,
     }
 ;

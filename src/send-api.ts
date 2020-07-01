@@ -26,6 +26,7 @@ export function sendMessageToBot(bot_access_token: string, enterprise_unique_nam
     };
     return makePostReq<ISendApiResp>({url, body, headerData})
         .then((data) => {
+            window.language = data.room.df_state.language || 'en';
             environment.room = data.room;
             return data;
         })

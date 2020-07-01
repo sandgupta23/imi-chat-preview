@@ -1,5 +1,6 @@
 import {$chatBody} from "./dom";
 import {languageDetection, transliteration} from "./recording-api";
+import {environment} from "./environment";
 
 export function getTimeInHHMM(timeMS) {
     const time = timeMS ? new Date(timeMS) : new Date();
@@ -80,10 +81,19 @@ export function showToaster(message) {
 
 export async function checkForTransliteration(input: string) {
     let finalInput = input;
-    const x = await languageDetection({
-        "msg_type": "text",
-        "msg": input
-    });
+    let x
+    if (environment.use_lang_detection) {
+        x = {
+            inputParams:{
+                language: window.language
+            }
+        }
+    } else {
+        x = await languageDetection({
+            "msg_type": "text",
+            "msg": input
+        });
+    }
     let y;
     if (x.inputParams.language !== 'en') {
         y = await transliteration({
