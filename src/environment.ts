@@ -10,6 +10,6 @@ export const environment = {
             id: null
         },
         logo: "",
-        use_lang_detection: false,
+        use_lang_detection: true,
     }
 ;
