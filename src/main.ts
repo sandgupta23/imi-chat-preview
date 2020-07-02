@@ -119,7 +119,6 @@ export function initClientEvents(imiPreview) {
         const input = '';
 
         if (target.classList.contains('fa-microphone')) {
-
             try {
                 $microphoneStarter.style.display = "none";
                 const recordingPanel = document.getElementsByClassName('recording-panel')[0] as HTMLElement;
@@ -190,7 +189,7 @@ export function initClientEvents(imiPreview) {
 }
 
 function resetMicPanel(sttPanel, sttText) {
-
+    debugger;
     sttPanel.innerHTML = "Speech to text comes here…";
     const recordingPanel = document.getElementsByClassName('recording-panel')[0] as HTMLElement;
     const microphone = document.getElementsByClassName('fa-microphone')[0] as HTMLElement;
@@ -232,6 +231,7 @@ class ImiPreview {
     setSendHumanMessageCallback(cb) {
 
         this._cb = (humanMessage, humanMessage1) => {
+            debugger;
             try {
                 const downvoteCommentWrapper = document.querySelectorAll('.downvote-comment.d-flex');
                 Array.from(downvoteCommentWrapper).forEach((downvoteCommentBox: HTMLElement) => {
@@ -242,6 +242,9 @@ class ImiPreview {
 
             }
             cb(humanMessage, humanMessage1);
+            const $footer = document.getElementById('footer');
+            const sttPanel = $footer.querySelector('.stt-panel') as HTMLElement;
+            resetMicPanel(sttPanel, '');
         }
     }
 
@@ -578,7 +581,6 @@ export async function humanMessageHandler(humanMessage: string, sourceType?, hum
     messageData.forEach((message) => {
         AppendMessageInChatBody([message], botResponse);
     });
-
 }
 
 function getBotResponseByTxnId(txn) {
