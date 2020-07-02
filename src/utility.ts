@@ -80,31 +80,31 @@ export function showToaster(message) {
 }
 
 export async function checkForTransliteration(input: string) {
-    let finalInput = input;
-    debugger;
-    let x
-    if (!environment.use_lang_detection) {
-        x = {
-            inputParams:{
-                language: window.language
-            }
-        }
-    } else {
-        x = await languageDetection({
-            "msg_type": "text",
-            "msg": input
-        });
-    }
-    let y;
-    if (x.inputParams.language !== 'en') {
-        y = await transliteration({
-            "source_lang": "eng",
-            "target_lang": "hin",
-            "input": input
-        });
-        finalInput = y.transliterated_text;
-    }
-    return finalInput;
+    // let finalInput = input;
+    // debugger;
+    // let x
+    // if (!environment.use_lang_detection) {
+    //     x = {
+    //         inputParams:{
+    //             language: window.language
+    //         }
+    //     }
+    // } else {
+    //     x = await languageDetection({
+    //         "msg_type": "text",
+    //         "msg": input
+    //     });
+    // }
+    // let y;
+    // if (x.inputParams.language !== 'en') {
+    //     y = await transliteration({
+    //         "source_lang": "eng",
+    //         "target_lang": "hin",
+    //         "input": input
+    //     });
+    //     finalInput = y.transliterated_text;
+    // }
+    return input;
 }
 
 export async function stopRecording() {
