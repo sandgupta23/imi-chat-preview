@@ -730,7 +730,7 @@ function getFullBodyExceptPhoneCover(isRtl?) {
                                     <div id="bot-description">hello</div>
                                 </div>
                                 <div class="options"  id="env-options">
-                                    <i class="fa fa-ellipsis-v"></i>
+<!--                                    <i class="fa fa-ellipsis-v"></i>-->
                                 </div>
                             </div>
                         </div>
@@ -840,7 +840,7 @@ function getPhoneCoverTemplate(isRtl?) {
                                 </div>
                                 <div style="width: 50px">
                                 <div class="options" id="env-options">
-                                    <i class="fa fa-ellipsis-v"></i>
+<!--                                    <i class="fa fa-ellipsis-v"></i>-->
                                 </div>
 </div>
                             </div>
@@ -916,7 +916,7 @@ function getHeaderTemplate() {
                                     <div id="bot-title" ></div>
                                 </div>
                                 <div class="options" id="env-options">
-                                    <i class="fa fa-ellipsis-v"></i>
+<!--                                    <i class="fa fa-ellipsis-v"></i>-->
                                 </div>
                             </div>
                         </div>

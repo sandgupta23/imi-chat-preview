@@ -26,7 +26,11 @@ export function sendMessageToBot(bot_access_token: string, enterprise_unique_nam
     };
     return makePostReq<ISendApiResp>({url, body, headerData})
         .then((data) => {
-            window.language = data.room.df_state.language || 'en';
+            window.language = data.room.df_state.language || 'en-IN';
+            window.dictate.setParams({
+                lang_local: window.language,
+                alt_lang: window.language
+            });
             environment.room = data.room;
             return data;
         })
@@ -66,7 +70,7 @@ export async function sendFeedback(body: { "bot_message_id": number, "feedback":
     const p = makePutReq<ISendApiResp>({url, body, headerData});
     ajaxPromises.push(p);
     await Promise.all(ajaxPromises) as any;
-    return  p;
+    return p;
 }
 
 

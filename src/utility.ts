@@ -81,8 +81,9 @@ export function showToaster(message) {
 
 export async function checkForTransliteration(input: string) {
     let finalInput = input;
+    debugger;
     let x
-    if (environment.use_lang_detection) {
+    if (!environment.use_lang_detection) {
         x = {
             inputParams:{
                 language: window.language

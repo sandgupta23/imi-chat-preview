@@ -179,13 +179,13 @@
         }
 
         //Sets the Params of the speech server
-        this.setParams = function () {
+        this.setParams = function (configArg = {}) {
             // config.lang_local=$("#langlocal").val();
             // config.alt_lang=$("#altlang").val();
             // config.sample_rate=$("#samplerate").val();
             // config.model_name=$("#modelname").val();
-            config.lang_local = 'en-IN'//$("#langlocal").val();
-            config.alt_lang = 'en-IN'//$("#altlang").val();
+            config.lang_local = configArg.lang_local || 'en-IN'//$("#langlocal").val();
+            config.alt_lang = configArg.alt_lang || 'en-IN'//$("#altlang").val();
             config.sample_rate = '16000'//$("#samplerate").val();
             config.model_name = 'google_beta'//$("#modelname").val();
         }
