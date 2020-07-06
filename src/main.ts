@@ -447,6 +447,7 @@ function initEvents(imiPreview: ImiPreview) {
 
 export async function humanMessageHandler(humanMessage: string, sourceType?) {
     // alert();
+    humanMessage = sanitizeHTML(humanMessage);
     AppendMessageInChatBody([{
         sourceType: sourceType || ESourceType.human,
         text: humanMessage,

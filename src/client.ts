@@ -1,11 +1,11 @@
-import {getBotDetails} from "./bot-details";
-import {IBotDetailsApiResp} from "./typings/bot-detaills-api";
-import {$chatFooter, $loader} from "./dom";
-import {getQueryStringValue} from "./utility";
-import {sendMessageToBot, socketKey} from "./send-api";
-import {environment} from "./environment";
-import {ESourceType} from "./typings/send-api";
-import {humanMessageHandler, initClientEvents, initEnvironment, sendFeedbackHandler} from "./main";
+import { getBotDetails } from "./bot-details";
+import { IBotDetailsApiResp } from "./typings/bot-detaills-api";
+import { $chatFooter, $loader } from "./dom";
+import { getQueryStringValue, sanitizeHTML } from "./utility";
+import { sendMessageToBot, socketKey } from "./send-api";
+import { environment } from "./environment";
+import { ESourceType } from "./typings/send-api";
+import { humanMessageHandler, initClientEvents, initEnvironment, sendFeedbackHandler } from "./main";
 
 let socket;
 let imiPreviewTemp;
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
     imiPreview.setSendFeedback(async (val, feedback) => {
         console.log(environment);
-
+        val.comment = sanitizeHTML(val.comment);
         await sendFeedbackHandler(val, feedback, imiPreview, botDetails);
     });
 
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     imiPreview.viewInit('.test-container', fullBody, phoneCasing);
     const $chatInput = document.getElementById('chat-input') as HTMLInputElement;
-    imiPreview.initAdditionalDom({$chatInput});
+    imiPreview.initAdditionalDom({ $chatInput });
     // imiPreview.
     // appendMessageInChatBody(data.generated_msg, data);
     // const botDetails = {description: "dummy description", logo: "dummy logo", title: "dummy title"};
@@ -77,21 +77,21 @@ document.addEventListener('DOMContentLoaded', async function () {
         },
         'imi_bot_middleware_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiVGhpcyBpcyBJTUkgQk9UIG1pZGRsZXdhcmUiLCJpYXQiOjE1Njc4ODc5MTAsImV4cCI6NDE1OTg4NzkxMH0.dYbMaf8HYMD5K532p7DpHN0cmru-JKMjst-WS9zi7u8'
     };
-    
+
     initializeSocketConnection(data);
 });
 
 let eventInit = false;
 function initializeSocketConnection(socketData) {
-    
+
     const url = 'https://rtm.imibot.ai';
     // const url = 'https://imi-bot-middleware.herokuapp.com';
     // const url = 'http://localhost:3000';
 
-    socket = window.io(url, {query: `data=${JSON.stringify(socketData)}`});
+    socket = window.io(url, { query: `data=${JSON.stringify(socketData)}` });
     socket.on('connect', () => {
         console.log('Client has CONNECTED to the server!');
-        if(eventInit === false){
+        if (eventInit === false) {
             initAllEvents();
             eventInit = true;
         }
