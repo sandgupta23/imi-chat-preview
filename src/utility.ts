@@ -1,4 +1,4 @@
-import {$chatBody} from "./dom";
+import { $chatBody } from "./dom";
 
 export function getTimeInHHMM(timeMS) {
     const time = timeMS ? new Date(timeMS) : new Date();
@@ -49,7 +49,7 @@ export function convertStringToDom(str: string) {
     // if (div.children.length === 0) {
     //     return [div.firstChild];
     // }else {
-        return div.children;
+    return div.children;
     // }
 }
 
@@ -75,4 +75,33 @@ export function showToaster(message) {
     setTimeout(function () {
         x.className = x.className.replace("show", "");
     }, 3000);
+}
+
+export function sanitizeHTML(html: string) {
+    if (!html || typeof html !== 'string') {
+        return html;
+    }
+    const tagBody = '(?:[^"\'>]|"[^"]*"|\'[^\']*\')*';
+    const tagOrComment = new RegExp(
+        '<(?:'
+        // Comment body.
+        + '!--(?:(?:-*[^->])*--+|-?)'
+        // Special "raw text" elements whose content should be elided.
+        + '|script\\b' + tagBody + '>[\\s\\S]*?</script\\s*'
+        + '|style\\b' + tagBody + '>[\\s\\S]*?</style\\s*'
+        // Regular name
+        + '|/?[a-z]'
+        + tagBody
+        + ')>',
+        'gi');
+    let oldHtml;
+    try {
+        do {
+            oldHtml = html;
+            html = html.replace(tagOrComment, '');
+        } while (html !== oldHtml);
+    } catch (e) {
+        console.log(e);
+    }
+    return html.replace(/</g, '&lt;');
 }

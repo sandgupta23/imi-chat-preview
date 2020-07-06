@@ -12,13 +12,13 @@ import {
     domInit, themeOptions,
     setOptions
 } from "./dom";
-import {getBotDetails} from "./bot-details";
-import {IBotDetailsApiResp} from "./typings/bot-detaills-api";
+import { getBotDetails } from "./bot-details";
+import { IBotDetailsApiResp } from "./typings/bot-detaills-api";
 import 'regenerator-runtime/runtime'
-import {sendFeedback, sendMessageToBot, serializeGeneratedMessagesToPreviewMessages} from "./send-api";
-import {environment} from "./environment";
-import {ESourceType, ISendApiResp, ISendApiResponsePayload} from "./typings/send-api";
-import {getQueryStringValue, scrollBodyToBottom, showToaster, updateQueryStringParameter} from "./utility";
+import { sendFeedback, sendMessageToBot, serializeGeneratedMessagesToPreviewMessages } from "./send-api";
+import { environment } from "./environment";
+import { ESourceType, ISendApiResp, ISendApiResponsePayload } from "./typings/send-api";
+import { getQueryStringValue, scrollBodyToBottom, showToaster, updateQueryStringParameter, sanitizeHTML } from "./utility";
 
 let isModelShown = false;
 
@@ -120,6 +120,7 @@ class ImiPreview {
     setSendHumanMessageCallback(cb) {
 
         this._cb = (humanMessage) => {
+            humanMessage = sanitizeHTML(humanMessage);
             try {
                 const downvoteCommentWrapper = document.querySelectorAll('.downvote-comment.d-flex');
                 Array.from(downvoteCommentWrapper).forEach((downvoteCommentBox: HTMLElement) => {
@@ -138,7 +139,7 @@ class ImiPreview {
     }
 
     setRoomInactiveMap(obj) {
-        this._roomInactiveMap = {...obj, ...this._roomInactiveMap};
+        this._roomInactiveMap = { ...obj, ...this._roomInactiveMap };
     }
 
     hideFeedbackPanelForTxnId(id) {
@@ -278,11 +279,11 @@ function initEvents(imiPreview: ImiPreview) {
                 $messageBubble.querySelector('.fa-spinner').classList.remove('d-none');
                 try {
                     if (feedbackNumber === 0 && target.classList.contains('downvote-comment-submit')) {
-                        await imiPreview._feedbackCB({txn, bot_message_id, comment}, feedbackNumber);
+                        await imiPreview._feedbackCB({ txn, bot_message_id, comment }, feedbackNumber);
                         x.querySelector('.final-label').innerText = 'Downvoted with comment';
 
                     } else {
-                        await imiPreview._feedbackCB({txn, bot_message_id}, feedbackNumber);
+                        await imiPreview._feedbackCB({ txn, bot_message_id }, feedbackNumber);
                     }
 
                     $feedbackWrapper.classList.remove('ask-feedback');
@@ -316,7 +317,7 @@ function initEvents(imiPreview: ImiPreview) {
                 // Get the modal
                 const modal = document.getElementById("myModal");
 
-// Get the image and insert it inside the modal - use its "alt" text as a caption
+                // Get the image and insert it inside the modal - use its "alt" text as a caption
                 const modalImg = document.getElementById("img01") as HTMLImageElement;
                 const captionText = document.getElementById("caption");
                 // img.onclick = function(){
@@ -325,10 +326,10 @@ function initEvents(imiPreview: ImiPreview) {
                 // captionText.innerHTML = this.alt;
                 // }
 
-// Get the <span> element that closes the modal
+                // Get the <span> element that closes the modal
                 const span = document.getElementsByClassName("close")[0] as HTMLElement;
 
-// When the user clicks on <span> (x), close the modal
+                // When the user clicks on <span> (x), close the modal
                 span.onclick = function () {
                     modal.style.display = "none";
                 }
