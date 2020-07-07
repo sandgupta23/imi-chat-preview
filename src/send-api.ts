@@ -26,7 +26,7 @@ export function sendMessageToBot(bot_access_token: string, enterprise_unique_nam
     };
     return makePostReq<ISendApiResp>({url, body, headerData})
         .then((data) => {
-            window.language = data.room.df_state.language || 'en-IN';
+            window.language = data.room.df_state.stt_lang || 'en-IN';
             window.dictate.setParams({
                 lang_local: window.language,
                 alt_lang: window.language
