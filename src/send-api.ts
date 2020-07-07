@@ -30,7 +30,7 @@ export function sendMessageToBot(bot_access_token: string, enterprise_unique_nam
             const language = data.room.df_state.language || 'en-IN';
             window.dictate.setParams({
                 lang_local: stt_lang,
-                alt_lang: language
+                alt_lang: stt_lang
             });
             environment.room = data.room;
             return data;
