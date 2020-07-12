@@ -245,7 +245,7 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
                 try {
                     frag.appendChild(child);
                 }catch (e) {
-                    debugger;
+
                     console.log(e);
                 }
             })

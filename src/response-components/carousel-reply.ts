@@ -1,5 +1,6 @@
 import {ESourceType} from "../typings/send-api";
 import {convertStringToDom} from "../utility";
+import {convertToLink} from "./link";
 
 export class CarouselReply {
     media;
@@ -39,14 +40,17 @@ export class CarouselReply {
     }
 
     createCarousalItems(mediaItem: any) {
+        debugger;
         let url = mediaItem.url.split("&").join("&amp;");
+        const desc = mediaItem.description? `<div class="description-text">${mediaItem.description}</div>`: `<div class="description-text">hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo </div>`;
         return `
     <div class="item">
             <div class="bot-carousal-item shadow-theme">
                 <div class="banner" style="background-image: url(${url})"></div>
                 <ul style="list-style: none">
-                    <li class="title" style="text-align: center">
-                        ${mediaItem.title}
+                    <li class="title-wrapper">
+                        <div class="title-text">${mediaItem.title}</div>
+                        ${desc}
                     </li>
                     ${this.createCarousalButtons(mediaItem.buttons)}
                 </ul>
@@ -59,7 +63,9 @@ export class CarouselReply {
         let str = "";
         buttons.forEach((button) => {
             str = str + `
-            <li class="action" data-payload="${button.payload}" data-type="${button.type}">${button.title}</li>
+            <li class="action" data-payload="${button.payload}" data-type="${button.type}">
+                <div class="link-wrapper" data-payload="${button.payload}">${convertToLink(button.title, null , `<i style="margin-right: 5px" class="fa fa-external-link"></i> `)}</div>
+            </li>
         `;
         });
         return str;

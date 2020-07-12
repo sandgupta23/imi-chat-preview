@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const fullBody = true;//getQueryStringValue('fullbody') === "true";
     const phoneCasing = getQueryStringValue('phonecasing') === "true";
+    environment.options.phoneCasing = phoneCasing;
     const brandColor = getQueryStringValue('brandcolor') || "#2b4f70";
     brandColor = brandColor.replace('_', '#');
 

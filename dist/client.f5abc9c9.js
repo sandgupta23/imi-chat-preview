@@ -134,7 +134,10 @@ exports.environment = {
   room: {
     id: null
   },
-  logo: ""
+  logo: "",
+  options: {
+    phoneCasing: false
+  }
 };
 },{}],"ajax.ts":[function(require,module,exports) {
 "use strict";
@@ -400,11 +403,16 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-function convertToLink(inputText, className) {
+function convertToLink(inputText, className, prefix) {
   if (className === void 0) {
     className = "text-link";
   }
 
+  if (prefix === void 0) {
+    prefix = "";
+  }
+
+  debugger;
   var inputTextWithoutBr = inputText.split('<br>').join('');
 
   if (inputTextWithoutBr.includes('<') && inputTextWithoutBr.includes('>')) {
@@ -413,9 +421,9 @@ function convertToLink(inputText, className) {
 
   var replacedText, replacePattern1, replacePattern2;
   replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
-  replacedText = inputText.replace(replacePattern1, "<a href=\"$1\" target=\"_blank\" class=\"" + className + "\">$1</a>");
+  replacedText = inputText.replace(replacePattern1, "<a href=\"$1\" target=\"_blank\" class=\"" + className + "\">" + prefix + "$1</a>");
   replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
-  replacedText = replacedText.replace(replacePattern2, "$1<a href=\"http://$2\" class=\"" + className + " target=\"_blank\">$2</a>");
+  replacedText = replacedText.replace(replacePattern2, "$1<a href=\"http://$2\" class=\"" + className + " target=\"_blank\">" + prefix + "$2</a>");
   return replacedText;
 }
 
@@ -523,6 +531,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var utility_1 = require("../utility");
 
+var link_1 = require("./link");
+
 var CarouselReply = function () {
   function CarouselReply(message) {
     this.media = message;
@@ -556,14 +566,16 @@ var CarouselReply = function () {
   };
 
   CarouselReply.prototype.createCarousalItems = function (mediaItem) {
+    debugger;
     var url = mediaItem.url.split("&").join("&amp;");
-    return "\n    <div class=\"item\">\n            <div class=\"bot-carousal-item shadow-theme\">\n                <div class=\"banner\" style=\"background-image: url(" + url + ")\"></div>\n                <ul style=\"list-style: none\">\n                    <li class=\"title\" style=\"text-align: center\">\n                        " + mediaItem.title + "\n                    </li>\n                    " + this.createCarousalButtons(mediaItem.buttons) + "\n                </ul>\n            </div>\n        </div>\n    ";
+    var desc = mediaItem.description ? "<div class=\"description-text\">" + mediaItem.description + "</div>" : "<div class=\"description-text\">hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo </div>";
+    return "\n    <div class=\"item\">\n            <div class=\"bot-carousal-item shadow-theme\">\n                <div class=\"banner\" style=\"background-image: url(" + url + ")\"></div>\n                <ul style=\"list-style: none\">\n                    <li class=\"title-wrapper\">\n                        <div class=\"title-text\">" + mediaItem.title + "</div>\n                        " + desc + "\n                    </li>\n                    " + this.createCarousalButtons(mediaItem.buttons) + "\n                </ul>\n            </div>\n        </div>\n    ";
   };
 
   CarouselReply.prototype.createCarousalButtons = function (buttons) {
     var str = "";
     buttons.forEach(function (button) {
-      str = str + ("\n            <li class=\"action\" data-payload=\"" + button.payload + "\" data-type=\"" + button.type + "\">" + button.title + "</li>\n        ");
+      str = str + ("\n            <li class=\"action\" data-payload=\"" + button.payload + "\" data-type=\"" + button.type + "\">\n                <div class=\"link-wrapper\" data-payload=\"" + button.payload + "\">" + link_1.convertToLink(button.title, null, "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> ") + "</div>\n            </li>\n        ");
     });
     return str;
   };
@@ -572,7 +584,7 @@ var CarouselReply = function () {
 }();
 
 exports.CarouselReply = CarouselReply;
-},{"../utility":"utility.ts"}],"response-components/audio-reply.ts":[function(require,module,exports) {
+},{"../utility":"utility.ts","./link":"response-components/link.ts"}],"response-components/audio-reply.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -918,7 +930,6 @@ function AppendMessageInChatBody(messages, botResponse, hideFeedback) {
         try {
           frag.appendChild(child);
         } catch (e) {
-          debugger;
           console.log(e);
         }
       });
@@ -2506,7 +2517,7 @@ function initEvents(imiPreview) {
 
             try {
               if (target.classList.contains('control')) {
-                itemInView = 2;
+                itemInView = environment_1.environment.options.phoneCasing ? 1 : 2;
                 $carasalContainer_1 = findParentWithClass(target, 'carousal-container');
                 shouldMoveRight = target.classList.contains('control-right');
                 $carasalInner = $carasalContainer_1.querySelector('.carousal-container-inner');
@@ -3013,6 +3024,7 @@ document.addEventListener('DOMContentLoaded', function () {
           });
           fullBody = true;
           phoneCasing = utility_1.getQueryStringValue('phonecasing') === "true";
+          environment_1.environment.options.phoneCasing = phoneCasing;
           brandColor = utility_1.getQueryStringValue('brandcolor') || "#2b4f70";
           brandColor = brandColor.replace('_', '#');
           imiPreview.viewInit('.test-container', fullBody, phoneCasing);
@@ -3102,7 +3114,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49165" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58009" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -3133,9 +3145,8 @@ if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
         assetsToAccept.forEach(function (v) {
           hmrAcceptRun(v[0], v[1]);
         });
-      } else if (location.reload) {
-        // `location` global exists in a web worker context but lacks `.reload()` function.
-        location.reload();
+      } else {
+        window.location.reload();
       }
     }
 

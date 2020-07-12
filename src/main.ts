@@ -12,13 +12,19 @@ import {
     domInit, themeOptions,
     setOptions
 } from "./dom";
-import { getBotDetails } from "./bot-details";
-import { IBotDetailsApiResp } from "./typings/bot-detaills-api";
+import {getBotDetails} from "./bot-details";
+import {IBotDetailsApiResp} from "./typings/bot-detaills-api";
 import 'regenerator-runtime/runtime'
-import { sendFeedback, sendMessageToBot, serializeGeneratedMessagesToPreviewMessages } from "./send-api";
-import { environment } from "./environment";
-import { ESourceType, ISendApiResp, ISendApiResponsePayload } from "./typings/send-api";
-import { getQueryStringValue, scrollBodyToBottom, showToaster, updateQueryStringParameter, sanitizeHTML } from "./utility";
+import {sendFeedback, sendMessageToBot, serializeGeneratedMessagesToPreviewMessages} from "./send-api";
+import {environment} from "./environment";
+import {ESourceType, ISendApiResp, ISendApiResponsePayload} from "./typings/send-api";
+import {
+    getQueryStringValue,
+    scrollBodyToBottom,
+    showToaster,
+    updateQueryStringParameter,
+    sanitizeHTML
+} from "./utility";
 
 let isModelShown = false;
 
@@ -139,7 +145,7 @@ class ImiPreview {
     }
 
     setRoomInactiveMap(obj) {
-        this._roomInactiveMap = { ...obj, ...this._roomInactiveMap };
+        this._roomInactiveMap = {...obj, ...this._roomInactiveMap};
     }
 
     hideFeedbackPanelForTxnId(id) {
@@ -279,11 +285,11 @@ function initEvents(imiPreview: ImiPreview) {
                 $messageBubble.querySelector('.fa-spinner').classList.remove('d-none');
                 try {
                     if (feedbackNumber === 0 && target.classList.contains('downvote-comment-submit')) {
-                        await imiPreview._feedbackCB({ txn, bot_message_id, comment }, feedbackNumber);
+                        await imiPreview._feedbackCB({txn, bot_message_id, comment}, feedbackNumber);
                         x.querySelector('.final-label').innerText = 'Downvoted with comment';
 
                     } else {
-                        await imiPreview._feedbackCB({ txn, bot_message_id }, feedbackNumber);
+                        await imiPreview._feedbackCB({txn, bot_message_id}, feedbackNumber);
                     }
 
                     $feedbackWrapper.classList.remove('ask-feedback');
@@ -343,7 +349,8 @@ function initEvents(imiPreview: ImiPreview) {
 
         try {
             if (target.classList.contains('control')) {
-                const itemInView = 2;
+
+                const itemInView = environment.options.phoneCasing ? 1 : 2;
                 const $carasalContainer = findParentWithClass(target, 'carousal-container') as HTMLElement;
                 const shouldMoveRight = target.classList.contains('control-right');
                 const $carasalInner = $carasalContainer.querySelector('.carousal-container-inner') as HTMLElement;

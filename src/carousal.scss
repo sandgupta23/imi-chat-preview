@@ -83,11 +83,11 @@
 
 
   .item {
-    width: 50%;
-    max-width: 225px;
+    width: 100%;
+    max-width: 300px;
     background: white;
     flex-shrink: 0;
-    border-radius: 8px;
+    //border-radius: 8px;
     overflow: hidden;
     //box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.15);
   }
@@ -100,19 +100,21 @@
   margin-right: 2px;
   margin-left: 2px;
   overflow: hidden;
-  border-radius: 8px;
+  //border-radius: 8px;
 
   .banner {
-    height: 160px;
+    height: 0;
+    padding: 28.125%;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     background-size: cover;
+    background-position: center;
   }
 
-  .action, .title {
-    min-height: 45px;
+  .action, .title-wrapper {
+    min-height: 32px;
     @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
       /* IE10+ CSS1.1 here */
       height: 45px;
@@ -121,16 +123,45 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    //align-items: center;
+    flex-direction: column;
+    padding: 5px;
     border-top: 1px solid rgba(0, 0, 0, .125);
+
+    .title-text {
+      font-weight: 600;
+      margin-bottom: 6px;
+
+      /*https://stackoverflow.com/questions/3922739/limit-text-length-to-n-lines-using-css*/
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3; /* number of lines to show */
+      -webkit-box-orient: vertical;
+    }
+
+    .description-text {
+      margin-bottom: 6px;
+
+      /*https://stackoverflow.com/questions/3922739/limit-text-length-to-n-lines-using-css*/
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 5; /* number of lines to show */
+      -webkit-box-orient: vertical;
+    }
   }
 
   .action {
+    text-align: center;
     cursor: pointer;
-  }
-
-  .title {
-    height: 60px;
+    display: flex; /*limit oneline doesn't work om flex*/
+    .link-wrapper {
+      align-items: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }
 

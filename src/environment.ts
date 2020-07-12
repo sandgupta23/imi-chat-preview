@@ -9,6 +9,9 @@ export const environment = {
         room: {
             id: null
         },
-        logo: ""
+        logo: "",
+        options:{
+            phoneCasing: false
+        }
     }
 ;
