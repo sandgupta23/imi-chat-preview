@@ -349,7 +349,7 @@ function initEvents(imiPreview: ImiPreview) {
 
         try {
             if (target.classList.contains('control')) {
-                debugger;
+
                 const itemInView = environment.options.phoneCasing ? 1 : 2;
                 const $carasalContainer = findParentWithClass(target, 'carousal-container') as HTMLElement;
                 const shouldMoveRight = target.classList.contains('control-right');

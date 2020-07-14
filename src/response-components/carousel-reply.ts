@@ -1,5 +1,5 @@
 import {ESourceType} from "../typings/send-api";
-import {convertStringToDom} from "../utility";
+import {convertStringToDom, showToaster} from "../utility";
 import {convertToLink} from "./link";
 import {environment} from "../environment";
 
@@ -16,7 +16,7 @@ export class CarouselReply {
     }
 
     getTemplate(text, source?: ESourceType) {
-        debugger;
+
         const carousalStr = this.createCarousalStr(this.media);
         let controlStr = `<div class="fa fa-angle-left control control-left"></div>
                    <div class="fa fa-angle-right control control-right"></div>`;
@@ -62,16 +62,21 @@ export class CarouselReply {
     }
 
     createCarousalButtons(buttons) {
-        debugger;
+
         let str = "";
         buttons.forEach((button) => {
-            const btnText = button.type === 'url'?
+            debugger;
+            let payload = button.type === 'url'? '' : button.payload;
+            let btnText = button.type === 'url'?
                 convertToLink(button.title, null , `<i style="margin-right: 5px" class="fa fa-external-link"></i> `)
                 : button.title;
-            const payload = button.type === 'url'? '' : button.payload;
+            if(btnText === button.title){ /*title is not a link*/
+                btnText = `<i style="margin-right: 5px" class="fa fa-external-link"></i> ` + btnText;
+                payload = "__invalid_link__";
+            }
             str = str + `
             <li class="action" data-payload="${payload}" data-type="${button.type}">
-                <div class="link-wrapper" data-payload="${button.payload}">${btnText}</div>
+                <div class="link-wrapper" data-payload="${payload}">${btnText}</div>
             </li>
         `;
         });

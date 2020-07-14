@@ -1,7 +1,7 @@
 import { getBotDetails } from "./bot-details";
 import { IBotDetailsApiResp } from "./typings/bot-detaills-api";
 import { $chatFooter, $loader } from "./dom";
-import { getQueryStringValue, sanitizeHTML } from "./utility";
+import {getQueryStringValue, sanitizeHTML, showToaster} from "./utility";
 import { sendMessageToBot, socketKey } from "./send-api";
 import { environment } from "./environment";
 import { ESourceType } from "./typings/send-api";
@@ -36,6 +36,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     const imiPreview = new ImiPreview();
     imiPreviewTemp = imiPreview;
     imiPreview.setSendHumanMessageCallback((val) => {
+        if(val === '__invalid_link__'){
+            showToaster('Invalid url');
+            return;
+        }
         humanMessageHandler(val);
     });
     imiPreview.setSendFeedback(async (val, feedback) => {
