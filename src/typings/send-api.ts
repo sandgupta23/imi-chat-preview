@@ -264,7 +264,7 @@ export enum EBotMessageMediaType {
     bot_thinking = 'bot_thinking'
 }
 
-export enum ESourceType {
+export enum     ESourceType {
     bot = "bot",
     human = "human",
 }

@@ -35,12 +35,12 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const imiPreview = new ImiPreview();
     imiPreviewTemp = imiPreview;
-    imiPreview.setSendHumanMessageCallback((val) => {
+    imiPreview.setSendHumanMessageCallback((val, val1) => {
         if(val === '__invalid_link__'){
             showToaster('Invalid url');
             return;
         }
-        humanMessageHandler(val);
+        humanMessageHandler(val, ESourceType.human, val1);
     });
     imiPreview.setSendFeedback(async (val, feedback) => {
         console.log(environment);

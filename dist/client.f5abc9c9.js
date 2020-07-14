@@ -2309,7 +2309,9 @@ var ImiPreview = function () {
   };
 
   ImiPreview.prototype.setSendHumanMessageCallback = function (cb) {
-    this._cb = function (humanMessage) {
+    this._cb = function (humanMessage, humanMessage1) {
+      debugger;
+
       if (!humanMessage) {
         return;
       }
@@ -2324,7 +2326,7 @@ var ImiPreview = function () {
         });
       } catch (e) {}
 
-      cb(humanMessage);
+      cb(humanMessage, humanMessage1);
     };
   };
 
@@ -2507,7 +2509,7 @@ function initEvents(imiPreview) {
 
           case 8:
             if (target.hasAttribute('data-payload')) {
-              imiPreview._cb(target.getAttribute('data-payload'));
+              imiPreview._cb(target.getAttribute('data-payload'), target.textContent);
 
               return [2];
             }
@@ -2648,7 +2650,7 @@ function initEvents(imiPreview) {
   }
 }
 
-function humanMessageHandler(humanMessage, sourceType) {
+function humanMessageHandler(humanMessage, sourceType, humanMessage1) {
   return __awaiter(this, void 0, void 0, function () {
     var botResponse, messageData;
     return __generator(this, function (_a) {
@@ -2657,7 +2659,7 @@ function humanMessageHandler(humanMessage, sourceType) {
           humanMessage = utility_1.sanitizeHTML(humanMessage);
           dom_1.AppendMessageInChatBody([{
             sourceType: sourceType || send_api_2.ESourceType.human,
-            text: humanMessage,
+            text: humanMessage1 || humanMessage,
             time: Date.now()
           }]);
           return [4, send_api_1.sendMessageToBot(environment_1.environment.bot_access_token, environment_1.environment.enterprise_unique_name, humanMessage)];
@@ -3026,13 +3028,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
           imiPreview = new ImiPreview();
           imiPreviewTemp = imiPreview;
-          imiPreview.setSendHumanMessageCallback(function (val) {
+          imiPreview.setSendHumanMessageCallback(function (val, val1) {
             if (val === '__invalid_link__') {
               utility_1.showToaster('Invalid url');
               return;
             }
 
-            main_1.humanMessageHandler(val);
+            main_1.humanMessageHandler(val, send_api_2.ESourceType.human, val1);
           });
           imiPreview.setSendFeedback(function (val, feedback) {
             return __awaiter(_this, void 0, void 0, function () {

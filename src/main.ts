@@ -125,7 +125,8 @@ class ImiPreview {
 
     setSendHumanMessageCallback(cb) {
 
-        this._cb = (humanMessage) => {
+        this._cb = (humanMessage, humanMessage1) => {
+            debugger;
             if (!humanMessage) {
                 return;
             }
@@ -139,7 +140,7 @@ class ImiPreview {
             } catch (e) {
 
             }
-            cb(humanMessage);
+            cb(humanMessage, humanMessage1);
         }
     }
 
@@ -309,7 +310,8 @@ function initEvents(imiPreview: ImiPreview) {
             }
         }
         if (target.hasAttribute('data-payload')) {
-            imiPreview._cb(target.getAttribute('data-payload'));
+
+            imiPreview._cb(target.getAttribute('data-payload'), target.textContent);
             return;
         }
 
@@ -455,12 +457,12 @@ function initEvents(imiPreview: ImiPreview) {
 
 }
 
-export async function humanMessageHandler(humanMessage: string, sourceType?) {
+export async function humanMessageHandler(humanMessage: string, sourceType?, humanMessage1?: string,) {
     // alert();
     humanMessage = sanitizeHTML(humanMessage);
     AppendMessageInChatBody([{
         sourceType: sourceType || ESourceType.human,
-        text: humanMessage,
+        text: humanMessage1 || humanMessage,
         time: Date.now()
     }]);
 
