@@ -349,7 +349,7 @@ function initEvents(imiPreview: ImiPreview) {
 
         try {
             if (target.classList.contains('control')) {
-
+                debugger;
                 const itemInView = environment.options.phoneCasing ? 1 : 2;
                 const $carasalContainer = findParentWithClass(target, 'carousal-container') as HTMLElement;
                 const shouldMoveRight = target.classList.contains('control-right');
@@ -711,7 +711,7 @@ function getPhoneCoverTemplate(isRtl?) {
                                     onerror="this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'" 
                                        alt="">
                                 </span>
-                                <div class="bot-details" style="margin-left: ${isRtl ? '42px' : '-42px'}">
+                                <div class="bot-details">
                                     <div id="bot-title" style="text-align: center" ></div>
                                 </div>
                                 <div style="width: 50px">

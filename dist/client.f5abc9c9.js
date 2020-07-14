@@ -533,6 +533,8 @@ var utility_1 = require("../utility");
 
 var link_1 = require("./link");
 
+var environment_1 = require("../environment");
+
 var CarouselReply = function () {
   function CarouselReply(message) {
     this.media = message;
@@ -545,10 +547,12 @@ var CarouselReply = function () {
   };
 
   CarouselReply.prototype.getTemplate = function (text, source) {
+    debugger;
     var carousalStr = this.createCarousalStr(this.media);
     var controlStr = "<div class=\"fa fa-angle-left control control-left\"></div>\n                   <div class=\"fa fa-angle-right control control-right\"></div>";
+    var itemInView = environment_1.environment.options.phoneCasing ? 1 : 2;
 
-    if (this.media.length <= 2) {
+    if (this.media.length <= itemInView) {
       controlStr = "";
     }
 
@@ -566,16 +570,18 @@ var CarouselReply = function () {
   };
 
   CarouselReply.prototype.createCarousalItems = function (mediaItem) {
-    debugger;
     var url = mediaItem.url.split("&").join("&amp;");
-    var desc = mediaItem.description ? "<div class=\"description-text\">" + mediaItem.description + "</div>" : "<div class=\"description-text\">hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo hrllo </div>";
+    var desc = mediaItem.description ? "<div class=\"description-text\">" + mediaItem.description + "</div>" : "";
     return "\n    <div class=\"item\">\n            <div class=\"bot-carousal-item shadow-theme\">\n                <div class=\"banner\" style=\"background-image: url(" + url + ")\"></div>\n                <ul style=\"list-style: none\">\n                    <li class=\"title-wrapper\">\n                        <div class=\"title-text\">" + mediaItem.title + "</div>\n                        " + desc + "\n                    </li>\n                    " + this.createCarousalButtons(mediaItem.buttons) + "\n                </ul>\n            </div>\n        </div>\n    ";
   };
 
   CarouselReply.prototype.createCarousalButtons = function (buttons) {
+    debugger;
     var str = "";
     buttons.forEach(function (button) {
-      str = str + ("\n            <li class=\"action\" data-payload=\"" + button.payload + "\" data-type=\"" + button.type + "\">\n                <div class=\"link-wrapper\" data-payload=\"" + button.payload + "\">" + link_1.convertToLink(button.title, null, "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> ") + "</div>\n            </li>\n        ");
+      var btnText = button.type === 'url' ? link_1.convertToLink(button.title, null, "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> ") : button.title;
+      var payload = button.type === 'url' ? '' : button.payload;
+      str = str + ("\n            <li class=\"action\" data-payload=\"" + payload + "\" data-type=\"" + button.type + "\">\n                <div class=\"link-wrapper\" data-payload=\"" + button.payload + "\">" + btnText + "</div>\n            </li>\n        ");
     });
     return str;
   };
@@ -584,7 +590,7 @@ var CarouselReply = function () {
 }();
 
 exports.CarouselReply = CarouselReply;
-},{"../utility":"utility.ts","./link":"response-components/link.ts"}],"response-components/audio-reply.ts":[function(require,module,exports) {
+},{"../utility":"utility.ts","./link":"response-components/link.ts","../environment":"environment.ts"}],"response-components/audio-reply.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2517,6 +2523,7 @@ function initEvents(imiPreview) {
 
             try {
               if (target.classList.contains('control')) {
+                debugger;
                 itemInView = environment_1.environment.options.phoneCasing ? 1 : 2;
                 $carasalContainer_1 = findParentWithClass(target, 'carousal-container');
                 shouldMoveRight = target.classList.contains('control-right');
@@ -2788,7 +2795,7 @@ function getFullBodyExceptPhoneCover(isRtl) {
 }
 
 function getPhoneCoverTemplate(isRtl) {
-  return "\n    <div class=\"page1\">\n    <div class=\"page__content\">\n        <div class=\"phone\">\n        <div id=\"snackbar\"></div>\n            <div class=\"phone__body\">\n                <div class=\"phone__view\">\n                    <div id=\"phone-modal\" class=\"modal1\" style=\"\">\n                        <i class=\"fa fa-times\" id=\"close-modal1\"></i>\n                        <div class=\"lang-panel\">\n                            <h1>Select language</h1>\n                            <div>\n                                <select id=\"lang-select\">\n                                    <option value=\"en\">English</option>\n                                    <option value=\"ar\" style=\"direction: rtl;\">\u0639\u0631\u0628\u064A</option>\n                                </select>\n                            </div>\n                            <button class=\"imi-button-primary\" id=\"lang-submit\">Submit</button>\n                        </div>\n                    </div>\n                    <div class=\"imi-preview-grid-container\">\n\n                        <div class=\"header\" dir=\"" + (isRtl ? 'rtl' : 'ltr') + "\" style=\"z-index: 1\">\n                            <div class=\"basel-bg\"></div>\n                            <div class=\"bot-intro\" id=\"botIntro\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\"\n                                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\" \n                                       alt=\"\">\n                                </span>\n                                <div class=\"bot-details\" style=\"margin-left: " + (isRtl ? '42px' : '-42px') + "\">\n                                    <div id=\"bot-title\" style=\"text-align: center\" ></div>\n                                </div>\n                                <div style=\"width: 50px\">\n                                <div class=\"options\" id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n</div>\n                            </div>\n                        </div>\n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"padding: 8px 12px; display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        <!--chat body ends-->\n                        <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"phone__notch\">\n                    <div class=\"phone__speaker\"></div>\n                    <div class=\"phone__camera\"></div>\n                </div>\n            </div>\n            <div class=\"phone__btn\">\n                <button class=\"phone__btn--power\"></button>\n                <div class=\"phone__btn--volume\">\n                    <button class=\"phone__btn--volume-up\"></button>\n                    <button class=\"phone__btn--volume-down\"></button>\n                </div>\n                <button class=\"phone__btn--mute\"></button>\n            </div>\n        </div>\n    </div>\n</div>\n    ";
+  return "\n    <div class=\"page1\">\n    <div class=\"page__content\">\n        <div class=\"phone\">\n        <div id=\"snackbar\"></div>\n            <div class=\"phone__body\">\n                <div class=\"phone__view\">\n                    <div id=\"phone-modal\" class=\"modal1\" style=\"\">\n                        <i class=\"fa fa-times\" id=\"close-modal1\"></i>\n                        <div class=\"lang-panel\">\n                            <h1>Select language</h1>\n                            <div>\n                                <select id=\"lang-select\">\n                                    <option value=\"en\">English</option>\n                                    <option value=\"ar\" style=\"direction: rtl;\">\u0639\u0631\u0628\u064A</option>\n                                </select>\n                            </div>\n                            <button class=\"imi-button-primary\" id=\"lang-submit\">Submit</button>\n                        </div>\n                    </div>\n                    <div class=\"imi-preview-grid-container\">\n\n                        <div class=\"header\" dir=\"" + (isRtl ? 'rtl' : 'ltr') + "\" style=\"z-index: 1\">\n                            <div class=\"basel-bg\"></div>\n                            <div class=\"bot-intro\" id=\"botIntro\">\n                                <span class=\"bot-logo\">\n                                    <img id=\"bot-logo\"\n                                    onerror=\"this.src='https://imibot-production.s3-eu-west-1.amazonaws.com/integrations/v2/default-fallback-image.png'\" \n                                       alt=\"\">\n                                </span>\n                                <div class=\"bot-details\">\n                                    <div id=\"bot-title\" style=\"text-align: center\" ></div>\n                                </div>\n                                <div style=\"width: 50px\">\n                                <div class=\"options\" id=\"env-options\">\n                                    <i class=\"fa fa-ellipsis-v\"></i>\n                                </div>\n</div>\n                            </div>\n                        </div>\n                        <!--chat body starts-->\n                        <div class=\"chat-body\" id=\"body\"\n                             style=\"padding: 8px 12px; display: flex; flex-direction: column; z-index: 0\">\n\n                        </div>\n                        <!--chat body ends-->\n                        <div class=\"footer\">\n                            <input placeholder=\"Type a message\" id=\"chat-input\" dir=\"ltr\" autocomplete=\"off\" autofocus\n                                   type=\"text\">\n                            <span class=\"icon\" id=\"chat-input-icon\">\n                                <span class=\"fa fa-send\"></span>\n                            </span>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"phone__notch\">\n                    <div class=\"phone__speaker\"></div>\n                    <div class=\"phone__camera\"></div>\n                </div>\n            </div>\n            <div class=\"phone__btn\">\n                <button class=\"phone__btn--power\"></button>\n                <div class=\"phone__btn--volume\">\n                    <button class=\"phone__btn--volume-up\"></button>\n                    <button class=\"phone__btn--volume-down\"></button>\n                </div>\n                <button class=\"phone__btn--mute\"></button>\n            </div>\n        </div>\n    </div>\n</div>\n    ";
 }
 
 function getHeaderTemplate() {
@@ -3114,7 +3121,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58009" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50862" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
