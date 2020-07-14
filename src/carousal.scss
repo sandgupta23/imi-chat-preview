@@ -156,12 +156,6 @@
     text-align: center;
     cursor: pointer;
     display: flex; /*limit oneline doesn't work om flex*/
-    .link-wrapper {
-      align-items: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
   }
 }
 

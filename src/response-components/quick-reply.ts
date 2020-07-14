@@ -27,7 +27,15 @@ export class QuickReply {
     createQuickReplyButtons(quick_reply) {
         let str = "";
         quick_reply.quick_replies.forEach((quick_reply) => {
-            str = str + `<button data-payload="${quick_reply.payload}">${quick_reply.title}</button>`
+            let payload = quick_reply.content_type === 'url'? '' : quick_reply.payload;
+            let btnText = quick_reply.content_type === 'url'?
+                convertToLink(quick_reply.title, null , `<i style="margin-right: 5px" class="fa fa-external-link"></i> `)
+                : quick_reply.title;
+            if(btnText === quick_reply.title && quick_reply.content_type === 'url'){ /*title is not a link*/
+                btnText = `<i style="margin-right: 5px" class="fa fa-external-link"></i> ` + btnText;
+                payload = "__invalid_link__";
+            }
+            str = str + `<button class="link-wrapper bot-link" data-payload="${payload}">${btnText}</button>`
         });
 
         return str;

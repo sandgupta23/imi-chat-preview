@@ -70,7 +70,7 @@ export class CarouselReply {
             let btnText = button.type === 'url'?
                 convertToLink(button.title, null , `<i style="margin-right: 5px" class="fa fa-external-link"></i> `)
                 : button.title;
-            if(btnText === button.title){ /*title is not a link*/
+            if(btnText === button.title && button.content_type === 'url'){ /*title is not a link*/
                 btnText = `<i style="margin-right: 5px" class="fa fa-external-link"></i> ` + btnText;
                 payload = "__invalid_link__";
             }

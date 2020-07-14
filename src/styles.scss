@@ -856,3 +856,17 @@ ul, li {
     color: white !important;
   }
 }
+
+.link-wrapper {
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+}
+
+.bot-link{
+  *{
+    color: white !important;
+  }
+}

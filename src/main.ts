@@ -126,6 +126,9 @@ class ImiPreview {
     setSendHumanMessageCallback(cb) {
 
         this._cb = (humanMessage) => {
+            if (!humanMessage) {
+                return;
+            }
             humanMessage = sanitizeHTML(humanMessage);
             try {
                 const downvoteCommentWrapper = document.querySelectorAll('.downvote-comment.d-flex');
