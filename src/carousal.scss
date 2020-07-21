@@ -60,20 +60,20 @@
     align-items: center;
     justify-content: center;
     top: 50%;
-    width: 25px;
-    height: 25px;
+    width: 18px;
+    height: 18px;
     transform: translateY(-50%);
-    font-size: 16px;
+    font-size: 13px;
     color: var(--color-brand); //rgba(0, 0, 0, .125);
     border-radius: 50%;
     cursor: pointer;
 
     &.control-left {
-      left: -9px
+      left: -7px
     }
 
     &.control-right {
-      right: -9px;
+      right: -7px;
     }
   }
 }
@@ -135,7 +135,7 @@
     justify-content: center;
     //align-items: center;
     flex-direction: column;
-    padding: 5px;
+    padding: 8px;
     border-top: 1px solid rgba(0, 0, 0, .125);
 
     .title-text {
