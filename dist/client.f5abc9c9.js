@@ -564,7 +564,7 @@ var CarouselReply = function () {
       controlStr = "";
     }
 
-    return "\n               <div class=\"carousal-container hide-left-control\" data-step=\"0\">\n                   <div class=\"carousal-container-inner\">\n                        " + carousalStr + "\n                   </div>\n                    " + controlStr + "\n                </div>\n            ";
+    return "\n               <div class=\"carousal-container hide-left-control\" style=\"overflow: visible\" data-step=\"0\">\n                   <div style=\"overflow:auto;\">\n                       <div style=\"overflow: auto; display: block; justify-content: center\">\n                           <div class=\"carousal-container-inner\">\n                                " + carousalStr + "\n                           </div>\n                        </div>\n                    </div>\n                    " + controlStr + "\n                </div>\n            ";
   };
 
   CarouselReply.prototype.createCarousalStr = function (media) {
@@ -586,7 +586,6 @@ var CarouselReply = function () {
   CarouselReply.prototype.createCarousalButtons = function (buttons) {
     var str = "";
     buttons.forEach(function (button) {
-      debugger;
       var payload = button.type === 'url' ? '' : button.payload;
       var btnText = button.type === 'url' ? link_1.convertToLink(button.url, null, "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> " + button.title) : button.title;
 
@@ -3146,7 +3145,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61183" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50342" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

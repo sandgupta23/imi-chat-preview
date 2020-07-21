@@ -69,12 +69,21 @@
     cursor: pointer;
 
     &.control-left {
-      left: 5px
+      left: -9px
     }
 
     &.control-right {
-      right: 5px;
+      right: -9px;
     }
+  }
+}
+.phone__body{
+  .control-left {
+    left: -9px
+  }
+
+  .control-right {
+    right: -9px;
   }
 }
 

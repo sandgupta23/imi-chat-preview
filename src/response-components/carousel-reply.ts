@@ -25,10 +25,14 @@ export class CarouselReply {
             controlStr = "";
         }
         return `
-               <div class="carousal-container hide-left-control" data-step="0">
-                   <div class="carousal-container-inner">
-                        ${carousalStr}
-                   </div>
+               <div class="carousal-container hide-left-control" style="overflow: visible" data-step="0">
+                   <div style="overflow:auto;">
+                       <div style="overflow: auto; display: block; justify-content: center">
+                           <div class="carousal-container-inner">
+                                ${carousalStr}
+                           </div>
+                        </div>
+                    </div>
                     ${controlStr}
                 </div>
             `;
@@ -65,7 +69,7 @@ export class CarouselReply {
 
         let str = "";
         buttons.forEach((button) => {
-            debugger;
+
             let payload = button.type === 'url'? '' : button.payload;
             let btnText = button.type === 'url'?
                 convertToLink(button.url, null , `<i style="margin-right: 5px" class="fa fa-external-link"></i> ${button.title}`)
