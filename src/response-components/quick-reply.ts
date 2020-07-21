@@ -29,7 +29,7 @@ export class QuickReply {
         quick_reply.quick_replies.forEach((quick_reply) => {
             let payload = quick_reply.content_type === 'url'? '' : quick_reply.payload;
             let btnText = quick_reply.content_type === 'url'?
-                convertToLink(quick_reply.title, null , `<i style="margin-right: 5px" class="fa fa-external-link"></i> `)
+                convertToLink(quick_reply.url, null , `<i style="margin-right: 5px" class="fa fa-external-link"></i> ${quick_reply.title}`)
                 : quick_reply.title;
             if(btnText === quick_reply.title && quick_reply.content_type === 'url'){ /*title is not a link*/
                 btnText = `<i style="margin-right: 5px" class="fa fa-external-link"></i> ` + btnText;

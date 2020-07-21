@@ -234,6 +234,8 @@ export function AppendMessageInChatBody(messages: IMessageData[], botResponse: I
     // const el = document.createElement('DIV');
     let carousal;
     if (str) {
+
+        wrapper.style.maxWidth = '100% !important'  ;
         const el = document.createElement('template');
         el.innerHTML = str;
         carousal = el.content.querySelector('.carousal-container') as HTMLElement;

@@ -68,7 +68,7 @@ export class CarouselReply {
             debugger;
             let payload = button.type === 'url'? '' : button.payload;
             let btnText = button.type === 'url'?
-                convertToLink(button.title, null , `<i style="margin-right: 5px" class="fa fa-external-link"></i> `)
+                convertToLink(button.url, null , `<i style="margin-right: 5px" class="fa fa-external-link"></i> ${button.title}`)
                 : button.title;
             if(btnText === button.title && button.content_type === 'url'){ /*title is not a link*/
                 btnText = `<i style="margin-right: 5px" class="fa fa-external-link"></i> ` + btnText;

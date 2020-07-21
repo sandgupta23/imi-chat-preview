@@ -422,9 +422,9 @@ function convertToLink(inputText, className, prefix) {
 
   var replacedText, replacePattern1, replacePattern2;
   replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
-  replacedText = inputText.replace(replacePattern1, "<a href=\"$1\" target=\"_blank\" class=\"" + className + "\">" + prefix + "$1</a>");
+  if (prefix) replacedText = inputText.replace(replacePattern1, "<a href=\"$1\" target=\"_blank\" class=\"" + className + "\">" + prefix + "</a>");else replacedText = inputText.replace(replacePattern1, "<a href=\"$1\" target=\"_blank\" class=\"" + className + "\">$1</a>");
   replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
-  replacedText = replacedText.replace(replacePattern2, "$1<a href=\"http://$2\" class=\"" + className + " target=\"_blank\">" + prefix + "$2</a>");
+  if (prefix) replacedText = replacedText.replace(replacePattern2, "$1<a href=\"http://$2\" class=\"" + className + " target=\"_blank\">" + prefix + "</a>");else replacedText = replacedText.replace(replacePattern2, "$1<a href=\"http://$2\" class=\"" + className + " target=\"_blank\">" + prefix + "$2</a>");
   return replacedText;
 }
 
@@ -515,7 +515,7 @@ var QuickReply = function () {
     var str = "";
     quick_reply.quick_replies.forEach(function (quick_reply) {
       var payload = quick_reply.content_type === 'url' ? '' : quick_reply.payload;
-      var btnText = quick_reply.content_type === 'url' ? link_1.convertToLink(quick_reply.title, null, "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> ") : quick_reply.title;
+      var btnText = quick_reply.content_type === 'url' ? link_1.convertToLink(quick_reply.url, null, "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> " + quick_reply.title) : quick_reply.title;
 
       if (btnText === quick_reply.title && quick_reply.content_type === 'url') {
         btnText = "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> " + btnText;
@@ -588,7 +588,7 @@ var CarouselReply = function () {
     buttons.forEach(function (button) {
       debugger;
       var payload = button.type === 'url' ? '' : button.payload;
-      var btnText = button.type === 'url' ? link_1.convertToLink(button.title, null, "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> ") : button.title;
+      var btnText = button.type === 'url' ? link_1.convertToLink(button.url, null, "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> " + button.title) : button.title;
 
       if (btnText === button.title && button.content_type === 'url') {
         btnText = "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> " + btnText;
@@ -939,6 +939,7 @@ function AppendMessageInChatBody(messages, botResponse, hideFeedback) {
   var carousal;
 
   if (str) {
+    wrapper.style.maxWidth = '100% !important';
     var el = document.createElement('template');
     el.innerHTML = str;
     carousal = el.content.querySelector('.carousal-container');
@@ -3145,7 +3146,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53623" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61183" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
