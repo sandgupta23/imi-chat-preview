@@ -109,6 +109,9 @@ async function initApp(imiPreview: ImiPreview) {
 }
 
 class ImiPreview {
+    constructor() {
+        window.environment = environment;
+    }
     _cb;
     _feedbackCB;
     _roomInactiveMap;
@@ -354,8 +357,9 @@ function initEvents(imiPreview: ImiPreview) {
 
         try {
             if (target.classList.contains('control')) {
-
-                const itemInView = environment.options.phoneCasing ? 1 : 2;
+                console.log('-------------------carousel----------------');
+                window.environment = environment;
+                const itemInView =  environment.options.itemInView || (environment.options.phoneCasing ? 1 : 3);
                 const $carasalContainer = findParentWithClass(target, 'carousal-container') as HTMLElement;
                 const shouldMoveRight = target.classList.contains('control-right');
                 const $carasalInner = $carasalContainer.querySelector('.carousal-container-inner') as HTMLElement;

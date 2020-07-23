@@ -20,7 +20,7 @@ export class CarouselReply {
         const carousalStr = this.createCarousalStr(this.media);
         let controlStr = `<div class="fa fa-angle-left control control-left"></div>
                    <div class="fa fa-angle-right control control-right"></div>`;
-        const itemInView = environment.options.phoneCasing ? 1 : 2;
+        const itemInView =  environment.options.itemInView || (environment.options.phoneCasing ? 1 : 2);
         if(this.media.length <= itemInView){
             controlStr = "";
         }

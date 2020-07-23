@@ -11,7 +11,7 @@ export const environment = {
         },
         logo: "",
         options:{
-            phoneCasing: false
+            phoneCasing: false,
         }
     }
 ;
