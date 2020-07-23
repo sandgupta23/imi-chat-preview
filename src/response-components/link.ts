@@ -2,7 +2,6 @@
   * linkify: replaces all texts to <a> links in a string
   * */
 export function convertToLink(url, className = "text-link", prefix = "") {
-    debugger;
     const inputTextWithoutBr = url.split('<br>').join('');
     if (inputTextWithoutBr.includes('<') && inputTextWithoutBr.includes('>')) {
         return url;

@@ -367,15 +367,16 @@ function initEvents(imiPreview: ImiPreview) {
                 let dataStep = Number($carasalContainer.getAttribute('data-step'));
                 $carasalContainer.classList.remove('hide-left-control');
                 $carasalContainer.classList.remove('hide-right-control');
+                debugger;
                 if ((dataStep < $carasalItemLength - itemInView) && shouldMoveRight) {
-                    dataStep++;
-                    if (dataStep === ($carasalItemLength - itemInView)) {
+                    dataStep = dataStep /*+ 1 */+ itemInView;//dataStep++;
+                    if (dataStep >= ($carasalItemLength - itemInView)) {
                         setTimeout(() => {
                             $carasalContainer.classList.add('hide-right-control');
                         }, 350);
                     }
                 } else if ((dataStep > 0) && !shouldMoveRight) {
-                    dataStep--;
+                    dataStep = dataStep /*- 1*/ -itemInView;// dataStep--;
                     if (dataStep === 0) {
                         setTimeout(() => {
                             $carasalContainer.classList.add('hide-left-control');
@@ -384,7 +385,6 @@ function initEvents(imiPreview: ImiPreview) {
                 } else {
                     return;
                 }
-
                 $carasalContainer.setAttribute('data-step', dataStep.toString());
                 const carasalContainerWidth = $carasalContainer.offsetWidth;
                 const itemWidth = ($carasalInner.querySelector('.item') as HTMLElement).offsetWidth;
