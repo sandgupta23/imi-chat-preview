@@ -13,16 +13,16 @@ export function convertToLink(url, className = "text-link", prefix = "") {
     // URLs starting with http://, https://, or ftp://
     replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
     if(prefix)
-    replacedText = url.replace(replacePattern1, `<a href="$1" target="_blank" class="${className}">${prefix}</a>`);
+        replacedText = url.replace(replacePattern1, `<a href="$1" target="_blank" class="${className}">${prefix}</a>`);
     else
-    replacedText = url.replace(replacePattern1, `<a href="$1" target="_blank" class="${className}">$1</a>`);
+        replacedText = url.replace(replacePattern1, `<a href="$1" target="_blank" class="${className}">$1</a>`);
 
     // URLs starting with "www." (without // before it, or it'd re-link the ones done above).
     replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
     if(prefix)
-    replacedText = replacedText.replace(replacePattern2, `$1<a href="http://$2" target="_blank" class="${className}>${prefix}</a>`);
+        replacedText = replacedText.replace(replacePattern2, `$1<a href="http://$2" class="${className}" target="_blank">${prefix}</a>`);
     else
-    replacedText = replacedText.replace(replacePattern2, `$1<a href="http://$2" target="_blank" class="${className}>$2</a>`);
+        replacedText = replacedText.replace(replacePattern2, `$1<a href="http://$2" class="${className}" target="_blank">$2</a>`);
 
     // Change email addresses to mailto:: links.
     // replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
