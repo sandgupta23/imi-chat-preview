@@ -31,10 +31,10 @@ export class QuickReply {
             let btnText = quick_reply.content_type === 'url'?
                 convertToLink(quick_reply.url, null , `<i style="margin-right: 5px" class="fa fa-external-link"></i> ${quick_reply.title}`)
                 : quick_reply.title;
-            if(button.type === 'url' && !isValidUrl(quick_reply.url)){ /*title is not a link*/
+            if(quick_reply.content_type === 'url' && !isValidUrl(quick_reply.url)){ /*title is not a link*/
                 btnText = `<i style="margin-right: 5px" class="fa fa-external-link"></i> ` + btnText;
                 payload = "__invalid_link__";
-                btnText = button.title;
+                btnText = quick_reply.title;
             }
             str = str + `<button class="link-wrapper bot-link" data-payload="${payload}">${btnText}</button>`
         });
