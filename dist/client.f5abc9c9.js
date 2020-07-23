@@ -398,6 +398,14 @@ function sanitizeHTML(html) {
 }
 
 exports.sanitizeHTML = sanitizeHTML;
+
+function isValidUrl(url) {
+  var replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+  var replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+  return replacePattern1.test(url) || replacePattern2.test(url);
+}
+
+exports.isValidUrl = isValidUrl;
 },{"./dom":"dom.ts"}],"response-components/link.ts":[function(require,module,exports) {
 "use strict";
 
@@ -405,7 +413,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-function convertToLink(inputText, className, prefix) {
+function convertToLink(url, className, prefix) {
   if (className === void 0) {
     className = "text-link";
   }
@@ -414,17 +422,18 @@ function convertToLink(inputText, className, prefix) {
     prefix = "";
   }
 
-  var inputTextWithoutBr = inputText.split('<br>').join('');
+  debugger;
+  var inputTextWithoutBr = url.split('<br>').join('');
 
   if (inputTextWithoutBr.includes('<') && inputTextWithoutBr.includes('>')) {
-    return inputText;
+    return url;
   }
 
   var replacedText, replacePattern1, replacePattern2;
   replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
-  if (prefix) replacedText = inputText.replace(replacePattern1, "<a href=\"$1\" target=\"_blank\" class=\"" + className + "\">" + prefix + "</a>");else replacedText = inputText.replace(replacePattern1, "<a href=\"$1\" target=\"_blank\" class=\"" + className + "\">$1</a>");
+  if (prefix) replacedText = url.replace(replacePattern1, "<a href=\"$1\" target=\"_blank\" class=\"" + className + "\">" + prefix + "</a>");else replacedText = url.replace(replacePattern1, "<a href=\"$1\" target=\"_blank\" class=\"" + className + "\">$1</a>");
   replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
-  if (prefix) replacedText = replacedText.replace(replacePattern2, "$1<a href=\"http://$2\" class=\"" + className + " target=\"_blank\">" + prefix + "</a>");else replacedText = replacedText.replace(replacePattern2, "$1<a href=\"http://$2\" class=\"" + className + " target=\"_blank\">" + prefix + "$2</a>");
+  if (prefix) replacedText = replacedText.replace(replacePattern2, "$1<a href=\"http://$2\" class=\"" + className + " target=\"_blank\">" + prefix + "</a>");else replacedText = replacedText.replace(replacePattern2, "$1<a href=\"http://$2\" class=\"" + className + " target=\"_blank\">$2</a>");
   return replacedText;
 }
 
@@ -517,9 +526,10 @@ var QuickReply = function () {
       var payload = quick_reply.content_type === 'url' ? '' : quick_reply.payload;
       var btnText = quick_reply.content_type === 'url' ? link_1.convertToLink(quick_reply.url, null, "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> " + quick_reply.title) : quick_reply.title;
 
-      if (btnText === quick_reply.title && quick_reply.content_type === 'url') {
+      if (button.type === 'url' && !utility_1.isValidUrl(quick_reply.url)) {
         btnText = "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> " + btnText;
         payload = "__invalid_link__";
+        btnText = button.title;
       }
 
       str = str + ("<button class=\"link-wrapper bot-link\" data-payload=\"" + payload + "\">" + btnText + "</button>");
@@ -589,9 +599,12 @@ var CarouselReply = function () {
       var payload = button.type === 'url' ? '' : button.payload;
       var btnText = button.type === 'url' ? link_1.convertToLink(button.url, null, "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> " + button.title) : button.title;
 
-      if (btnText === button.title && button.content_type === 'url') {
+      if (!utility_1.isValidUrl(button.url)) {}
+
+      if (button.type === 'url' && !utility_1.isValidUrl(button.url)) {
         btnText = "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> " + btnText;
         payload = "__invalid_link__";
+        btnText = button.title;
       }
 
       str = str + ("\n            <li class=\"action\" data-payload=\"" + payload + "\" data-type=\"" + button.type + "\">\n                <div class=\"link-wrapper\" data-payload=\"" + payload + "\">" + btnText + "</div>\n            </li>\n        ");
@@ -2310,8 +2323,6 @@ var ImiPreview = function () {
 
   ImiPreview.prototype.setSendHumanMessageCallback = function (cb) {
     this._cb = function (humanMessage, humanMessage1) {
-      debugger;
-
       if (!humanMessage) {
         return;
       }
@@ -3145,7 +3156,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52198" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64851" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

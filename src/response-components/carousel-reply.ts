@@ -1,5 +1,5 @@
 import {ESourceType} from "../typings/send-api";
-import {convertStringToDom, showToaster} from "../utility";
+import {convertStringToDom, isValidUrl, showToaster} from "../utility";
 import {convertToLink} from "./link";
 import {environment} from "../environment";
 
@@ -74,9 +74,13 @@ export class CarouselReply {
             let btnText = button.type === 'url'?
                 convertToLink(button.url, null , `<i style="margin-right: 5px" class="fa fa-external-link"></i> ${button.title}`)
                 : button.title;
-            if(btnText === button.title && button.content_type === 'url'){ /*title is not a link*/
+            if(!isValidUrl(button.url)){
+
+            }
+            if(button.type === 'url' && !isValidUrl(button.url)){ /*title is not a link*/
                 btnText = `<i style="margin-right: 5px" class="fa fa-external-link"></i> ` + btnText;
                 payload = "__invalid_link__";
+                btnText = button.title;
             }
             str = str + `
             <li class="action" data-payload="${payload}" data-type="${button.type}">

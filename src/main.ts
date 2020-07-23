@@ -126,7 +126,7 @@ class ImiPreview {
     setSendHumanMessageCallback(cb) {
 
         this._cb = (humanMessage, humanMessage1) => {
-            debugger;
+
             if (!humanMessage) {
                 return;
             }

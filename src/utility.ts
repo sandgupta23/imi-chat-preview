@@ -1,4 +1,4 @@
-import { $chatBody } from "./dom";
+import {$chatBody} from "./dom";
 
 export function getTimeInHHMM(timeMS) {
     const time = timeMS ? new Date(timeMS) : new Date();
@@ -64,7 +64,9 @@ export function removeInActiveFeedbackPanel($chatbody: HTMLElement) {
         // }
     })
 }
+
 let showToasterTimeoutRef
+
 export function showToaster(message) {
     // Get the snackbar DIV
     var x = document.getElementById("snackbar");
@@ -105,4 +107,11 @@ export function sanitizeHTML(html: string) {
         console.log(e);
     }
     return html.replace(/</g, '&lt;');
+}
+
+export function isValidUrl(url: string) {
+    const replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+    const replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+    return replacePattern1.test(url) || replacePattern2.test(url);
+
 }
