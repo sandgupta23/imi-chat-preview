@@ -78,9 +78,10 @@ export class CarouselReply {
 
             }
             if(button.type === 'url' && !isValidUrl(button.url)){ /*title is not a link*/
+                debugger;
                 btnText = `<i style="margin-right: 5px" class="fa fa-external-link"></i> ` + btnText;
                 payload = "__invalid_link__";
-                btnText = button.title;
+                // btnText = button.title;
             }
             str = str + `
             <li class="action" data-payload="${payload}" data-type="${button.type}">
