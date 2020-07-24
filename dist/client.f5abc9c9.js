@@ -526,7 +526,7 @@ var QuickReply = function () {
       var btnText = quick_reply.content_type === 'url' ? link_1.convertToLink(quick_reply.url, null, "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> " + quick_reply.title) : quick_reply.title;
 
       if (quick_reply.content_type === 'url' && !utility_1.isValidUrl(quick_reply.url)) {
-        btnText = "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> " + btnText;
+        btnText = "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> " + quick_reply.title;
         payload = "__invalid_link__";
       }
 
@@ -601,7 +601,7 @@ var CarouselReply = function () {
 
       if (button.type === 'url' && !utility_1.isValidUrl(button.url)) {
         debugger;
-        btnText = "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> " + btnText;
+        btnText = "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> " + button.title;
         payload = "__invalid_link__";
       }
 

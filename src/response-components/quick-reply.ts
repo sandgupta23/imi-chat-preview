@@ -32,7 +32,7 @@ export class QuickReply {
                 convertToLink(quick_reply.url, null , `<i style="margin-right: 5px" class="fa fa-external-link"></i> ${quick_reply.title}`)
                 : quick_reply.title;
             if(quick_reply.content_type === 'url' && !isValidUrl(quick_reply.url)){ /*title is not a link*/
-                btnText = `<i style="margin-right: 5px" class="fa fa-external-link"></i> ` + btnText;
+                btnText = `<i style="margin-right: 5px" class="fa fa-external-link"></i> ` + quick_reply.title;
                 payload = "__invalid_link__";
                 // btnText = quick_reply.title;
             }
