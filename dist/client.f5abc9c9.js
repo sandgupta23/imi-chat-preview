@@ -614,7 +614,6 @@ var CarouselReply = function () {
       if (!utility_1.isValidUrl(button.url)) {}
 
       if (button.type === 'url' && !utility_1.isValidUrl(button.url)) {
-        debugger;
         btnText = "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> " + button.title;
         payload = "__invalid_link__";
       }
@@ -2577,7 +2576,6 @@ function initEvents(imiPreview) {
                 dataStep = Number($carasalContainer_1.getAttribute('data-step'));
                 $carasalContainer_1.classList.remove('hide-left-control');
                 $carasalContainer_1.classList.remove('hide-right-control');
-                debugger;
 
                 if (dataStep < $carasalItemLength - itemInView && shouldMoveRight) {
                   dataStep = dataStep + itemInView;

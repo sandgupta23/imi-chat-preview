@@ -369,7 +369,7 @@ function initEvents(imiPreview: ImiPreview) {
                 let dataStep = Number($carasalContainer.getAttribute('data-step'));
                 $carasalContainer.classList.remove('hide-left-control');
                 $carasalContainer.classList.remove('hide-right-control');
-                debugger;
+
                 if ((dataStep < $carasalItemLength - itemInView) && shouldMoveRight) {
                     dataStep = dataStep /*+ 1 */+ itemInView;//dataStep++;
                     if (dataStep >= ($carasalItemLength - itemInView)) {
