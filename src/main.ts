@@ -358,8 +358,10 @@ function initEvents(imiPreview: ImiPreview) {
         try {
             if (target.classList.contains('control')) {
                 console.log('-------------------carousel----------------');
-                window.environment = environment;
-                const itemInView =  environment.options.itemInView || (environment.options.phoneCasing ? 1 : 3);
+                /*
+                * itemInView is set by carousel-reply.ts
+                * */
+                const itemInView =  environment.options.itemInView;
                 const $carasalContainer = findParentWithClass(target, 'carousal-container') as HTMLElement;
                 const shouldMoveRight = target.classList.contains('control-right');
                 const $carasalInner = $carasalContainer.querySelector('.carousal-container-inner') as HTMLElement;

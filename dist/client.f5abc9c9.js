@@ -566,7 +566,21 @@ var CarouselReply = function () {
   CarouselReply.prototype.getTemplate = function (text, source) {
     var carousalStr = this.createCarousalStr(this.media);
     var controlStr = "<div class=\"fa fa-angle-left control control-left\"></div>\n                   <div class=\"fa fa-angle-right control control-right\"></div>";
-    var itemInView = environment_1.environment.options.itemInView || (environment_1.environment.options.phoneCasing ? 1 : 2);
+    window.environment = environment_1.environment;
+
+    if (environment_1.environment.options.phoneCasing) {
+      environment_1.environment.options.itemInView = 1;
+    } else {
+      if (window.innerWidth < 470) {
+        environment_1.environment.options.itemInView = 1;
+      } else if (window.innerWidth < 680) {
+        environment_1.environment.options.itemInView = 2;
+      } else {
+        environment_1.environment.options.itemInView = 3;
+      }
+    }
+
+    var itemInView = environment_1.environment.options.itemInView;
 
     if (this.media.length <= itemInView) {
       controlStr = "";
@@ -2555,8 +2569,7 @@ function initEvents(imiPreview) {
             try {
               if (target.classList.contains('control')) {
                 console.log('-------------------carousel----------------');
-                window.environment = environment_1.environment;
-                itemInView = environment_1.environment.options.itemInView || (environment_1.environment.options.phoneCasing ? 1 : 3);
+                itemInView = environment_1.environment.options.itemInView;
                 $carasalContainer_1 = findParentWithClass(target, 'carousal-container');
                 shouldMoveRight = target.classList.contains('control-right');
                 $carasalInner = $carasalContainer_1.querySelector('.carousal-container-inner');
@@ -3159,7 +3172,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56990" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59844" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -5,7 +5,8 @@ import {environment} from "../environment";
 
 export class CarouselReply {
     media;
-    constructor(message){
+
+    constructor(message) {
         this.media = message;
     }
 
@@ -20,8 +21,20 @@ export class CarouselReply {
         const carousalStr = this.createCarousalStr(this.media);
         let controlStr = `<div class="fa fa-angle-left control control-left"></div>
                    <div class="fa fa-angle-right control control-right"></div>`;
-        const itemInView =  environment.options.itemInView || (environment.options.phoneCasing ? 1 : 2);
-        if(this.media.length <= itemInView){
+        window.environment = environment;
+        if (environment.options.phoneCasing) {
+            environment.options.itemInView = 1;
+        } else {
+            if (window.innerWidth < 470) {
+                environment.options.itemInView = 1;
+            } else if (window.innerWidth < 680) {
+                environment.options.itemInView = 2;
+            } else {
+                environment.options.itemInView = 3;
+            }
+        }
+        const itemInView = environment.options.itemInView;
+        if (this.media.length <= itemInView) {
             controlStr = "";
         }
         return `
@@ -48,7 +61,7 @@ export class CarouselReply {
 
     createCarousalItems(mediaItem: any) {
         let url = mediaItem.url.split("&").join("&amp;");
-        const desc = mediaItem.description? `<div class="description-text">${mediaItem.description}</div>`: ``;
+        const desc = mediaItem.description ? `<div class="description-text">${mediaItem.description}</div>` : ``;
         return `
     <div class="item">
             <div class="bot-carousal-item shadow-theme">
@@ -70,14 +83,14 @@ export class CarouselReply {
         let str = "";
         buttons.forEach((button) => {
 
-            let payload = button.type === 'url'? '' : button.payload;
-            let btnText = button.type === 'url'?
-                convertToLink(button.url, null , `<i style="margin-right: 5px" class="fa fa-external-link"></i> ${button.title}`)
+            let payload = button.type === 'url' ? '' : button.payload;
+            let btnText = button.type === 'url' ?
+                convertToLink(button.url, null, `<i style="margin-right: 5px" class="fa fa-external-link"></i> ${button.title}`)
                 : button.title;
-            if(!isValidUrl(button.url)){
+            if (!isValidUrl(button.url)) {
 
             }
-            if(button.type === 'url' && !isValidUrl(button.url)){ /*title is not a link*/
+            if (button.type === 'url' && !isValidUrl(button.url)) { /*title is not a link*/
                 debugger;
                 btnText = `<i style="margin-right: 5px" class="fa fa-external-link"></i> ` + button.title;
                 payload = "__invalid_link__";
