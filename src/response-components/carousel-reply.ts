@@ -85,8 +85,9 @@ export class CarouselReply {
 
             let payload = button.type === 'url' ? '' : button.payload;
             let btnText = button.type === 'url' ?
-                convertToLink(button.url, null, `<i style="margin-right: 5px" class="fa fa-external-link"></i> ${button.title}`)
+                convertToLink(button.url, null, `<i style="margin-right: 5px" class="fa fa-external-link"></i>${button.title}`)
                 : button.title;
+
             if (!isValidUrl(button.url)) {
 
             }

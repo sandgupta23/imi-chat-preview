@@ -523,13 +523,14 @@ var QuickReply = function () {
     var str = "";
     quick_reply.quick_replies.forEach(function (quick_reply) {
       var payload = quick_reply.content_type === 'url' ? '' : quick_reply.payload;
-      var btnText = quick_reply.content_type === 'url' ? link_1.convertToLink(quick_reply.url, null, "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> " + quick_reply.title) : quick_reply.title;
+      var btnText = quick_reply.content_type === 'url' ? link_1.convertToLink(quick_reply.url, null, "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i>" + quick_reply.title) : quick_reply.title;
 
       if (quick_reply.content_type === 'url' && !utility_1.isValidUrl(quick_reply.url)) {
         btnText = "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> " + quick_reply.title;
         payload = "__invalid_link__";
       }
 
+      debugger;
       str = str + ("<button class=\"link-wrapper bot-link\" data-payload=\"" + payload + "\">" + btnText + "</button>");
     });
     return str;
@@ -609,7 +610,7 @@ var CarouselReply = function () {
     var str = "";
     buttons.forEach(function (button) {
       var payload = button.type === 'url' ? '' : button.payload;
-      var btnText = button.type === 'url' ? link_1.convertToLink(button.url, null, "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i> " + button.title) : button.title;
+      var btnText = button.type === 'url' ? link_1.convertToLink(button.url, null, "<i style=\"margin-right: 5px\" class=\"fa fa-external-link\"></i>" + button.title) : button.title;
 
       if (!utility_1.isValidUrl(button.url)) {}
 
