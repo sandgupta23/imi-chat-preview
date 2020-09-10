@@ -22,17 +22,17 @@ export class CarouselReply {
         let controlStr = `<div class="fa fa-angle-left control control-left"></div>
                    <div class="fa fa-angle-right control control-right"></div>`;
         window.environment = environment;
-        if (environment.options.phoneCasing) {
-            environment.options.itemInView = 1;
-        } else {
-            if (window.innerWidth < 470) {
-                environment.options.itemInView = 1;
-            } else if (window.innerWidth < 680) {
-                environment.options.itemInView = 2;
-            } else {
-                environment.options.itemInView = 3;
-            }
-        }
+        // if (environment.options.phoneCasing) {
+        //     environment.options.itemInView = 1;
+        // } else {
+        //     if (window.innerWidth < 470) {
+        //         environment.options.itemInView = 1;
+        //     } else if (window.innerWidth < 680) {
+        //         environment.options.itemInView = 2;
+        //     } else {
+        //         environment.options.itemInView = 3;
+        //     }
+        // }
         const itemInView = environment.options.itemInView;
         if (this.media.length <= itemInView) {
             controlStr = "";
